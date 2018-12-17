@@ -1,0 +1,134 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{mathtools}
+\usepackage{color}
+\usepackage[total={6in,8in}]{geometry}
+\usepackage{amsthm}
+\usepackage{mathrsfs}
+
+\usepackage{enumitem}
+\usepackage{centernot}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\sn}{\mathfrak{S}}
+\newcommand{\ve}{\varepsilon}
+\setlength{\parindent}{0cm}
+
+
+\author{Marika Swanberg}
+\title{Reed-Muller Codes}
+\date{}
+\begin{document}
+\maketitle
+Mostly taken from \textit{The Theory of Error-Correcting Codes}.
+\section{Boolean functions}
+We can think of RM codes in terms of boolean functions, that is functions $f: 2^m \rightarrow 2^m$ in $m$ variables which take values in $\{0,1\}$. Denote such functions $f(v) = f(v_1, v_2, \ldots , v_m)$. We may apply regular boolean algebra to the functions using the following rules: $f \oplus g = f + g$, $f \land g = fg$, and $\lnot f = 1 + f$.
+\bigskip
+
+\textbf{Ex 1.} Let $m = 3$. Then, we have $f: \{0,1,2,3\} \rightarrow 2^3$ defined by
+\begin{align*}
+& v_3 = 00001111 \\
+& v_2 = 00110011 \\
+& v_1 = 01010101 \\
+& f = 00011000 \\
+\end{align*}
+Then, $f = v_1v_2\bar{v_3} \lor \bar{v_1}\bar{v_2}v_3$.
+
+\bigskip
+
+This is not covered in the book, but we will define $v_i$ generally as:
+$(0^{2^{i-1}}1^{2^{i-1}})^{2^{m-i}}$ where we follow the computer science notation for  concatenation as exponentiation.
+
+\section{Reed-Muller Codes}
+The $rth$ order binary Reed-Muller (or RM) code $\mathscr{R}(r,m)$ of length $n = 2^m$, where $0 \leq r \leq m$, is the set of all vectors $f$ where $f(v_1, \ldots, v_m)$ is a boolean function which is a polynomial of degree at most $r$.
+
+\bigskip
+
+\textbf{Ex 2.} The first order RM code of length 8, $\mathscr{R}(1, 8)$ consists of the 16 codewords $$a_01 + a_1v_1 + a_2v_2 + a_3v_3$$ where $a_i \in \{0,1\}$.
+
+In general, the $rth$ order RM code is the set of all linear combinations of products of $v_i$'s up to size $r$, i.e.
+$$
+\sum_{\substack{ S \subseteq \{1, \ldots m\}\\ |S| \leq r}} a_S \cdot  \prod_{i \in S} v_{i}
+$$
+Where $a_S \in \{0,1\}$.
+
+The linear combinations of $v_i$'s are linearly independent and form a basis for the code. Thus, the dimension of a $\mathscr{R}(r,m)$ code is 
+$$k = 1 + {m \choose 1} + {m \choose 2} + \ldots + {m \choose r}$$
+
+\textbf{Theorem 3.} $\mathscr{R}(r+1, m+1) = \{(u||u+v): u \in \mathscr{R}(r+1, m), v\in \mathscr{R}(r,m)\}$, i.e. concatenation. 
+\bigskip
+
+Additionally, we have a similar statement for generator matrices.
+\bigskip
+
+\textbf{Theorem 4.}
+$$G(r+1, m+1) = 
+\begin{bmatrix}
+G(r+1, m) & G(r+1, m) \\
+0 & G(r,m)\\
+\end{bmatrix}
+$$
+
+In general, the generator matrix for a $\mathscr{R}(r,m)$-code has as its rows the linear combinations of $v_i$'s.
+\section{RM Codes and Geometries}
+See appendix on projective and euclidean geometries in \textit{The Theory of Error-Correcting Codes} for more information. The \textit{Euclidean geometry} EG(m,2) of dimension $m$ over GF(2) contains $2^m$ points, whose coordinates are all the binary vectors $v = (v_1,\ldots, v_m)$ of length $m$. If the zero point is deleted, the \textit{projective geometry} PG(m-1, 2) is obtained.
+
+Note/recall a binary incidence vector (also known as indicator vector) of length $2^m$ $\chi(S)$ is 1 for those components $s\in S$ and 0's everywhere else. We can think of the codewords of $\mathscr{R}(r,m)$ in this context, namely as (incidence vectors of) subsets of EG(m,2).
+
+\bigskip
+
+\textbf{Ex 5.} For example, the Euclidean geometry $EG(3,2)$ consists of 8 points, namely $P_0, P_1, \ldots , P_7$ whose coordinates we may take to be the following column vectors:
+
+\begin{center}
+\begin{tabular}{ c c c c c c c c c }
+ & $P_0$ & $P_1$ & $P_2$ &$ P_3$ &$ P_4$ &$ P_5 $& $P_6$ & $P_7$ \\
+$\bar{v_1}$ & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
+$\bar{v_2}$ & 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
+$\bar{v_3}$ & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\   
+\end{tabular}
+\end{center}
+
+The subset $S = \{P_2, P_3, P_4, P_5\}$ has incidence vector $\chi(S) = 00111100$. This is a codeword of $\mathscr{R}(1,3)$.
+
+\bigskip
+
+For any value $m$ let us take the complements of the vectors $v_m, \ldots , v_1$. 
+\begin{center}
+\begin{tabular}{ c c c c c c c c c c }
+$\bar{v}_m$ & 1 & 1 & 1 & 1 &$\ldots$ & 0 & 0 & 0 & 0\\
+$\bar{v}_{m-1}$ &1 & 1 & 1 & 1 &$\ldots$ & 0 & 0 & 0 & 0\\
+$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ &$\ldots$ \\
+$\bar{v}_2$ & 1 & 1 & 0 & 0 & $\ldots$ & 1 & 1 & 0 & 0\\   
+$\bar{v}_1$ & 1 & 0 & 1 & 0 &$\ldots$ & 1 & 0 & 1 & 0\\   
+\end{tabular}
+\end{center}
+
+The columns of this matrix are coordinates of the points in $EG(m,2)$. Thus, there is a 1-1 correspondence between the points of $EG(m,2)$ and the components of binary vectors of length $2^m$. Any vector $x$ of length $2^m$ describes a subset of $EG(m,2)$ consisting of those points $P$ for which $x_P = 1$ and $x$ is the incidence vector for this subset. For example, the vectors $v_i$ themselves are the characteristic vectors of hyperplanes which pass through the origin, the $v_iv_j$ describe subspaces of dimension $m-2$, and so on.
+
+\subsection{Decoding Algorithm}
+To encode a message $a$, we simply compute $a\cdot G$ where $G$ is the generator matrix for the particular RM code we are working with. For the remainder of this section, we'll work with $\mathscr{R}(2,4)$.
+
+\bigskip
+
+\textbf{Notation.} We will refer to the symbols of the message $a = a_0a_4a_3a_2a_1a_{34}a_{24}a_{14}a_{23}a_{13}a_{12}$. When we apply $a \cdot G$, this message gets encoded into the codeword
+$$
+x = aG = a_01 + a_4v_4 + \ldots + a_1v_1 + \ldots + a_{12}v_1v_2 = x_0x_1x_2\ldots x_{15}
+$$
+
+In general, to decode a codeword from $\mathscr{R}(r,m)$, we construct a series of parity checks. First, find $a_{\sigma}$ where $\sigma = \sigma_1 \ldots \sigma_r$, say. The corresponding row of the generator matrix $v_{\sigma_1} \ldots v_{\sigma_r}$ is the incidence vector of an $(m-r)$-dimensional subspace $S$ of $EG(m,2)$. (To find $S$, use the row of the generator matrix as an indicator vector on the matrix we made of the complements of the Reed-Muller monomial basis vectors). Now, we take $T$ to be the complementary subspace to $S$ with incidence vector $v_{\tau_1} \ldots v_{\tau_{m-r}}$ where $\{\tau_1 \ldots \tau_{m-r}\}$ is the complement of $\{\sigma_1 \ldots \sigma_r\}$ in $\{1, 2, \ldots, m\}$. Then, $T$ meets $S$ in a single point, namely the origin. Now, let $U_1, \ldots, U_{2^{m-r}}$ be all the \textit{translates} of $T$ in $EG(m,2)$, including $T$ itself. Each $U_i$ meets $S$ in exactly one point.
+
+\textbf{Theorem} If there are no errors, $a_{\sigma}$ is given by 
+\begin{equation*}
+a_{\sigma} = \sum_{P \in U_i} x_P, \quad i = 1, \ldots , 2^{m-r}
+\end{equation*}
+Note that there are $2^{m-r}$ equations that should all yield the same $a_{\sigma}$, and if not, one can apply majority logic. This theorem implies that if no more than $\lfloor\frac{1}{2}(2^{m-r} -1)\rfloor$ errors occur, majority logic decoding will recover each of the symbols $v_{\sigma}$ correctly, where $\sigma$ is a string of any $r$ symbols. 
+	After going through this process for all $r$-length subscripts in $a$, we subtract the corresponding $a_{ij}v_iv_j$'s from $x$ to obtain a new codeword $x' = x_0'x_1' \ldots x_{15}'$ and repeat the process for all $r-1$-length subscripts. We continue this process until all we have left is $a_01 + \text{error}$ and $a_0 = 0$ or 1 according to the number of 1's in the remainder of the codeword.
+
+[it would probably be good to go through an example here. Also to explain the algorithm better... But yeah I like the geometric interpretation of it]
+\end{document}
