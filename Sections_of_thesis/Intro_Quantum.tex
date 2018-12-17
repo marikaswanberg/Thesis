@@ -1,0 +1,152 @@
+\documentclass[12pt]{article}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{xspace}
+\usepackage{color}
+\usepackage[total={6in,8in}]{geometry}
+\usepackage{amsthm}
+
+\usepackage{enumitem}
+\usepackage{centernot}
+
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\sn}{\mathfrak{S}}
+\newcommand{\ve}{\varepsilon}
+\newcommand{\ketz}{\ensuremath{\lvert 0\rangle}\xspace}
+\newcommand{\keto}{\ensuremath{\lvert 1\rangle}\xspace}
+\newcommand{\ket}[1]{\ensuremath{\lvert #1\rangle}\xspace}
+\newcommand{\ketpsi}{\ensuremath{|\psi\rangle}\xspace}
+\newcommand{\Hplus}{\ensuremath{\lvert + \rangle}\xspace}
+\newcommand{\Hminus}{\ensuremath{\lvert- \rangle}\xspace}
+\newlength{\minuslength}
+\settowidth{\minuslength}{$-$}
+\newcommand{\hadamard}{
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1 & \hspace{\minuslength}1\\
+1 & -1 
+\end{bmatrix}
+}
+\setlength{\parindent}{1cm}
+
+
+\author{Marika Swanberg}
+
+\begin{document}
+\section{Introduction to Quantum Computing} 
+
+Classical computers, i.e.~the computers that we all know and love, run on \textit{bits} or 1's and 0's. This is the fundamental unit of information in classical computers. In quantum computers, information is built upon an analagous concept, the \textit{quantum bit} or \textit{qubit}. We will discuss the defining properties of qubits, some of which may seem very different from those of bits. 
+
+\subsection{Information Storage}
+In classical computing, each bit can be in one of two states--1 or 0.  We denote \textit{quantum states} by \ketz and \keto, pronounced ``\textit{ket zero}'' and ``\textit{ket one},'' respectively. This follows traditional \textit{Dirac notation}\footnote{See reference on notation}. Unlike classical bits, qubits can be in a \textit{superposition} between these two states. We describe a quantum state as follows: $\ketpsi = \alpha \ketz + \beta \keto$, where $\alpha$ and $\beta$ are complex numbers and $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1$. This describes a probability distribution over the quantum states \ketz and \keto with \textit{amplitudes} $\alpha$ and $\beta$. We can also think of \ketpsi as a vector in a two-dimensional complex vector space. The states \ketz and \keto form an orthonomal basis in this complex vector space and are called the \textit{computational basis states}.
+
+So how can we know which state a bit or qubit is in? In classical computing, we can simply read the bit to determine whether it's a 0 or a 1. Qubits are a little trickier. We cannot read \ketpsi to determine its exact state, that is $\alpha$ and $\beta$. As soon as we measure \ketpsi, the superposition will collapse to either \ketz with probability $ \lvert \alpha \rvert ^2$ or \keto with probability $ \lvert \beta \rvert ^2$. In other words, \ketpsi is like a weighted coin that we can flip once to get either heads or tails, but we have no way to directly measure the bias in the coin. Unlike a coin, as soon as \ketpsi has been measured to reveal some quantum state, \ketpsi will permanently collapse to that state, i.e.~$\ketpsi = 1\ketz + 0 \keto$ or $\ketpsi = 0\ketz + 1\keto$. Every time we measure it thereafter, we will observe the same state that we measured the first time. In the coin analogy, it's like we have a weighted coin that we can flip once to reveal heads or tails, and every subsequent flip always yields the initial state that we flipped to.
+
+You may be wondering why this is useful. It seems impossible that our fundamental unit of information in this model of computation is unknowable, immeasurable. The beauty of quantum computation lies in the \textit{manipulation} of these immeasurable qubits such that by the time we measure them at the end, the result will inform us of the state they started in. More on that later. 
+
+\subsection{Special States \Hplus and \Hminus}
+
+As we already glossed over, $\ketz = 1 \ketz + 0  \keto$ and $\keto = 0 \ketz + 1 \keto$. We sometimes represent these states as column vectors: 
+\begin{align*}
+\ketz = \begin{bmatrix}
+1\\
+0
+\end{bmatrix}
+\text{ and }
+\keto = \begin{bmatrix}
+0\\
+1
+\end{bmatrix}
+\end{align*}
+
+Thus, we can represent a transformation on qubits by a 2-by-2 matrix where the first column is the image of \ketz and the second column is the image of \keto under the transformation. For example, the quantum NOT gate can be realized as a matrix:
+\begin{align*}
+X = \begin{bmatrix}
+0 & 1\\
+1 & 0 
+\end{bmatrix}
+\end{align*}
+This takes a state $\ketpsi = \alpha \ketz + \beta \keto$ and transforms it into $X \ketpsi  = \beta \ketz + \alpha \keto$. Alternatively, by matrix multiplication we see that
+\begin{align*}
+X \ketpsi = \begin{bmatrix}
+0 & 1\\
+1 & 0 
+\end{bmatrix}
+\begin{bmatrix}
+\alpha \\
+\beta
+\end{bmatrix} 
+= 
+\begin{bmatrix}
+\beta \\
+\alpha
+\end{bmatrix}.
+\end{align*}
+So, any transformation on a single qubit can be represented by a 2-by-2 matrix. What about the transformation that, when given \ketz or \keto, outputs an \textit{equal superposition} of \ketz and \keto ? We might represent that as follows:
+\begin{align*}
+\widehat{H} = \begin{bmatrix}
+1 & 1\\
+1 & 1 
+\end{bmatrix}
+\end{align*}
+There are a few problems with this transformation. First, applying this transformation $\widehat{H} \ketz = 1\ketz + 1\keto$, which means that $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1^2 + 1^2 \neq 1.$ So, we must \textit{normalize} the matrix, to get 
+\begin{align*}
+\widehat{H} = 
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+1 & 1\\
+1 & 1 
+\end{bmatrix}
+\end{align*}
+Now, applying the transformation to our basis vectors, we get $\widehat{H} \ketz =(\ketz + \keto)/\sqrt{2}$ and $\widehat{H} \keto =(\ketz + \keto)/\sqrt{2}$. There is still a problem with this transformation. All quantum transformations must be \textit{reversible}, but we have mapped the two basis vectors to the same state, so the transformation is not reversible. To fix this, we will simply negate one of the ones:
+\begin{align*}
+H = \hadamard
+\end{align*}
+This is called the \textit{Hadamard transform} or \textit{Hadamard gate}. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. Both of these states are in an equal superposition between \ketz and \keto. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
+
+The requirements that quantum transformations be reversible and normalized are encapsulated by the property that the matrix representation for any transformation be \textit{unitary}. That is, $U^{\dagger} U = I$ where $U^{\dagger}$ is the transpose of the complex conjugate of $U$ and $I$ is the 2-by-2 identity matrix. Within those requirements, we can construct any transformation we like. What about transforming multiple qubits?
+
+\subsection{Multiple Qubits}
+
+To represent multiple qubits, we expand our two quantum states to many using tensor products \footnote{See appendix on tensor products}. For example, in a two qubit system, we have the following basis states:
+$$ \ketz \otimes \ketz,~\ketz \otimes \keto,~\keto \otimes \ketz, \text{ and } \keto \otimes \keto.$$ 
+These four states can equivalently be written as:
+$$ \ket{00},~\ket{01},~\ket{10}, \text{ and } \ket{11}.$$
+Thus, any two-qubit state can be represented as a linear combination of these basis states, namely $\ket{\psi} = \alpha_{00}\ket{00}+ \alpha_{01}\ket{01} + \alpha_{10}\ket{10} + \alpha_{11}\ket{11}.$ In general, an $n$-qubit state can be represented as 
+\begin{equation*}
+\ket{\psi} = \sum_{i \in \Z_2^n} \alpha_{i}\ket{i},
+\end{equation*}
+where $i$ is the binary representation of the numbers $0, \ldots, n-1.$ The probability of observing a state \ket{i} upon measuring \ket{\psi} is $\lvert \alpha_{i} \rvert ^2.$ 
+
+We may measure qubits individually as well. For example, measuring just the first qubit gives us 0 with probability 
+\begin{equation*}
+ \sum_{i \in \Z_2^{n-1}} \lvert \alpha_{0i} \rvert ^2,
+\end{equation*}
+leaving the post-measurement state
+\begin{equation*}
+ \ket{\psi'} = \frac{\sum_{i \in \Z_2^{n-1}} \alpha_{0i} \ket{\alpha_{0i}}}{\sqrt{\sum_{i \in \Z_2^{n-1}} \lvert \alpha_{0i} \rvert ^2}}.
+\end{equation*}
+Something that follows from the above equation but which is not self-evident is the concept of \textit{entangled states}. Consider the following state:
+\begin{equation*}
+\ket{\beta_{00}} = \frac{\ket{00} + \ket{11}}{\sqrt{2}}
+\end{equation*}
+Suppose we measured the first qubit. We will observe \ket{0} with probability 1/2, and the resulting post-measurement state is: \ket{\beta_{00}'} = \ket{00} (by the equation above). How can this be? We only measured the first qubit, and yet, we now have information about both qubits. This is precisely because the state is entangled. Another example of an entangled state is:
+\begin{equation*}
+\ket{\beta_{01}} = \frac{\ket{01} + \ket{10}}{\sqrt{2}}
+\end{equation*}
+These two states, \ket{\beta_{00}} and \ket{\beta_{01}}, are the first two \textit{Bell states} or \textit{EPR pairs}. Quantum entanglement is a powerful computational tool and will be used in many quantum algorithms in the rest of the text. 
+
+Now that we have the means to represent an $n$-qubit state, the state transformations can be represented by $2^n$-by-$2^n$ matrices. In particular, the $n$-qubit Hadamard transform is $H^{\otimes n} = H \otimes H \otimes \ldots \otimes H$, i.e.~$n$ tensor products.
+
+\subsection{Summary}
+In summary, below are the main constraints that our quantum computations must abide by:
+\begin{itemize}
+\item After measuring a state, it collapses irreversibly to one of the basis states.
+\item Aside from measuring, all transformations on the qubits must be reversible and normalized, i.e.~the matrix representation must be unitary.
+\end{itemize}
+\end{document}
