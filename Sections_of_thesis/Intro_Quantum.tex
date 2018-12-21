@@ -184,6 +184,8 @@ And the CNOT, or controlled-NOT gate acts on two qubits by flipping the second q
 \end{bmatrix}
 \end{align}
 As you can see, by multiplying the CNOT matrix by the column vector $(a\quad b\quad c\quad d)$ this takes $a\ket{00} + b\ket{01} + c\ket{10} + d\ket{11}$ and transforms it into $a\ket{00} + b\ket{01} + c\ket{11} + d\ket{10}$, thereby swapping the amplitudes on the states $\ket{10}$ and $\ket{11}$, or equivalently ``flipping'' the second bit of the state if the first bit is a 1. 
+
+The \textit{gate complexity} of a unitary transformation is the minimum number of gates needed to implement the circuit. 
 \subsection{No-Cloning Theorem}
 
 Suppose my friend has a secret state \ket{\psi} that she wants me to have a copy of.  Classically, we could easily build a circuit to copy her state $x = 0$ or $x = 1$ without measuring it. We would simply initialize a temporary register to 0, and our circuit would write $x \oplus 0$, the XOR of $x$ and 0, to the destination register. 
@@ -217,7 +219,25 @@ However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\ps
 
 This is an important fundamental difference between the classical and quantum models of computation. We take for granted in classical computing that we can copy any unknown states, and much of classical computation relies upon this fact. 
 \subsection{Phase-kickback Trick}
+
+Suppose we have ``black-box access'' to some function $f$. That is, we can query $f$ on some input $x$ and it will compute $f(x)$. We record the output in a \textit{response register}, the second qubit in the example below; the first qubit is called the \textit{query register}. This can be modeled as the following unitary transformation:
+\begin{equation*}
+\ket{x, z} \xrightarrow{f} \ket{x, z \oplus f(x)}
+\end{equation*}
+Given $z$, we can deduce what $f(x)$ is by taking $z \oplus f(x) \oplus z = f(x)$, addition mod 2. This is essential to keeping the transformation unitary. 
+
+One common query method is using what is called the \textit{phase kickback trick}. The basic idea is that we initialize the response register to \Hminus so that both the query and response registers stay the same after the query, and the value of $f(x)$ is encapsulated by the phase of the state. More concretely, we have:
+\begin{align*}
+\ket{x} \otimes \Hminus 
+& = \ket{x} \otimes \frac{1}{\sqrt{2}}(\ketz - \keto)\\
+& = \frac{1}{\sqrt{2}}(\ket{x, 0} - \ket{x, 1}) \\
+& \xrightarrow{f} \frac{1}{\sqrt{2}}(\ket{x, f(x)} - \ket{x, 1 \oplus f(x)} \\
+& = \ket{x} \otimes \frac{1}{\sqrt{2}}\bigg(\ket{f(x)} - \ket{\overline{f(x)}}\bigg) \\
+& = (-1)^{f(x)} \ket{x} \otimes \ket{ -}.
+\end{align*}
+
 \subsection{Quantum Oracles}
+move to section on query complexity
 \subsection{Deustch-Josza Algorithm}
 \subsection{Big-$O$ Notation}
 
