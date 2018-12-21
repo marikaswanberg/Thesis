@@ -21,8 +21,10 @@
 \newcommand{\keto}{\ensuremath{\lvert 1\rangle}\xspace}
 \newcommand{\ket}[1]{\ensuremath{\lvert #1\rangle}\xspace}
 \newcommand{\ketpsi}{\ensuremath{|\psi\rangle}\xspace}
+\newcommand{\bra}[1]{\ensuremath{\langle #1\vert}\xspace}
 \newcommand{\Hplus}{\ensuremath{\lvert + \rangle}\xspace}
 \newcommand{\Hminus}{\ensuremath{\lvert- \rangle}\xspace}
+\newcommand{\inner}[2]{\ensuremath{\langle #1 \mid #2 \rangle}\xspace}
 \newlength{\minuslength}
 \settowidth{\minuslength}{$-$}
 \newcommand{\hadamard}{
@@ -40,16 +42,22 @@
 \begin{document}
 \section{Introduction to Quantum Computing} 
 
-Classical computers, i.e.~the computers that we all know and love, run on \textit{bits} or 1's and 0's. This is the fundamental unit of information in classical computers. In quantum computers, information is built upon an analagous concept, the \textit{quantum bit} or \textit{qubit}. We will discuss the defining properties of qubits, some of which may seem very different from those of bits. 
+In the following chapter, we will delve into the basics of quantum computing. Before proceeding, it is important to realize that quantum computing is a fundamentally different \textit{model of computation} than all computer systems currently on the market. Much like the first programmable computer was realized by Alan Turing far before he ever saw any practical realizations of his machines, we too study quantum computing at a time when only the most rudimentary quantum computers are available in practice.
 
-\subsection{Information Storage}
-In classical computing, each bit can be in one of two states--1 or 0.  We denote \textit{quantum states} by \ketz and \keto, pronounced ``\textit{ket zero}'' and ``\textit{ket one},'' respectively. This follows traditional \textit{Dirac notation}\footnote{See reference on notation}. Unlike classical bits, qubits can be in a \textit{superposition} between these two states. We describe a quantum state as follows: $\ketpsi = \alpha \ketz + \beta \keto$, where $\alpha$ and $\beta$ are complex numbers and $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1$. This describes a probability distribution over the quantum states \ketz and \keto with \textit{amplitudes} $\alpha$ and $\beta$. We can also think of \ketpsi as a vector in a two-dimensional complex vector space. The states \ketz and \keto form an orthonomal basis in this complex vector space and are called the \textit{computational basis states}.
+The quantum mechanical properties upon which quantum computers are based have been studied extensively by physicists; we will avoid discussing such details and instead take these properties for granted in order to focus on the information-theoretic behavior of this new model of computation. 
 
-So how can we know which state a bit or qubit is in? In classical computing, we can simply read the bit to determine whether it's a 0 or a 1. Qubits are a little trickier. We cannot read \ketpsi to determine its exact state, that is $\alpha$ and $\beta$. As soon as we measure \ketpsi, the superposition will collapse to either \ketz with probability $ \lvert \alpha \rvert ^2$ or \keto with probability $ \lvert \beta \rvert ^2$. In other words, \ketpsi is like a weighted coin that we can flip once to get either heads or tails, but we have no way to directly measure the bias in the coin. Unlike a coin, as soon as \ketpsi has been measured to reveal some quantum state, \ketpsi will permanently collapse to that state, i.e.~$\ketpsi = 1\ketz + 0 \keto$ or $\ketpsi = 0\ketz + 1\keto$. Every time we measure it thereafter, we will observe the same state that we measured the first time. In the coin analogy, it's like we have a weighted coin that we can flip once to reveal heads or tails, and every subsequent flip always yields the initial state that we flipped to.
+Due to the complex nature of quantum mechanics, there are a plethora of misconceptions about quantum computing. One of the most widespread is that quantum computers gain computational speedups by \textit{trying all possible solutions at once}. This is simply not true. Perhaps my favorite that I have heard upon starting my thesis is that \textit{quantum computers are like classical computers but in trinary}. False, we cannot efficiently simulate a quantum computer on a classical one. Lastly, probably most confusing is that \textit{quantum computers are faster at all tasks compared to classical computers}. Quantum computers are faster than classical computers at some tasks, such as searching an unstructured list, but they have the same asymptotic runtime\footnote{We will discuss what this means exactly later} as classical computers for other tasks. Now that I have outlined some common misconceptions, hopefully this introduction will help codify the true properties quantum computers. 
 
-You may be wondering why this is useful. It seems impossible that our fundamental unit of information in this model of computation is unknowable, immeasurable. The beauty of quantum computation lies in the \textit{manipulation} of these immeasurable qubits such that by the time we measure them at the end, the result will inform us of the state they started in. More on that later. 
+\subsection{Information Representation}
+Classical computers, i.e.~the computers that we all know and love, run on \textit{bits} or 1's and 0's. This is the fundamental unit of information in classical computers. In quantum computers, information is built upon an analagous concept, the \textit{quantum bit} or \textit{qubit}. We will discuss the defining properties of qubits, some of which may seem very different from those of bits.
 
-\subsection{Special States \Hplus and \Hminus}
+In classical computing, each bit can be in one of two states--1 or 0.  We denote \textit{quantum states} by \ketz and \keto, pronounced ``\textit{ket zero}'' and ``\textit{ket one},'' respectively. This follows traditional \textit{Dirac notation}\footnote{See reference on notation}. Unlike classical bits, qubits can be in a \textit{superposition} between these two states. We describe a quantum state as follows: $\ketpsi = \alpha \ketz + \beta \keto$, where $\alpha$ and $\beta$ are complex numbers and $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1$. This describes a probability distribution over the quantum states \ketz and \keto with \textit{amplitudes} $\alpha$ and $\beta$. We can also think of \ketpsi as a vector in a two-dimensional complex vector space, say $\C^2$. The states \ketz and \keto form an orthonomal basis in this complex vector space and are called the \textit{computational basis states}.
+
+So how can we know which state a bit or qubit is in? In classical computing, we can simply read the bit to determine whether it's a 0 or a 1. Qubits are a little trickier. We cannot read \ketpsi to determine its exact amplitudes, $\alpha$ and $\beta$. As soon as we measure \ketpsi, the superposition will collapse to either \ketz with probability $ \lvert \alpha \rvert ^2$ or \keto with probability $ \lvert \beta \rvert ^2$. In other words, \ketpsi is like a weighted coin that we can flip once to get either heads or tails, but we have no way to directly measure the bias in the coin. Unlike a coin, as soon as \ketpsi has been measured to reveal some quantum state, \ketpsi will permanently collapse to that state, i.e.~$\ketpsi = 1\ketz + 0 \keto$ or $\ketpsi = 0\ketz + 1\keto$. Every time we measure it thereafter, we will observe the same state that we measured the first time. In the coin analogy, it's like we have a weighted coin that we can flip once to reveal heads or tails, and every subsequent flip always yields the initial state that we flipped to.
+
+You may be wondering why this is useful. It seems impossible to build a model of computation on a fundamental unit of information that is unknowable, immeasurable. The beauty of quantum computation lies in the \textit{manipulation} of these immeasurable qubits such that by the time we measure them at the end, the result will inform us of the state they started in. Simply measuring the qubits before doing any transformations is fundamentally the same as  running a random number generator on a classical computer and trying a random possible solution. Obviously, this is not very useful, so we must \textit{transform} the qubits to say anything intelligent about the end result that we measure.
+
+\subsection{Quantum Logic Gates}
 
 As we already glossed over, $\ketz = 1 \ketz + 0  \keto$ and $\keto = 0 \ketz + 1 \keto$. We sometimes represent these states as column vectors: 
 \begin{align*}
@@ -87,7 +95,7 @@ X \ketpsi = \begin{bmatrix}
 \alpha
 \end{bmatrix}.
 \end{align*}
-So, any transformation on a single qubit can be represented by a 2-by-2 matrix. What about the transformation that, when given \ketz or \keto, outputs an \textit{equal superposition} of \ketz and \keto ? We might represent that as follows:
+So, any transformation on a single qubit can be represented by a 2-by-2 matrix. What about the transformation that, when given \ketz or \keto, outputs an \textit{equal superposition} of \ketz and \keto ? This would essentially give us a fair coin. We might represent that as follows:
 \begin{align*}
 \widehat{H} = \begin{bmatrix}
 1 & 1\\
@@ -103,13 +111,22 @@ There are a few problems with this transformation. First, applying this transfor
 1 & 1 
 \end{bmatrix}
 \end{align*}
-Now, applying the transformation to our basis vectors, we get $\widehat{H} \ketz =(\ketz + \keto)/\sqrt{2}$ and $\widehat{H} \keto =(\ketz + \keto)/\sqrt{2}$. There is still a problem with this transformation. All quantum transformations must be \textit{reversible}, but we have mapped the two basis vectors to the same state, so the transformation is not reversible. To fix this, we will simply negate one of the ones:
+Now, applying the transformation to our basis vectors, we get $\widehat{H} \ketz =(\ketz + \keto)/\sqrt{2}$ and $\widehat{H} \keto =(\ketz + \keto)/\sqrt{2}$. There is still a problem with this transformation. All quantum transformations must be \textit{reversible}, but we have mapped the two basis vectors to the same state, so the transformation is not reversible. To fix this, we will simply change the image of this transformation under \keto:
 \begin{align*}
 H = \hadamard
 \end{align*}
-This is called the \textit{Hadamard transform} or \textit{Hadamard gate}. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. Both of these states are in an equal superposition between \ketz and \keto. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
+This is called the \textit{Hadamard transform} or \textit{Hadamard gate}. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. Both of these states are in an equal superposition between \ketz and \keto, but they are distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
 
-The requirements that quantum transformations be reversible and normalized are encapsulated by the property that the matrix representation for any transformation be \textit{unitary}. That is, $U^{\dagger} U = I$ where $U^{\dagger}$ is the transpose of the complex conjugate of $U$ and $I$ is the 2-by-2 identity matrix. Within those requirements, we can construct any transformation we like. What about transforming multiple qubits?
+\bigskip
+
+\textbf{Definition.}
+
+$$\Hplus = (\ketz + \keto)/\sqrt{2} \text{ and }$$
+$$\Hminus = (\ketz - \keto)/\sqrt{2}.$$
+
+\bigskip
+
+The requirements that quantum transformations be reversible and normalized are encapsulated by the property that the matrix representation for any transformation must be \textit{unitary}. That is, $U^{\dagger} U = I$ where $U^{\dagger}$ is the transpose of the complex conjugate of $U$ and $I$ is the 2-by-2 identity matrix. Within those requirements, we can construct any transformation we like. What about transforming multiple qubits?
 
 \subsection{Multiple Qubits}
 
@@ -131,6 +148,9 @@ leaving the post-measurement state
 \begin{equation*}
  \ket{\psi'} = \frac{\sum_{i \in \Z_2^{n-1}} \alpha_{0i} \ket{\alpha_{0i}}}{\sqrt{\sum_{i \in \Z_2^{n-1}} \lvert \alpha_{0i} \rvert ^2}}.
 \end{equation*}
+
+\subsection{Entangled States}
+
 Something that follows from the above equation but which is not self-evident is the concept of \textit{entangled states}. Consider the following state:
 \begin{equation*}
 \ket{\beta_{00}} = \frac{\ket{00} + \ket{11}}{\sqrt{2}}
@@ -142,11 +162,47 @@ Suppose we measured the first qubit. We will observe \ket{0} with probability 1/
 These two states, \ket{\beta_{00}} and \ket{\beta_{01}}, are the first two \textit{Bell states} or \textit{EPR pairs}. Quantum entanglement is a powerful computational tool and will be used in many quantum algorithms in the rest of the text. 
 
 Now that we have the means to represent an $n$-qubit state, the state transformations can be represented by $2^n$-by-$2^n$ matrices. In particular, the $n$-qubit Hadamard transform is $H^{\otimes n} = H \otimes H \otimes \ldots \otimes H$, i.e.~$n$ tensor products.
+\subsection{Universal Quantum Gate}
+
+\subsection{No-Cloning Theorem}
+
+Suppose my friend has a secret state \ket{\psi} that she wants me to have a copy of.  Classically, we could easily build a circuit to copy her state $x = 0$ or $x = 1$ without measuring it. We would simply initialize a temporary register to 0, and our circuit would write $x \oplus 0$, the XOR of $x$ and 0, to the destination register. 
+
+The quantum case is a bit trickier. Suppose \ket{\psi} is only known to our friend. We wish to copy this exact state into a target slot, which starts out in some standard known state \ket{s}. Thus, the initial state of our copying machine is $\ket{\psi} \otimes \ket{s}$. Now, we apply some unitary operation $U$ to these registers to obtain
+\begin{equation}
+\ket{\psi} \otimes \ket{s} \xrightarrow{U} U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
+\end{equation}
+Now, suppose this quantum copying circuit works for two arbitrary states \ket{\psi} and \ket{\phi}. Then, we have
+\begin{equation}
+U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
+\end{equation}
+and
+\begin{equation}
+U(\ket{\phi} \otimes \ket{s}) = \ket{\phi} \otimes \ket{\phi}
+\end{equation}
+Now, taking the inner product of these two equations gives\footnote{Check this math???} 
+\begin{align}
+(\bra{\psi} \otimes \bra{s})U^{\dagger}U \ket{\phi} \otimes \ket{s}
+& = \inner{\psi}{\phi} \otimes \inner{s}{s} \otimes I \\
+ & = \inner{\psi}{\phi}\\
+& = (\bra{\psi}\otimes \bra{\psi})(\ket{\phi}\otimes \ket{\phi}) \\
+& = \inner{\psi}{\phi} \otimes \inner{\psi}{\phi} \\
+& = (\inner{\psi}{\phi})^2
+\end{align}
+Critically, lines (5) and (8) give
+\begin{equation*}
+ \inner{\psi}{\phi} = (\inner{\psi}{\phi})^2.
+\end{equation*}
+However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\psi}$ is orthogonal to $\ket{\phi}$. Thus, a general cloning device can only clone states that are orthogonal, which means that we cannot clone states which we know nothing about. 
+\subsection{Phase-kickback Trick}
+\subsection{Quantum Oracles}
+\subsection{Deustch-Josza Algorithm}
+\subsection{Big-$O$ Notation}
 
 \subsection{Summary}
 In summary, below are the main constraints that our quantum computations must abide by:
 \begin{itemize}
 \item After measuring a state, it collapses irreversibly to one of the basis states.
-\item Aside from measuring, all transformations on the qubits must be reversible and normalized, i.e.~the matrix representation must be unitary.
+\item Aside from measurement, all transformations on the qubits must be reversible and normalized, i.e.~the matrix representation must be unitary.
 \end{itemize}
 \end{document}
