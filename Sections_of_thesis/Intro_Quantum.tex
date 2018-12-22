@@ -9,7 +9,10 @@
 
 \usepackage{enumitem}
 \usepackage{centernot}
+\usepackage[utf8]{inputenc}
+\usepackage[english]{babel}
 
+\newtheorem{theorem}{Theorem}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -239,7 +242,53 @@ One common query method is using what is called the \textit{phase kickback trick
 \subsection{Quantum Oracles}
 move to section on query complexity
 \subsection{Deustch-Josza Algorithm}
-\subsection{Big-$O$ Notation}
+\subsection{Asymptotic Runtime Complexity}
+
+Computer scientists are very interested in how long their algorithm or function will take to run on given inputs. The crudest, most theoretical, runtime analysis looks at the \textit{asymptotic runtime} of an algorithm. In practice, the actual runtime can be affected significantly by any number of factors like the operating system and memory  latency, but for our purposes the 
+\textit{asymptotic} runtime is the only metric we will care about (particularly because current existent quantum computers are rather rudimentary).
+
+The basic idea behind asymptotic runtime analysis is that we consider how long our algorithm takes to compute as a function of the \textit{length} (number of bits) of the input, where the time interval is calculated as the number of basic operations required. Classically, the basic operations are generally considered to be the ones that the Arithmetic Logic Unit (ALU) in the CPU can do. These include: addition, subtraction, multiplication, division, boolean comparisons, and variable assignment. Quantumly, the basic operations are the same as above in addition to arbitrary unitary transformations and oracle queries (which take one time step). 
+
+Now that we have the basic idea, time to get technical. We define notions of relative asymptotic growth rates of functions: $O, \Omega, o, \omega$, and $\Theta$. We will define these notions rigorously below, but for all practical purposes, the following distinctions are sufficient. Suppose we have two functions $f(n)$ and $g(n)$. Then, 
+\begin{itemize}
+\item We say $f(n) = O(g(n))$,\textit{``$f$ is big-oh of $g$,''} if $f(n) \leq g(n)$ as $n$ gets large;
+\item $f(n) = o(g(n))$,\textit{``$f$ is little-oh of $g$,''} if $f(n) < g(n)$ (strictly) as $n$ gets large;
+\item $f(n) = \Omega(g(n))$,\textit{``$f$ is big-omega of $g$,''} if $f(n) \geq g(n)$ as $n \rightarrow \infty$;
+\item $f(n) = \omega(g(n))$,\textit{``$f$ is little-omega of $g$,''} if $f(n) > g(n)$ (strictly) as $n$ gets large.
+\item Lastly, $f(n) = \Theta(g(n))$, \textit{``$f$ is theta of $g$,''} if $f(n) = g(n)$ (up to constant factors) as $n$ gets large.
+\end{itemize}
+The above imprecise definitions are rigorous enough for our discussions; however, I present the formal definitions below for the overly pedantic or curious reader. 
+ 
+\begin{theorem}
+A function f(n) is O(g(n)), denoted f(n) = O(g(n)), if there exist $c>0, n_0>0$ such that
+$$f(n) \leq c g(n) \quad \forall n\geq n_0.$$
+\end{theorem}
+
+\begin{theorem}
+A function f(n) is o(g(n)), denoted f(n) = o(g(n)), if there exists $n_0>0$ such that for all $c>0$,
+$$f(n) < c g(n) \quad \forall n\geq n_0.$$
+\end{theorem}
+
+\begin{theorem}
+A function f(n) is $\Omega(g(n))$, denoted $f(n) = \Omega(g(n))$, if there exist $c>0, n_0>0$ such that
+$$f(n) \geq c g(n) \quad \forall n\geq n_0.$$
+\end{theorem}
+
+\begin{theorem}
+A function f(n) is $\omega(g(n))$, denoted $f(n) = \omega(g(n))$, if there exists $n_0>0$ such that for all $c>0$,
+$$f(n) > c g(n) \quad \forall n\geq n_0.$$
+\end{theorem}
+
+\begin{theorem}
+A function f(n) is $\Theta(g(n))$, denoted $f(n) = \Theta(g(n))$, if f(n) = O(g(n)) and g(n) = O(f(n)).
+\end{theorem}
+
+Determining the exact values of $n_0$ and $c$ is not necessary. Instead, we will present a few heuristics:
+\begin{enumerate}
+\item Constant factors don't matter. 
+\item Only the largest complexity class matters if we are adding terms.
+\end{enumerate}
+For example, $f(n)= 25n^3 + 170000n$ is $O(n^{17})$ because $n^3 \leq n^{17} $ as $n$ grows, and $f(n) = \Theta(n^3)$ because the $170000n$ doesn't matter as $n$ grows and we don't care about the constant factor of 25 either, and $f(n) = \omega(n^2)$, because $n^2 < n^3$ as $n$ goes to infinity.
 
 \subsection{Summary}
 In summary, below are the main constraints that our quantum computations must abide by:
