@@ -13,6 +13,7 @@
 \usepackage[english]{babel}
 
 \newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -45,5 +46,21 @@
 \begin{document}
 \section{Introduction to Coding Theory} 
 
+Coding theory, and specifically error-correcting codes, was developed to enable the reliable transmission of messages even over a noisy communication channel. One important distinction is that we are assuming the noise is \textit{non-adversarial}, that is, the codes we consider are not made to be cryptographically secure. Rather, the codes protect against random (unintentional) error. They are used in the classical setting, for example in CDs (if anyone still uses CDs) to prevent data loss in the event of a scratch and long-distance space communications with rovers and satellites. An interesting aspect of coding theory that we will not cover is that different codes have been optimized for different noise models.
+
+Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the theory of error-correcting codes.
+
+\subsection{Preliminaries}
+As was mentioned, we consider the scenario that we are transmitting a message over a noisy communication channel. More specifically, we will look at \textit{binary symmetric channels}.
+
+\begin{definition}[Binary Symmetric Channel] A binary symmetric channel is a classical channel that can transmit a string of 0's and 1's. If a bit $b$ is sent, $b$ will be flipped to $\lnot b$ with probability $p$, and $b$ will be transmitted correctly with probability $1-p$ where $p < \frac{1}{2}$.
+\end{definition}
+
+Note that if our binary symmetric channel flips bits with probability $p > 1/2$, we could easily create a channel with $p <1/2$ by negating every bit on the receiving or sending end. Additionally, note that if $p=1/2$, information-theoretically we have no way of recovering the message.
+
+In the following subsections we will investigate how to mitigate the information loss from these random errors.
+
+\subsection{Encoding and Decoding}
+The basic idea behind error-correcting codes is that we will systematically introduce redundancy to the message we want to send; this process is called \textit{encoding}.
 
 \end{document}
