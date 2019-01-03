@@ -56,11 +56,14 @@ As was mentioned, we consider the scenario that we are transmitting a message ov
 \begin{definition}[Binary Symmetric Channel] A binary symmetric channel is a classical channel that can transmit a string of 0's and 1's. If a bit $b$ is sent, $b$ will be flipped to $\lnot b$ with probability $p$, and $b$ will be transmitted correctly with probability $1-p$ where $p < \frac{1}{2}$.
 \end{definition}
 
-Note that if our binary symmetric channel flips bits with probability $p > 1/2$, we could easily create a channel with $p <1/2$ by negating every bit on the receiving or sending end. Additionally, note that if $p=1/2$, information-theoretically we have no way of recovering the message.
+This type of channel is \textit{binary} because we are transmitting bits, and it is \textit{symmetric} because there is an equal probability of a 0 flipping to a 1 and the reverse. Note that if our binary symmetric channel flips bits with probability $p > 1/2$, we could easily create a channel with $p <1/2$ by negating every bit on the receiving or sending end. Additionally, note that if $p=1/2$, it is  information-theoretically impossible to recover the message, so we don't consider this case and frankly it is dubious to even call that a communication channel.
 
-In the following subsections we will investigate how to mitigate the information loss from these random errors.
+In the following subsections we will investigate how to mitigate the information loss from these random errors in binary symmetric channels where $p<1/2$.
 
 \subsection{Encoding and Decoding}
 The basic idea behind error-correcting codes is that we will systematically introduce redundancy to the message we want to send; this process is called \textit{encoding}.
+
+\begin{definition}[Message, encoding] We will denote our message $m$ as $m_0m_1m_2 \ldots m_{k-1}$ where $m_i \in \{0,1\} \text{ for all }0 \leq i \leq k-1$. Next, we will denote the encoding of our message $m$, as determined by an encoding algorithm, $E(m) = u_0u_1u_2 \ldots u_{n-1}$ where $n > k$ and $u_i \in \{0,1\} \text{ for all }0 \leq i \leq n-1$. 
+\end{definition}
 
 \end{document}
