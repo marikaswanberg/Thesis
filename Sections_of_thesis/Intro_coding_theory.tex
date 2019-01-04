@@ -46,7 +46,7 @@
 \begin{document}
 \section{Introduction to Coding Theory} 
 
-Coding theory, and specifically error-correcting codes, was developed to enable the reliable transmission of messages even over a noisy communication channel. One important distinction is that we are assuming the noise is \textit{non-adversarial}, that is, the codes we consider are not made to be cryptographically secure. Rather, the codes protect against random (unintentional) error. They are used in the classical setting, for example in CDs (if anyone still uses CDs) to prevent data loss in the event of a scratch and long-distance space communications with rovers and satellites. An interesting aspect of coding theory that we will not cover is that different codes have been optimized for different noise models.
+Coding theory and error-correcting codes were developed to enable the reliable transmission of messages over noisy communication channels. One important distinction is that we are assuming the noise is \textit{non-adversarial}, that is, the codes we consider are not made to be cryptographically secure. Rather, the codes protect against random (unintentional) error. They are used in the classical setting, for example in CDs (if anyone still uses CDs) to prevent data loss in the event of a scratch and long-distance space communications with rovers and satellites. An interesting aspect of coding theory that we will not cover is that different codes have been optimized for different noise models.
 
 Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the theory of error-correcting codes.
 
@@ -63,7 +63,7 @@ In the following subsections we will investigate how to mitigate the information
 \subsection{Encoding and Decoding}
 The basic idea behind error-correcting codes is that we will systematically introduce redundancy to the message we want to send; this process is called \textit{encoding}.
 
-\begin{definition}[Message, encoding] We will denote our message $m$ as $m_0m_1m_2 \ldots m_{k-1}$ where $m_i \in \{0,1\} \text{ for all }0 \leq i \leq k-1$. Next, we will denote the encoding of our message $m$, as determined by an encoding algorithm, $E(m) = u_0u_1u_2 \ldots u_{n-1}$ where $n > k$ and $u_i \in \{0,1\} \text{ for all }0 \leq i \leq n-1$. 
+\begin{definition}[Message, encoding] We will denote our message $m$ as $m_0m_1m_2 \ldots m_{k-1}$ where $m_i \in \{0,1\} \text{ for all }0 \leq i \leq k-1$. Next, we will denote the encoding of our message $m$, called a codeword, $E(m) = u_0u_1u_2 \ldots u_{n-1}$ where $n > k$ and $u_i \in \{0,1\} \text{ for all }0 \leq i \leq n-1$. 
 \end{definition}
 
 \end{document}
