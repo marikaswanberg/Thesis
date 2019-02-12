@@ -6,6 +6,7 @@
 \usepackage{color}
 \usepackage[total={6in,8in}]{geometry}
 \usepackage{amsthm}
+\usepackage{graphicx}
 
 \usepackage{enumitem}
 \usepackage{centernot}
@@ -79,4 +80,5 @@ Nearest neighbor decoding relies on the minimum distance $d$ between any two cod
 Then, the minimum certificate that can exist between $x$ and $y$ is a set $S$ of size $n-(d-1) = n-d+1$. Since $d$ is the minimum distance for $\mathscr{C}$ , we can bound the minimum certificate size for any received codeword $r$ $, C_r(f) \leq n - d +1.$ Thus, the maximum certificate size $C_x(f)$ for all $x \in \{0,1\}^n$, i.e. the total certificate complexity of $\mathscr{C}$ is $n-d+1$.\\
 \end{proof}
 
+\includegraphics[scale=1, angle=270]{cert_comp_pic.jpg}
 \end{document}
