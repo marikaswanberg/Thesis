@@ -54,7 +54,7 @@ Block sensitivity is a lower bound on all query complexity measures (?)
 What does this mean in the context of error-correcting codes? We want to know the block sensitivity of $f$, our decoding algorithm. For linear decoding, we have $f: \{0,1\}^n \rightarrow \{0,1\}^k$ where the messages are of length $k$ and the codewords have $n-k$ check bits. 
 
 \begin{theorem}
-For linear codes $\mathscr{C} = [n,k]$ with minimum distance $d$, the decoding function $f: \{0,1\}^n \rightarrow \{0,1\}^k$ has a block sensitivity $$
+For linear codes $\mathscr{C} = [n,k]$ with minimum distance $d$, the nearest neighbor decoding function $f: \{0,1\}^n \rightarrow \{0,1\}^k$ has a block sensitivity $$
 bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}$$
 \end{theorem}
 
@@ -66,12 +66,17 @@ Our linear code has minimum distance $d$. By (theorem 2 in MacWilliams and Sloan
 
 For an input $x \in \{0,1\}^N$, a certificate is a set $S \subseteq \{1, \ldots, N\}$ with the property that the variables $x_i, i \in S$ determine the value of $f(x)$. 
  
-\begin{definition}[Certificate complexity] $S \subseteq \{1, \ldots, N\}$ is a certificate on an input $x$ if, for any $y \in \{0,1\}^N$ such that $x_i = y_i$, we have $f(x) = f(y)$. $C_x(f)$ is the minimum size $\lvert S \rvert$ of a certificate $S$ on input $x$. The certificate complexity $C(f)$ is the maximum of $C_x(f)$ over all $x\in \{0,1\}$.
+\begin{definition}[Certificate complexity] $S \subseteq \{1, \ldots, N\}$ is a certificate on an input $x$ if, for any $y \in \{0,1\}^N$ such that $x_i = y_i, i \in S$, we have $f(x) = f(y)$. $C_x(f)$ is the minimum size $\lvert S \rvert$ of a certificate $S$ on input $x$. The certificate complexity $C(f)$ is the maximum of $C_x(f)$ over all $x\in \{0,1\}$.
 \end{definition}
 
 \begin{theorem}
-
+For a linear code $\mathscr{C} = [n,k]$ with distance $d$, the nearest neighbor decoding function $f$ has certificate complexity $C(f) = n -d +1$.
 \end{theorem}
 
+\begin{proof}
+Nearest neighbor decoding relies on the minimum distance $d$ between any two codewords. Our code $\mathscr{C} $ has minimum distance $d$; thus, there exist received codewords $x$ and $y$ with distance $2 \cdot \lfloor \frac{1}{2}(d-1)\rfloor = d-1$ apart (centered around a codeword $u$) in which $f(x) = u = f(y)$. 
+
+Then, the minimum certificate that can exist between $x$ and $y$ is a set $S$ of size $n-(d-1) = n-d+1$. Since $d$ is the minimum distance for $\mathscr{C}$ , we can bound the minimum certificate size for any received codeword $r$ $, C_r(f) \leq n - d +1.$ Thus, the maximum certificate size $C_x(f)$ for all $x \in \{0,1\}^n$, i.e. the total certificate complexity of $\mathscr{C}$ is $n-d+1$.\\
+\end{proof}
 
 \end{document}
