@@ -11,6 +11,7 @@
 \usepackage{centernot}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
+\usepackage{mathrsfs}
 
 \newtheorem{theorem}{Theorem}
 \newtheorem{definition}{Definition}
@@ -44,11 +45,33 @@
 \author{Marika Swanberg}
 
 \begin{document}
-\section{kds} 
+\section{Block Sensitivity} 
+Block sensitivity is a lower bound on all query complexity measures (?)
 
+\begin{definition}[Block sensitivity] For an input $x\in \{0,1\}^N$ and a subset of variables $S \subseteq \{1, 2, \ldots, N\}$, $x^{(S)}$ is the input obtained from $x$ by changing all $x_i, i \in S$ to opposite values. The block sensitivity $bs(f)$ is the maximum $k$ for which there is an input $x \in \{0,1\}^N$ and pairwise disjoint subsets $S_1, \ldots, S_k \subseteq \{1, \ldots, N\}$ with $f(x) \neq f(x^{(S_i)})$ for all $1 \leq i \leq k$
+\end{definition}
 
+What does this mean in the context of error-correcting codes? We want to know the block sensitivity of $f$, our decoding algorithm. For linear decoding, we have $f: \{0,1\}^n \rightarrow \{0,1\}^k$ where the messages are of length $k$ and the codewords have $n-k$ check bits. 
 
-\subsection{dflsa}
+\begin{theorem}
+For linear codes $\mathscr{C} = [n,k]$ with minimum distance $d$, the decoding function $f: \{0,1\}^n \rightarrow \{0,1\}^k$ has a block sensitivity $$
+bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}$$
+\end{theorem}
+
+\begin{proof}
+Our linear code has minimum distance $d$. By (theorem 2 in MacWilliams and Sloane), the code can correct $\lfloor \frac{1}{2}(d-1) \rfloor$ errors. Thus, $f(x) = f(x^{(S)})$ where $\lvert S \rvert \leq \lfloor \frac{1}{2}(d-1) \rfloor$. Correct decoding is not guaranteed when $\lvert S \rvert > \lfloor \frac{1}{2}(d-1) \rfloor$. There are at most $n/(\lfloor \frac{1}{2}(d-1) \rfloor +1)$ pairwise disjoint sets of size $\lfloor \frac{1}{2}(d-1) \rfloor+ 1$ in $\{1, \ldots, n\}$, which could all potentially lead to decoding errors. Thus, $$bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}.$$\\
+\end{proof}
+
+\section{Certificate Complexity}
+
+For an input $x \in \{0,1\}^N$, a certificate is a set $S \subseteq \{1, \ldots, N\}$ with the property that the variables $x_i, i \in S$ determine the value of $f(x)$. 
+ 
+\begin{definition}[Certificate complexity] $S \subseteq \{1, \ldots, N\}$ is a certificate on an input $x$ if, for any $y \in \{0,1\}^N$ such that $x_i = y_i$, we have $f(x) = f(y)$. $C_x(f)$ is the minimum size $\lvert S \rvert$ of a certificate $S$ on input $x$. The certificate complexity $C(f)$ is the maximum of $C_x(f)$ over all $x\in \{0,1\}$.
+\end{definition}
+
+\begin{theorem}
+
+\end{theorem}
 
 
 \end{document}
