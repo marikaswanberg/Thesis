@@ -1,0 +1,10 @@
+\contentsline {chapter}{Chapter 1: Introduction to Quantum Computing}{1}
+\contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{3}
+\contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{5}
+\contentsline {chapter}{Chapter 4: Reed-Muller Codes}{7}
+\contentsline {chapter}{Chapter 5: Quantum Decoding Algorithm for Reed-Muller Codes}{9}
+\contentsline {chapter}{Conclusion}{11}
+\contentsline {section}{\numberline {6.1}More info}{11}
+\contentsline {chapter}{Appendix A: Tensors}{13}
+\contentsline {chapter}{Appendix B: Finite Geometries}{15}
+\contentsline {chapter}{References}{17}
