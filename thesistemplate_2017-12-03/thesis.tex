@@ -59,6 +59,7 @@
 \usepackage[english]{babel}
 
 \newtheorem{theorem}{Theorem}
+\newtheorem{definition}{Definition}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -120,8 +121,11 @@
 
 % The preface is optional
 % To remove it, comment it out or delete it.
-%    \chapter*{Preface}
-%	This is an example of a thesis setup to use the reed thesis document class.
+   \chapter*{Preface}
+Write some preface here.
+
+A note to thesis students: If you are reading this thesis in order to expand upon my work or study a related topic, I recommend learning the basics of quantum computing from \textit{Quantum Computation and Quantum Information} by Nielsen and Chuang, and also looking at the definitive reference on code theory, \textit{The Theory of Error-Correcting Codes} by MacWilliams and Sloane. The introduction that I provide is not by any means exhaustive. Additionally, exercise patience and care with these topics, as they are not intuitive even to the seasoned mathematician or computer scientist. 
+
 	
 	
 
@@ -243,15 +247,10 @@ H = \hadamard
 \end{align*}
 This is called the \textit{Hadamard transform} or \textit{Hadamard gate}. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. Both of these states are in an equal superposition between \ketz and \keto, but they are distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
 
-\bigskip
-
-\textbf{Definition.}
-
-$$\Hplus = (\ketz + \keto)/\sqrt{2} \text{ and }$$
-$$\Hminus = (\ketz - \keto)/\sqrt{2}.$$
-
-\bigskip
-
+\begin{definition}[Plus and Minus States] The following states (pronounced ``plus'' and ``minus'') will be used ubiquitously throughout this thesis in their shorthand form:
+$$\Hplus = \frac{1}{\sqrt{2}}(\ketz + \keto)$$
+$$\Hminus = \frac{1}{\sqrt{2}}(\ketz - \keto)$$
+\end{definition}
 The requirements that quantum transformations be reversible and normalized are encapsulated by the property that the matrix representation for any transformation must be \textit{unitary}. That is, $U^{\dagger} U = I$ where $U^{\dagger}$ is the transpose of the complex conjugate of $U$ and $I$ is the 2-by-2 identity matrix. Within those requirements, we can construct any transformation we like. What about transforming multiple qubits?
 
 \section{Multiple Qubits}
@@ -344,6 +343,31 @@ Line (5) holds because $s$ is normalized. Critically, lines (5) and (8) give
 However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\psi}$ is orthogonal to $\ket{\phi}$. Thus, a general cloning device can only clone states that are orthogonal, which means that we cannot clone states which we know nothing about. 
 
 This is an important fundamental difference between the classical and quantum models of computation. We take for granted in classical computing that we can copy any unknown states, and much of classical computation relies upon this fact. 
+
+\section{Quantum Oracles}
+
+Within any computational model, some computations are ``expensive'' for any number of reasons: they require large amounts of resources such as time, space, or circuitry. For this reason, one may wish to outsource such computations to third parties, which we will call \textit{oracles}. As the name would suggest, oracles may be queried on inputs, and magically in one time step will output the result of the computation on the input, for a particular function. More concretely, an oracle $\mathcal{O}_f$ outputs $f(x)$ when queried on the input $x$.
+
+Classical oracles are used throughout computer science theory to abstract computations and reason about algorithms and protocols. Quantum oracles differ  from classical oracles in significant ways. 
+
+\subsection{Quantum Queries}
+First, consider the action of the query. In order to ensure the reversibility of quantum queries, we must maintain two registers: a query register, and a response register. The query register contains the input $x$ on which we wish to query the oracle. This register remains untouched by the oracle. The response register has some initial state $\ket{r}$ and after the quantum query takes place, has the state $\ket{r\oplus f(x)}$ where $f$ is the function that the oracle computed. 
+
+\begin{definition}[Quantum Oracle Query] A quantum oracle has the following action on the query and response registers $\mathcal{O}_f : \ket{x, r} \rightarrow \ket{x, r \oplus f(x)}$.
+\end{definition}
+
+In addition to the query and response registers, quantum oracles have the special ability to take as input a \textit{superposition of queries} and output a \textit{superposition of responses}. More precisely, suppose we have a superposition of queries of length $n$ 
+\begin{equation*}
+\ket{x} = \sum_{i \in \Z_2^n} \alpha_i \ket{i}
+\end{equation*}
+
+and $n$ response registers $\ket{r} = \ket{r_1} \otimes \ldots \ket{r_n}$. Then, the query $\mathcal{O}(\ket{x, r})$ results in the following state
+\begin{equation*}
+\ket{x} = \sum_{i \in \Z_2^n} \alpha_i \ket{i, r_i \oplus f(i)}.
+\end{equation*}
+It is important to note that this only constitutes \textit{one} quantum query to the oracle.
+
+
 \section{Phase-kickback Trick}
 
 Suppose we have ``black-box access'' to some function $f$. That is, we can query $f$ on some input $x$ and it will compute $f(x)$. We record the output in a \textit{response register}, the second qubit in the example below; the first qubit is called the \textit{query register}. This can be modeled as the following unitary transformation:
@@ -362,12 +386,40 @@ One common query method is using what is called the \textit{phase kickback trick
 & = (-1)^{f(x)} \ket{x} \otimes \ket{ -}.
 \end{align*}
 
-\section{Quantum Oracles}
-move to section on query complexity
 \section{Deustch-Josza Algorithm}
-\section{Asymptotic Runtime Complexity}
+\section{A Note on Asymptotic Complexity}
 
-Computer scientists are very interested in how long their algorithm or function will take to run on given inputs. The crudest, most theoretical, runtime analysis looks at the \textit{asymptotic runtime} of an algorithm. In practice, the actual runtime can be affected significantly by any number of factors like the operating system and memory  latency, but for our purposes the 
+In this thesis, we will be studying the asymptotic complexity of various different metrics, including: runtime, query complexity, certificate complexity, block sensitivity, and perhaps circuit complexity\footnote{These complexity metrics will be defined later.}. Those who are unfamiliar with asymptotic complexity (also termed Landau-Bachmann notation in mathematics) should review the appendix on the topic. 
+
+
+\chapter{Introduction to Coding Theory}	
+
+
+\chapter{Introduction to Learning Theory}
+
+\chapter{Reed-Muller Codes}
+
+\chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
+
+\chapter*{Conclusion}
+         \addcontentsline{toc}{chapter}{Conclusion}
+	\chaptermark{Conclusion}
+	\markboth{Conclusion}{Conclusion}
+	\setcounter{chapter}{6}
+	\setcounter{section}{0}
+	
+Here's a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
+
+So, if you remove all that stuff because you don't like it to say ``Chapter 4: Conclusion'', then you have to manually add all the things \LaTeX\ would normally do for you. Maybe someday we'll write a new chapter macro that doesn't add ``Chapter X'' to the beginning of every chapter title.
+
+\section{More info}
+And here's some other random info: the first paragraph after a chapter title or section head \emph{shouldn't be} indented, because indents are to tell the reader that you're starting a new paragraph. Since that's obvious after a chapter or section title, proper typesetting doesn't add an indent there. 
+
+
+%If you feel it necessary to include an appendix, it goes here.
+    \appendix
+    	\chapter{Asymptotic Complexity}
+    	Computer scientists are very interested in how long their algorithm or function will take to run on given inputs. The crudest, most theoretical, runtime analysis looks at the \textit{asymptotic runtime} of an algorithm. In practice, the actual runtime can be affected significantly by any number of factors like the operating system and memory  latency, but for our purposes the 
 \textit{asymptotic} runtime is the only metric we will care about (particularly because current existent quantum computers are rather rudimentary).
 
 The basic idea behind asymptotic runtime analysis is that we consider how long our algorithm takes to compute as a function of the \textit{length} (number of bits) of the input, where the time interval is calculated as the number of basic operations required. Classically, the basic operations are generally considered to be the ones that the Arithmetic Logic Unit (ALU) in the CPU can do. These include: addition, subtraction, multiplication, division, boolean comparisons, and variable assignment. Quantumly, the basic operations are the same as above in addition to arbitrary unitary transformations and oracle queries (which take one time step). 
@@ -413,39 +465,7 @@ Determining the exact values of $n_0$ and $c$ is not necessary. Instead, we will
 \end{enumerate}
 For example, $f(n)= 25n^3 + 170000n$ is $O(n^{17})$ because $n^3 \leq n^{17} $ as $n$ grows, and $f(n) = \Theta(n^3)$ because the $170000n$ doesn't matter as $n$ grows and we don't care about the constant factor of 25 either, and $f(n) = \omega(n^2)$, because $n^2 < n^3$ as $n$ goes to infinity.
 
-\section{Summary}
-In summary, below are the main constraints that our quantum computations must abide by:
-\begin{itemize}
-\item After measuring a state, it collapses irreversibly to one of the basis states.
-\item Aside from measurement, all transformations on the qubits must be reversible and normalized, i.e.~the matrix representation must be unitary.
-\end{itemize}
 
-\chapter{Introduction to Coding Theory}	
-
-
-\chapter{Introduction to Learning Theory}
-
-\chapter{Reed-Muller Codes}
-
-\chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
-
-\chapter*{Conclusion}
-         \addcontentsline{toc}{chapter}{Conclusion}
-	\chaptermark{Conclusion}
-	\markboth{Conclusion}{Conclusion}
-	\setcounter{chapter}{6}
-	\setcounter{section}{0}
-	
-Here's a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
-
-So, if you remove all that stuff because you don't like it to say ``Chapter 4: Conclusion'', then you have to manually add all the things \LaTeX\ would normally do for you. Maybe someday we'll write a new chapter macro that doesn't add ``Chapter X'' to the beginning of every chapter title.
-
-\section{More info}
-And here's some other random info: the first paragraph after a chapter title or section head \emph{shouldn't be} indented, because indents are to tell the reader that you're starting a new paragraph. Since that's obvious after a chapter or section title, proper typesetting doesn't add an indent there. 
-
-
-%If you feel it necessary to include an appendix, it goes here.
-    \appendix
       \chapter{Tensors}
       \chapter{Finite Geometries}
 

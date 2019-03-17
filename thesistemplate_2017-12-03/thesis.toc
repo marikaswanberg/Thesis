@@ -4,19 +4,20 @@
 \contentsline {section}{\numberline {1.2}Quantum Logic Gates}{3}
 \contentsline {section}{\numberline {1.3}Multiple Qubits}{4}
 \contentsline {section}{\numberline {1.4}Entangled States}{5}
-\contentsline {section}{\numberline {1.5}Universal Quantum Gate}{5}
+\contentsline {section}{\numberline {1.5}Universal Quantum Gate}{6}
 \contentsline {section}{\numberline {1.6}No-Cloning Theorem}{6}
-\contentsline {section}{\numberline {1.7}Phase-kickback Trick}{7}
-\contentsline {section}{\numberline {1.8}Quantum Oracles}{8}
-\contentsline {section}{\numberline {1.9}Deustch-Josza Algorithm}{8}
-\contentsline {section}{\numberline {1.10}Asymptotic Runtime Complexity}{8}
-\contentsline {section}{\numberline {1.11}Summary}{10}
+\contentsline {section}{\numberline {1.7}Quantum Oracles}{7}
+\contentsline {subsection}{\numberline {1.7.1}Quantum Queries}{8}
+\contentsline {section}{\numberline {1.8}Phase-kickback Trick}{8}
+\contentsline {section}{\numberline {1.9}Deustch-Josza Algorithm}{9}
+\contentsline {section}{\numberline {1.10}A Note on Asymptotic Complexity}{9}
 \contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{11}
 \contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{13}
 \contentsline {chapter}{Chapter 4: Reed-Muller Codes}{15}
 \contentsline {chapter}{Chapter 5: Quantum Decoding Algorithm for Reed-Muller Codes}{17}
 \contentsline {chapter}{Conclusion}{19}
 \contentsline {section}{\numberline {6.1}More info}{19}
-\contentsline {chapter}{Appendix A: Tensors}{21}
-\contentsline {chapter}{Appendix B: Finite Geometries}{23}
-\contentsline {chapter}{Bibliography}{25}
+\contentsline {chapter}{Appendix A: Asymptotic Complexity}{21}
+\contentsline {chapter}{Appendix B: Tensors}{23}
+\contentsline {chapter}{Appendix C: Finite Geometries}{25}
+\contentsline {chapter}{Bibliography}{27}
