@@ -9,8 +9,8 @@
 \contentsline {section}{\numberline {1.7}Quantum Oracles}{7}
 \contentsline {subsection}{\numberline {1.7.1}Quantum Queries}{8}
 \contentsline {section}{\numberline {1.8}Phase-kickback Trick}{8}
-\contentsline {section}{\numberline {1.9}Deustch-Josza Algorithm}{9}
-\contentsline {section}{\numberline {1.10}A Note on Asymptotic Complexity}{9}
+\contentsline {section}{\numberline {1.9}Bernstein-Vazirani Algorithm}{9}
+\contentsline {section}{\numberline {1.10}A Note on Asymptotic Complexity}{10}
 \contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{11}
 \contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{13}
 \contentsline {chapter}{Chapter 4: Reed-Muller Codes}{15}

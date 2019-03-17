@@ -385,8 +385,29 @@ One common query method is using what is called the \textit{phase kickback trick
 & = \ket{x} \otimes \frac{1}{\sqrt{2}}\bigg(\ket{f(x)} - \ket{\overline{f(x)}}\bigg) \\
 & = (-1)^{f(x)} \ket{x} \otimes \ket{ -}.
 \end{align*}
+Since the response register remains unchanged, we will generally omit this from future computations, though technically it must be present to preserve the reversibility of the query. 
+\section{Bernstein-Vazirani Algorithm}
 
-\section{Deustch-Josza Algorithm}
+Now that we have seen a few tricks of the trade, we will dive into a quantum algorithm. The Bernstein-Vazirani algorithm forms the foundation for many of the algorithms in the rest of this thesis, so a solid grasp of this section will yield high dividends. 
+
+[CITATION TO VAZIRANI PAPER] The Bernstein-Vazirani algorithm solves the following problem: for $N = 2^n$, we are given $x \in \{0,1\}^N$ with the property that there exists some unknown $a \in \{0,1\}^n$ such that $x_i = i \cdot a$ mod 2. The goal is to find $a$. In other words, $x_i$ is the $i$th bit of the binary representation of $x$. 
+
+First, an overview of the algorithm: we will start in the state $\ketz^{\otimes n}$, the $n$-qubit zero state, and apply a $n$-qubit Hadamard transform to get an equal superposition of the states, i.e.~ $\Hplus^{\otimes n}$. Next, we perform a quantum query using the phase kickback trick to store the bits of $x$ in the phase of our state. Then, another Hadamard transform on all $n$ qubits. With a simple measurement, we obtain $a$ with probability 1. Now, for the details.
+
+\begin{align}
+ \ketz^{\otimes n}
+& \xrightarrow{H^{\otimes n}}\frac{1}{\sqrt{2^n}} \sum_{i \in \{0,1\}^n} \ket{i} \\
+& \xrightarrow{\mathcal{O}_x} \frac{1}{\sqrt{2^n}} \sum_{i \in \{0,1\}^n} (-1)^{x_i}\ket{i}\\
+& \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \{0,1\}^n} (-1)^{x_i} \sum_{j \in \{0,1\}^n} (-1)^{i \cdot j} \ket{j} \label{confusingline}\\
+& = \ket{a}
+\end{align}
+This computation looks a mess for the beginner, so let's try to make sense of it. The first three lines follow from the definitions of the functions (confused readers may need to review the defined action of $H$ and $\mathcal{O}$ with phase-kickback). The last step, however, is less clear-cut. Note that $(-1)^{x_i} = (-1)^{(i \cdot a) \text{ mod } 2} = (-1)^{(i \cdot a)}$, given by $x_i = (i \cdot a)$ mod 2 in the problem statement. Thus, we may manipulate \ref{confusingline} as follows:
+\begin{align}
+ \frac{1}{2^n} \sum_{i \in \{0,1\}^n} (-1)^{x_i} \sum_{j \in \{0,1\}^n} (-1)^{i \cdot j} \ket{j}
+& = \frac{1}{2^n} \sum_{i \in \{0,1\}^n} (-1)^{(i \cdot a)} \sum_{j \in \{0,1\}^n} (-1)^{i \cdot j} \ket{j} \\
+& = \frac{1}{2^n}  \sum_{j \in \{0,1\}^n}\sum_{i \in \{0,1\}^n} (-1)^{i \cdot(a + j)}  \ket{j} \label{equals_a}
+\end{align}
+Now, note that $(-1)^{i \cdot(a + j)}$ is equal to 1 if and only if $j = a$. Thus, the inner summation evaluates to $1/2^n$ when $j =a$ and zero otherwise. So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
 \section{A Note on Asymptotic Complexity}
 
 In this thesis, we will be studying the asymptotic complexity of various different metrics, including: runtime, query complexity, certificate complexity, block sensitivity, and perhaps circuit complexity\footnote{These complexity metrics will be defined later.}. Those who are unfamiliar with asymptotic complexity (also termed Landau-Bachmann notation in mathematics) should review the appendix on the topic. 
@@ -396,7 +417,7 @@ In this thesis, we will be studying the asymptotic complexity of various differe
 
 
 \chapter{Introduction to Learning Theory}
-
+Read Ronald de Wolf's thesis section on query complexity! pg. 193
 \chapter{Reed-Muller Codes}
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
