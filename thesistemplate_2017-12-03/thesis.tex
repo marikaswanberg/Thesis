@@ -1,4 +1,4 @@
-% This is the Reed College LaTeX thesis template. Most of the work 
+ % This is the Reed College LaTeX thesis template. Most of the work 
 % for the document class was done by Sam Noble (SN), as well as this
 % template. Later comments etc. by Ben Salzberg (BTS). Additional
 % restructuring and APA support by Jess Youngberg (JY).
@@ -245,7 +245,10 @@ Now, applying the transformation to our basis vectors, we get $\widehat{H} \ketz
 \begin{align*}
 H = \hadamard
 \end{align*}
-This is called the \textit{Hadamard transform} or \textit{Hadamard gate}. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. Both of these states are in an equal superposition between \ketz and \keto, but they are distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
+
+The quantum gate above ($H$) is called the \textit{Hadamard transform} or \textit{Hadamard gate}. We will precisely define this quantum gate later in this chapter, as it is absolutely critical to work in quantum algorithms. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. 
+
+Both of these states are in an equal superposition between \ketz and \keto, but they are distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
 
 \begin{definition}[Plus and Minus States] The following states (pronounced ``plus'' and ``minus'') will be used ubiquitously throughout this thesis in their shorthand form:
 $$\Hplus = \frac{1}{\sqrt{2}}(\ketz + \keto)$$
@@ -270,13 +273,13 @@ We may measure qubits individually as well. For example, measuring just the firs
  \sum_{i \in \Z_2^{n-1}} \lvert \alpha_{0i} \rvert ^2,
 \end{equation*}
 leaving the post-measurement state
-\begin{equation*}
+\begin{equation} \label{post_measurement}
  \ket{\psi'} = \frac{\sum_{i \in \Z_2^{n-1}} \alpha_{0i} \ket{\alpha_{0i}}}{\sqrt{\sum_{i \in \Z_2^{n-1}} \lvert \alpha_{0i} \rvert ^2}}.
-\end{equation*}
+\end{equation}
 
 \section{Entangled States}
 
-Something that follows from the above equation but which is not self-evident is the concept of \textit{entangled states}. Consider the following state:
+Something that follows from the post-measurement equation (\ref{post_measurement}) but which is not self-evident is the concept of \textit{entangled states}. Consider the following state:
 \begin{equation*}
 \ket{\beta_{00}} = \frac{\ket{00} + \ket{11}}{\sqrt{2}}
 \end{equation*}
@@ -287,6 +290,32 @@ Suppose we measured the first qubit. We will observe \ket{0} with probability 1/
 These two states, \ket{\beta_{00}} and \ket{\beta_{01}}, are the first two \textit{Bell states} or \textit{EPR pairs}. Quantum entanglement is a powerful computational tool and will be used in many quantum algorithms in the rest of the text. 
 
 Now that we have the means to represent an $n$-qubit state, the state transformations can be represented by $2^n$-by-$2^n$ matrices. In particular, the $n$-qubit Hadamard transform is $H^{\otimes n} = H \otimes H \otimes \ldots \otimes H$, i.e.~$n$ tensor products.
+
+\section{Hadamard Transform}
+
+As promised, a more precise definition of the Hadamard transform follows. This is by far the most important unitary transformation in the field of quantum algorithms.
+
+\begin{definition}[Hadamard Transform] The n-qubit Hadamard transform, $H^{\otimes n}$ acts on a state $\ket{\psi}$ as follows:
+\begin{equation*}
+H^{\otimes n} \ket{\psi} = \frac{1}{\sqrt{2^n}} \sum_{j \in \{0,1\}^n} (-1)^{\psi \cdot j} \ket{j}
+\end{equation*}
+where $\psi$ and $j$ are $n$-bit binary numbers.
+\end{definition}
+Upon first glance, this formula is quite uninviting, so I will provide a quick guide for some common states. 
+\begin{align*}
+& H^{\otimes n} \ketz^{\otimes n} = \Hplus^{\otimes n} \\
+& H^{\otimes n} \keto^{\otimes n} = \Hminus^{\otimes n} \\
+\end{align*}
+Since $H = H^{-1}$, we also have that
+\begin{align*}
+& H^{\otimes n} \Hplus^{\otimes n} =  \ketz^{\otimes n} \\
+& H^{\otimes n} \Hminus^{\otimes n} = \keto^{\otimes n}. \\
+\end{align*}
+This concludes the section on the Hadamard transform, though the careful (or confused) reader will find that they will have to refer back to this section in the coming chapters as the Hadamard transform is central to this thesis. 
+
+\section{Phase}
+A concept which we have 
+
 \section{Universal Quantum Gate}
 In classical computation, there are three basic logic gates: NOT, AND, and OR. We can combine these gates to represent any possible logical expression. Furthermore, the NAND gate and the NOR gate, which we get from taking the negation (NOT) of the output of AND and OR respectively, are said to be \textit{universal gates}. This means that we can construct the three basic logic gates just from NAND gates or just from NOR gates. So, NAND and NOR are universal in that any logical expression can be represented with just NAND or NOR circuits. This is very useful in practice because NAND gates are very cheap to construct, so using only NANDs can keep the cost of a computer chip down.
 
@@ -311,6 +340,7 @@ And the CNOT, or controlled-NOT gate acts on two qubits by flipping the second q
 As you can see, by multiplying the CNOT matrix by the column vector $(a\quad b\quad c\quad d)^\intercal$ this takes $a\ket{00} + b\ket{01} + c\ket{10} + d\ket{11}$ and transforms it into $a\ket{00} + b\ket{01} + c\ket{11} + d\ket{10}$, thereby swapping the amplitudes on the states $\ket{10}$ and $\ket{11}$, or equivalently ``flipping'' the second bit of the state if the first bit is a 1. 
 
 The \textit{gate complexity} of a unitary transformation is the minimum number of gates needed to implement the circuit. 
+
 \section{No-Cloning Theorem}
 
 Suppose my friend has a secret state \ket{\psi} that she wants me to have a copy of.  Classically, we could easily build a circuit to copy her state $x = 0$ or $x = 1$ without measuring it. We would simply initialize a temporary register to 0, and our circuit would write $x \oplus 0$, the XOR of $x$ and 0, to the destination register. 
