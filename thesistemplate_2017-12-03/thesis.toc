@@ -6,11 +6,11 @@
 \contentsline {section}{\numberline {1.4}Entangled States}{5}
 \contentsline {section}{\numberline {1.5}Hadamard Transform}{6}
 \contentsline {section}{\numberline {1.6}Phase}{6}
-\contentsline {section}{\numberline {1.7}Universal Quantum Gate}{6}
-\contentsline {section}{\numberline {1.8}No-Cloning Theorem}{7}
-\contentsline {section}{\numberline {1.9}Quantum Oracles}{8}
+\contentsline {section}{\numberline {1.7}Universal Quantum Gate}{7}
+\contentsline {section}{\numberline {1.8}No-Cloning Theorem}{8}
+\contentsline {section}{\numberline {1.9}Quantum Oracles}{9}
 \contentsline {subsection}{\numberline {1.9.1}Quantum Queries}{9}
-\contentsline {section}{\numberline {1.10}Phase-kickback Trick}{9}
+\contentsline {section}{\numberline {1.10}Phase-kickback Trick}{10}
 \contentsline {section}{\numberline {1.11}Bernstein-Vazirani Algorithm}{10}
 \contentsline {section}{\numberline {1.12}A Note on Asymptotic Complexity}{11}
 \contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{13}

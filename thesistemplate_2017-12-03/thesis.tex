@@ -314,7 +314,11 @@ Since $H = H^{-1}$, we also have that
 This concludes the section on the Hadamard transform, though the careful (or confused) reader will find that they will have to refer back to this section in the coming chapters as the Hadamard transform is central to this thesis. 
 
 \section{Phase}
-A concept which we have 
+Up to this point, we have used the term \textit{phase} slightly ambiguously. The exact meaning of the word differs depending on context, so we will flesh these out. In fact, some of the original results in this thesis puzzled both student and adviser until we revisited the exact distinction between \textit{global phase} and \textit{relative phase}.
+
+Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$,\footnote{HOW TO FORMAT EULERS NUMBER} where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two phases are equivalent up to their \textit{global phase shift}. As a thought experiment, one may wonder what happens upon measuring the two states. Suppose $M_x$ is our measurement operator. Then, the probabilities for $x$ occurring upon measurement are: $\bra{\psi}M_x^\dagger M_x \ket{\psi}$ and $\bra{\psi}e^{-i\theta}M_x^\dagger M_x e^{i\theta}\ket{\psi} = \bra{\psi}M_x^\dagger M_x \ket{\psi}.$ So, the two states are indistinguishable with respect to measurements. 
+
+The other notion of phase that will come up is \textit{relative phase}. Consider the states $\Hplus = (\ketz + \keto)/\sqrt{2}$ and $\Hminus = (\ketz- \keto)/\sqrt{2}$. These two states have the same \textit{magnitude} on their amplitudes (i.e.~$1/\sqrt{2}$) on both $\ketz$ and $\keto$. Thus, they have the same \textit{relative phase}. However, we can distinguish between the states $\Hplus$ and $\Hminus$ if we measure in 
 
 \section{Universal Quantum Gate}
 In classical computation, there are three basic logic gates: NOT, AND, and OR. We can combine these gates to represent any possible logical expression. Furthermore, the NAND gate and the NOR gate, which we get from taking the negation (NOT) of the output of AND and OR respectively, are said to be \textit{universal gates}. This means that we can construct the three basic logic gates just from NAND gates or just from NOR gates. So, NAND and NOR are universal in that any logical expression can be represented with just NAND or NOR circuits. This is very useful in practice because NAND gates are very cheap to construct, so using only NANDs can keep the cost of a computer chip down.
