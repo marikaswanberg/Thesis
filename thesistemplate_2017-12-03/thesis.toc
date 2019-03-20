@@ -15,11 +15,35 @@
 \contentsline {section}{\numberline {1.12}A Note on Asymptotic Complexity}{11}
 \contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{13}
 \contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{15}
-\contentsline {chapter}{Chapter 4: Reed-Muller Codes}{17}
-\contentsline {chapter}{Chapter 5: Quantum Decoding Algorithm for Reed-Muller Codes}{19}
-\contentsline {chapter}{Conclusion}{21}
-\contentsline {section}{\numberline {6.1}More info}{21}
-\contentsline {chapter}{Appendix A: Asymptotic Complexity}{23}
-\contentsline {chapter}{Appendix B: Tensors}{25}
-\contentsline {chapter}{Appendix C: Finite Geometries}{27}
-\contentsline {chapter}{Bibliography}{29}
+\contentsline {section}{\numberline {3.1}Basics of Concept Learning}{15}
+\contentsline {section}{\numberline {3.2}Certificate Complexity}{15}
+\contentsline {section}{\numberline {3.3}Block Sensitivity}{15}
+\contentsline {chapter}{Chapter 4: Simplex Code}{17}
+\contentsline {section}{\numberline {4.1}Encoding}{17}
+\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{17}
+\contentsline {section}{\numberline {4.3}Rosbustness to Errors Metric}{17}
+\contentsline {chapter}{Chapter 5: Reed-Muller Codes}{19}
+\contentsline {section}{\numberline {5.1}Boolean Functions}{19}
+\contentsline {section}{\numberline {5.2}Encoding}{19}
+\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{19}
+\contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{21}
+\contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{21}
+\contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{21}
+\contentsline {section}{\numberline {6.3}Stateless Noisy Oracle}{21}
+\contentsline {chapter}{Conclusion}{23}
+\contentsline {section}{\numberline {6.1}More info}{23}
+\contentsline {chapter}{Appendix A: Asymptotic Complexity}{25}
+\contentsline {chapter}{Appendix B: Tensors}{27}
+\contentsline {chapter}{Appendix C: Finite Geometries}{29}
+\contentsline {chapter}{Appendix D: TODO List}{31}
+\contentsline {section}{\numberline {D.1}Chapter 1: Quantum}{31}
+\contentsline {section}{\numberline {D.2}Chapter 2: Coding Theory}{31}
+\contentsline {section}{\numberline {D.3}Chapter 3: Learning Theory}{31}
+\contentsline {section}{\numberline {D.4}Chapter 4: Simplex Code}{31}
+\contentsline {section}{\numberline {D.5}Chapter 5: Reed-Muller Codes}{31}
+\contentsline {section}{\numberline {D.6}Chapter 6: Quantum Decoding for RM Codes}{31}
+\contentsline {section}{\numberline {D.7}Appendices}{32}
+\contentsline {subsection}{\numberline {D.7.1}Asymptotic Complexity}{32}
+\contentsline {subsection}{\numberline {D.7.2}Tensors}{32}
+\contentsline {subsection}{\numberline {D.7.3}Finite Geometries}{32}
+\contentsline {chapter}{Bibliography}{33}
