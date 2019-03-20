@@ -22,8 +22,9 @@
 \contentsline {section}{\numberline {3.3}Block Sensitivity}{15}
 \contentsline {chapter}{Chapter 4: Simplex Code}{17}
 \contentsline {section}{\numberline {4.1}Encoding}{17}
-\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{17}
-\contentsline {section}{\numberline {4.3}Rosbustness to Errors Metric}{17}
+\contentsline {subsection}{\numberline {4.1.1}Example}{18}
+\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{18}
+\contentsline {section}{\numberline {4.3}Rosbustness to Errors Metric}{18}
 \contentsline {chapter}{Chapter 5: Reed-Muller Codes}{19}
 \contentsline {section}{\numberline {5.1}Boolean Functions}{19}
 \contentsline {section}{\numberline {5.2}Encoding}{19}

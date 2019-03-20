@@ -479,8 +479,31 @@ Read Ronald de Wolf's thesis section on query complexity! pg. 193
 \section{Block Sensitivity}
 
 \chapter{Simplex Code}
+One particularly interesting linear code is the simplex code. This is a special case of the Reed-Muller codes we will discuss later. The encoding and decoding algorithms are quite simple, so this is our starting point for further analyzing some of the error-correcting properties of the quantum decoding algorithm.
 \section{Encoding}
+To compute the $i$-th bit of the codeword for a message $m$, take $c_i =i_2 \cdot m$ mod 2, where $i_2$ is the binary representation of the number $i$. Thus, a codeword $c$ for a message $m$ is defined: 
+\begin{equation*}
+c_1 \ldots c_{2^n} = 1_2 \cdot m ||2_2 \cdot m || \ldots ||(2^n)_2 \cdot m
+\end{equation*}
+computing all of the inner products modulo 2.
+\subsection{Example}
+Suppose $n=3$. Then, the encoding of the message $m = 010$ is:
+\begin{align*}
+&c_1 = (0,0,0) \cdot (0,1,0) = 0\\
+&c_2 = (0,0,1) \cdot (0,1,0) = 0\\
+&c_3 = (0,1,0) \cdot (0,1,0) = 1\\
+&c_4 = (0,1,1) \cdot (0,1,0) = 1\\
+&c_5 = (1,0,0) \cdot (0,1,0) = 0\\
+&c_6 = (1,0,1) \cdot (0,1,0) = 0\\
+&c_7 = (1,1,0) \cdot (0,1,0) = 1\\
+&c_8 = (1,1,1) \cdot (0,1,0) = 1\\
+\end{align*}
+Thus, $c = 00110011$ for that message. 
+
+Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $n$ has a codeword of length $2^n$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact.
+
 \section{Quantum Decoding Algorithm}
+The quantum decoding algorithm for the simplex code is very pleasing. The first key observation is that the generating matrix for the simplex code is 
 \section{Rosbustness to Errors Metric}
 
 \chapter{Reed-Muller Codes}
