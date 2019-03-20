@@ -14,6 +14,8 @@
 \contentsline {section}{\numberline {1.11}Bernstein-Vazirani Algorithm}{10}
 \contentsline {section}{\numberline {1.12}A Note on Asymptotic Complexity}{11}
 \contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{13}
+\contentsline {section}{\numberline {2.1}Preliminaries}{13}
+\contentsline {section}{\numberline {2.2}Encoding and Decoding}{14}
 \contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{15}
 \contentsline {section}{\numberline {3.1}Basics of Concept Learning}{15}
 \contentsline {section}{\numberline {3.2}Certificate Complexity}{15}
