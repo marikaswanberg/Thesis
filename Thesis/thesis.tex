@@ -122,11 +122,7 @@
 % The preface is optional
 % To remove it, comment it out or delete it.
    \chapter*{Preface}
-Write some preface here.
 
-A note to thesis students: If you are reading this thesis in order to expand upon my work or study a related topic, I recommend learning the basics of quantum computing from \textit{Quantum Computation and Quantum Information} by Nielsen and Chuang, and also looking at the definitive reference on code theory, \textit{The Theory of Error-Correcting Codes} by MacWilliams and Sloane. The introduction that I provide is not by any means exhaustive. Additionally, exercise patience and care with these topics, as they are not intuitive even to the seasoned mathematician or computer scientist. 
-
-	
 	
 
     \chapter*{List of Abbreviations}
@@ -503,7 +499,7 @@ Thus, $c = 00110011$ for that message.
 Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $n$ has a codeword of length $2^n$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact.
 
 \section{Quantum Decoding Algorithm}
-The quantum decoding algorithm for the simplex code is very pleasing. The first key observation is that the generating matrix for the simplex code is 
+The quantum decoding algorithm for the simplex code is very pleasing. The first key observation is that the generating matrix for the simplex code is, in a sense, ``equivalent'' to the Hadamard matrix. 
 \section{Rosbustness to Errors Metric}
 
 \chapter{Reed-Muller Codes}
