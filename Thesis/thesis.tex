@@ -52,14 +52,20 @@
 \usepackage{color}
 \usepackage[total={6in,8in}]{geometry}
 \usepackage{amsthm}
-
+\usepackage{mathrsfs}
 \usepackage{enumitem}
 \usepackage{centernot}
 \usepackage[utf8]{inputenc}
 \usepackage[english]{babel}
 
-\newtheorem{theorem}{Theorem}
-\newtheorem{definition}{Definition}
+% theorem, definition, remark, and example formatting
+\theoremstyle{definition}
+\newtheorem{theorem}{Theorem}[chapter]
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+
+%Commands
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\Q}{\mathbb{Q}}
@@ -123,7 +129,17 @@
 % To remove it, comment it out or delete it.
    \chapter*{Preface}
 
+	\begin{theorem}
+	a
+	\end{theorem}
 	
+	\begin{definition}
+	b
+	\end{definition}
+	
+	\begin{example}
+	c
+	\end{example}
 
     \chapter*{List of Abbreviations}
 		You can always change the way your abbreviations are formatted. Play around with it yourself, use tables, or come to CUS if you'd like to change the way it looks. You can also completely remove this chapter if you have no need for a list of abbreviations. Here is an example of what this could look like:
@@ -472,9 +488,79 @@ There are five basic components in the communication system we consider. The \te
 \end{equation*}
 
 \section{Encoding}
-The job of the encoder is to introduce well-defined redundancy into the transmission. 
-\subsection{Linear Codes}
-\subsection{Generator Matrix}
+The job of the encoder is to introduce well-defined redundancy into the transmission. We will describe a general encoding scheme that applies to all linear codes, though the more advanced encoding algorithms we will explore later will deviate from this general form.
+
+In this general code $\mathscr{C}$, the message will be encoded as a codeword that consists of a series of \textit{check symbols} appended to the original message $m$. The check symbols encode redundancy into the codeword. More concretely, the bits of the codeword $c$ associated with message $m$ are defined
+\begin{equation*}
+c_1 = m_1, \quad c_2 = m_2, \quad \ldots,\quad c_k = m_k
+\end{equation*}
+and the last $n-k$ bits of $c$ are all check symbols $c_{k+1} \ldots c_n$. The check symbols are determined by the codeword, and they are chosen so that 
+\begin{equation*}
+P \begin{bmatrix}
+c_{1}\\
+c_{2}\\
+\vdots\\
+c_n
+\end{bmatrix} = 
+P \mathbf{c}^{tr}= 0
+\end{equation*}
+where $P$ is the \textit{parity check matrix} for the code $\mathscr{C}$.
+
+\begin{definition}[Parity Check Matrix] The parity check matrix $P$ for a linear code $\mathscr{C}$ is given by 
+\begin{equation*}
+P = [A \mid I_{n-k}]
+\end{equation*}
+where $A$ is some fixed $(n-k) \times n$ binary matrix and $I_{n-k}$ is the $(n-k)\times(n-k)$ identity matrix.
+\end{definition}
+A code $\mathscr{C}\subset \Z_2^n$ is simply the set of all codewords $c$ that satisfy the equation $P\mathbf{c}^{tr} = 0$. In other words, $\mathscr{C} = \{c\in \Z_2^n \mid P\mathbf{c}^{tr} = 0\}$.
+\begin{example} \label{P_ex} Suppose our parity check matrix is
+\begin{equation*}
+P = 
+\left[
+\begin{array}{ccc|cc}
+0 & 1 & 1 & 1 & 0 \\
+1 & 0 & 1 & 0 & 1\\
+\end{array}
+\right]
+\end{equation*}
+This defines a code $\mathscr{C}$ with $n = 5$ and $k = 3$. For this code,
+\begin{equation*}
+A = 
+\begin{bmatrix}
+0 & 1 & 1\\
+1 & 0 & 1
+\end{bmatrix}
+\end{equation*}
+Moreover, the message $m = m_1m_2m_3$ is encoded into a codeword $c = c_1 c_2 c_3 c_4 c_5$ such that $c_1 = m_1$, $c_2 = m_2$, and $c_3 = m_3$ and then
+\begin{align*}
+& c_4 = -(c_2 + c_3) \equiv c_2 + c_3 \pmod 2\\
+& c_5 =  -(c_1 + c_3) \equiv c_1 + c_3 \pmod 2
+\end{align*}
+\end{example}
+
+Given a parity check matrix and a message, the encoder needs to output the corresponding codeword. This is best done with the \textit{generator matrix}.
+
+\begin{definition}[Generator Matrix] Given a parity check matrix $P = [A\mid I_{n-k}]$ for a code $\mathscr{C}$, the corresponding generator matrix is $G = [I_k \mid A^{tr}]$.
+To generate the codeword $c$ for a message $m$, simply multiply the matrices $c = mG$.
+\end{definition}
+
+\begin{remark}
+Note that a given code $\mathscr{C}$ may have more than one matrix that generates it.
+\end{remark}
+
+\begin{example}
+Continuing with the code defined in example \ref{P_ex}, we have that the corresponding generator matrix for this code is 
+\begin{equation*}
+G = 
+\left[
+\begin{array}{ccc|cc}
+1 & 0 & 0 	& 0 & 1	  \\
+0 & 1& 0	& 	1 & 0 \\
+0 & 0 & 1 	& 1 & 1
+\end{array}
+\right]
+\end{equation*}
+\end{example}
 
 \section{Decoding}
 \subsection{Errors}
