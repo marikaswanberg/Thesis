@@ -443,29 +443,50 @@ Now, note that $(-1)^{i \cdot(a + j)}$ is equal to 1 if and only if $j = a$. Thu
 In this thesis, we will be studying the asymptotic complexity of various different metrics, including: runtime, query complexity, certificate complexity, block sensitivity, and perhaps circuit complexity\footnote{These complexity metrics will be defined later.}. Those who are unfamiliar with asymptotic complexity (also termed Landau-Bachmann notation in mathematics) should review the appendix on the topic. 
 
 
-\chapter{Introduction to Coding Theory}	
+\chapter{Introduction to Code Theory and Error-Correcting Codes}	
 
-Coding theory and error-correcting codes were developed to enable the reliable transmission of messages over noisy communication channels. When sending bits over the internet, suppose that occasionally that bits get flipped in transit. The receiver wants some means of correcting these errors, and this is precisely what error-correcting codes are for.
+No real-life communication channel is perfect: internet packets occasionally get dropped, radio transmissions are drowned out by static interference, and data on storage media get corrupted. Distinguishing signal from noise is a problem as old as communication itself. One way of adapting to this problem is introducing redundancy into the transmission. If the information we want to transmit is encoded in more than one place, then there is a higher probability that at least one of the copies will make it through even if some of the copies are plagued with errors. This is precisely the approach that error-correcting codes take. 
 
-Error-correcting codes are used in the classical setting, for example in CDs (if anyone still uses CDs) to prevent data loss in the event of a scratch and long-distance space communications with rovers and satellites. An interesting aspect of coding theory that we will not cover is that different codes have been optimized for different noise models.
 
-Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the theory of error-correcting codes.
+Error-correcting codes were developed to enable the reliable transmission of messages over noisy communication channels. There are many examples of their use today, and many error-correcting codes have been developed for specific noise models. In CDs, error-correcting codes prevent (small) scratches from leading to data loss. They are also used for transmitting photographs from rovers and telescopes throughout the solar system to earth. 
+
+Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the code theory.
 
 \section{Preliminaries}
-As was mentioned, we consider the scenario that we are transmitting a message over a noisy communication channel. More specifically, we will look at \textit{binary symmetric channels}.
+There are many kinds of communication channels, but we will focus on \textit{binary symmetric channels}. 
 
-\begin{definition}[Binary Symmetric Channel] A binary symmetric channel is a classical channel that can transmit a string of 0's and 1's. If a bit $b$ is sent, $b$ will be flipped to $\lnot b$ with probability $p$, and $b$ will be transmitted correctly with probability $1-p$ where $p < \frac{1}{2}$.
+\begin{definition}[Binary Symmetric Channel] A binary symmetric channel is a classical channel that can transmit a string of 0's and 1's. If a bit $b$ is sent, $b$ will be flipped to $\lnot b$ with probability $p \in [0,1]$, and $b$ will be transmitted correctly with probability $1-p$ where $p < \frac{1}{2}$.
 \end{definition}
 
 This type of channel is \textit{binary} because we are transmitting bits, and it is \textit{symmetric} because there is an equal probability of a 0 flipping to a 1 and the reverse. Note that if our binary symmetric channel flips bits with probability $p > 1/2$, we could easily create a channel with $p <1/2$ by negating every bit on the receiving or sending end. Additionally, note that if $p=1/2$, it is  information-theoretically impossible to recover the message, so we don't consider this case and frankly it is dubious to even call that a communication channel.
 
-In the following sections we will investigate how to mitigate the information loss from these random errors in binary symmetric channels where $p<1/2$.
+In the following sections we will investigate how to mitigate the information loss from random errors in binary symmetric channels where $p<1/2$. In the following chapter, and throughout the thesis, we will use the terms ``noise'' and ``errors'' interchangeably.
 
-\section{Encoding and Decoding}
-The basic idea behind error-correcting codes is that we will systematically introduce redundancy to the message we want to send; this process is called \textit{encoding}.
+\section{Overview of Transmission}
 
-\begin{definition}[Message, encoding] We will denote our message $m$ as $m_0m_1m_2 \ldots m_{k-1}$ where $m_i \in \{0,1\} \text{ for all }0 \leq i \leq k-1$. Next, we will denote the encoding of our message $m$, called a codeword, $E(m) = u_0u_1u_2 \ldots u_{n-1}$ where $n > k$ and $u_i \in \{0,1\} \text{ for all }0 \leq i \leq n-1$. 
-\end{definition}
+Thus far, we have only described the parts of the communication system in vague terms; now, we will assuage the reader's thirst for clarity and precision. We will, of course, delve further into each of these parts later.
+
+There are five basic components in the communication system we consider. The \textit{message source}, or \textit{sender}, transfers a message $m = m_1 \ldots m_k$ to the \textit{encoder}. The \textit{encoder} outputs the \textit{codeword} $c = c_1\ldots c_n$ associated with message $m$ and passes it along to the \textit{binary symmetric channel}. The \textit{channel} incorporates an \textit{error vector} $e = e_1 \ldots e_n$ into the codeword and outputs the received vector $r = e + c = r_1 \ldots r_n$ where the addition is bitwise and modulo 2. Then, the \textit{decoder} takes the received vector (also referred to as the ``noisy codeword'') $r$ and outputs $\hat{m}$, an estimate of message $m$ to the \textit{receiver}. A schematic is provided below.
+\begin{equation*}
+\text{Sender} \xrightarrow{\text{Message }m} \text{Encoder} \xrightarrow{\text{Codeword }c} \text{Channel} \xrightarrow{\text{Vector }m+e} \text{Decoder} \xrightarrow{\text{Estimate }\hat{m}} \text{Receiver}
+\end{equation*}
+
+\section{Encoding}
+The job of the encoder is to introduce well-defined redundancy into the transmission. 
+\subsection{Linear Codes}
+\subsection{Generator Matrix}
+
+\section{Decoding}
+\subsection{Errors}
+Error vector. Error-detection vs. error correction.
+
+\subsection{Properties of Codes}
+hamming distance, hamming weight, minimum distance, nearest neighbor decoding, cosets, syndrome(?), Perr
+
+
+
+
+
 
 
 \chapter{Introduction to Learning Theory}

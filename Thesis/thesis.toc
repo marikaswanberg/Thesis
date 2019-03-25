@@ -13,40 +13,46 @@
 \contentsline {section}{\numberline {1.10}Phase-kickback Trick}{10}
 \contentsline {section}{\numberline {1.11}Bernstein-Vazirani Algorithm}{10}
 \contentsline {section}{\numberline {1.12}A Note on Asymptotic Complexity}{11}
-\contentsline {chapter}{Chapter 2: Introduction to Coding Theory}{13}
-\contentsline {section}{\numberline {2.1}Preliminaries}{13}
-\contentsline {section}{\numberline {2.2}Encoding and Decoding}{14}
-\contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{15}
-\contentsline {section}{\numberline {3.1}Basics of Concept Learning}{15}
-\contentsline {section}{\numberline {3.2}Certificate Complexity}{15}
-\contentsline {section}{\numberline {3.3}Block Sensitivity}{15}
-\contentsline {chapter}{Chapter 4: Simplex Code}{17}
-\contentsline {section}{\numberline {4.1}Encoding}{17}
-\contentsline {subsection}{\numberline {4.1.1}Example}{18}
-\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{18}
-\contentsline {section}{\numberline {4.3}Rosbustness to Errors Metric}{18}
-\contentsline {chapter}{Chapter 5: Reed-Muller Codes}{19}
-\contentsline {section}{\numberline {5.1}Boolean Functions}{19}
-\contentsline {section}{\numberline {5.2}Encoding}{19}
-\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{19}
-\contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{21}
-\contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{21}
-\contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{21}
-\contentsline {section}{\numberline {6.3}Stateless Noisy Oracle}{21}
-\contentsline {chapter}{Conclusion}{23}
-\contentsline {section}{\numberline {6.1}More info}{23}
-\contentsline {chapter}{Appendix A: Asymptotic Complexity}{25}
-\contentsline {chapter}{Appendix B: Tensors}{27}
-\contentsline {chapter}{Appendix C: Finite Geometries}{29}
-\contentsline {chapter}{Appendix D: TODO List}{31}
-\contentsline {section}{\numberline {D.1}Chapter 1: Quantum}{31}
-\contentsline {section}{\numberline {D.2}Chapter 2: Coding Theory}{31}
-\contentsline {section}{\numberline {D.3}Chapter 3: Learning Theory}{31}
-\contentsline {section}{\numberline {D.4}Chapter 4: Simplex Code}{31}
-\contentsline {section}{\numberline {D.5}Chapter 5: Reed-Muller Codes}{31}
-\contentsline {section}{\numberline {D.6}Chapter 6: Quantum Decoding for RM Codes}{31}
-\contentsline {section}{\numberline {D.7}Appendices}{32}
-\contentsline {subsection}{\numberline {D.7.1}Asymptotic Complexity}{32}
-\contentsline {subsection}{\numberline {D.7.2}Tensors}{32}
-\contentsline {subsection}{\numberline {D.7.3}Finite Geometries}{32}
-\contentsline {chapter}{Bibliography}{33}
+\contentsline {chapter}{Chapter 2: Introduction to Code Theory and Error-Correcting Codes}{13}
+\contentsline {section}{\numberline {2.1}Preliminaries}{14}
+\contentsline {section}{\numberline {2.2}Overview of Transmission}{14}
+\contentsline {section}{\numberline {2.3}Encoding}{14}
+\contentsline {subsection}{\numberline {2.3.1}Linear Codes}{15}
+\contentsline {subsection}{\numberline {2.3.2}Generator Matrix}{15}
+\contentsline {section}{\numberline {2.4}Decoding}{15}
+\contentsline {subsection}{\numberline {2.4.1}Errors}{15}
+\contentsline {subsection}{\numberline {2.4.2}Properties of Codes}{15}
+\contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{17}
+\contentsline {section}{\numberline {3.1}Basics of Concept Learning}{17}
+\contentsline {section}{\numberline {3.2}Certificate Complexity}{17}
+\contentsline {section}{\numberline {3.3}Block Sensitivity}{17}
+\contentsline {chapter}{Chapter 4: Simplex Code}{19}
+\contentsline {section}{\numberline {4.1}Encoding}{19}
+\contentsline {subsection}{\numberline {4.1.1}Example}{20}
+\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{20}
+\contentsline {section}{\numberline {4.3}Rosbustness to Errors Metric}{20}
+\contentsline {chapter}{Chapter 5: Reed-Muller Codes}{21}
+\contentsline {section}{\numberline {5.1}Boolean Functions}{21}
+\contentsline {section}{\numberline {5.2}Encoding}{21}
+\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{21}
+\contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{23}
+\contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{23}
+\contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{23}
+\contentsline {section}{\numberline {6.3}Stateless Noisy Oracle}{23}
+\contentsline {chapter}{Conclusion}{25}
+\contentsline {section}{\numberline {6.1}More info}{25}
+\contentsline {chapter}{Appendix A: Asymptotic Complexity}{27}
+\contentsline {chapter}{Appendix B: Tensors}{29}
+\contentsline {chapter}{Appendix C: Finite Geometries}{31}
+\contentsline {chapter}{Appendix D: TODO List}{33}
+\contentsline {section}{\numberline {D.1}Chapter 1: Quantum}{33}
+\contentsline {section}{\numberline {D.2}Chapter 2: Coding Theory}{33}
+\contentsline {section}{\numberline {D.3}Chapter 3: Learning Theory}{33}
+\contentsline {section}{\numberline {D.4}Chapter 4: Simplex Code}{33}
+\contentsline {section}{\numberline {D.5}Chapter 5: Reed-Muller Codes}{33}
+\contentsline {section}{\numberline {D.6}Chapter 6: Quantum Decoding for RM Codes}{33}
+\contentsline {section}{\numberline {D.7}Appendices}{34}
+\contentsline {subsection}{\numberline {D.7.1}Asymptotic Complexity}{34}
+\contentsline {subsection}{\numberline {D.7.2}Tensors}{34}
+\contentsline {subsection}{\numberline {D.7.3}Finite Geometries}{34}
+\contentsline {chapter}{Bibliography}{35}
