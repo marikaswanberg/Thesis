@@ -484,7 +484,7 @@ Thus far, we have only described the parts of the communication system in vague 
 
 There are five basic components in the communication system we consider. The \textit{message source}, or \textit{sender}, transfers a message $m = m_1 \ldots m_k$ to the \textit{encoder}. The \textit{encoder} outputs the \textit{codeword} $c = c_1\ldots c_n$ associated with message $m$ and passes it along to the \textit{binary symmetric channel}. The \textit{channel} incorporates an \textit{error vector} $e = e_1 \ldots e_n$ into the codeword and outputs the received vector $r = e + c = r_1 \ldots r_n$ where the addition is bitwise and modulo 2. Then, the \textit{decoder} takes the received vector (also referred to as the ``noisy codeword'') $r$ and outputs $\hat{m}$, an estimate of message $m$ to the \textit{receiver}. A schematic is provided below.
 \begin{equation*}
-\text{Sender} \xrightarrow{\text{Message }m} \text{Encoder} \xrightarrow{\text{Codeword }c} \text{Channel} \xrightarrow{\text{Vector }m+e} \text{Decoder} \xrightarrow{\text{Estimate }\hat{m}} \text{Receiver}
+\text{Sender} \xrightarrow{\text{Message }m} \text{Encoder} \xrightarrow{\text{Codeword }c} \text{Channel} \xrightarrow{\text{Rcvd.~Vect.~}m+e} \text{Decoder} \xrightarrow{\text{Est. }\hat{m}} \text{Receiver}
 \end{equation*}
 
 \section{Encoding}
@@ -563,11 +563,73 @@ G =
 \end{example}
 
 \section{Decoding}
+As was alluded to, the channel will (term-wise) add some unknown error vector $e = c_1 \ldots e_n$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $r = c + m \pmod 2$. 
+
+The decoder has a significantly harder job than the encoder. Namely, it must take this noisy codeword $r$ and return the message $m$ that produced the vector. Any given decoding algorithm will not always be successful; sometimes there will be so many errors in a given received codeword that it is impossible to parse which message was sent. That said, some decoding algorithms are more effective than others, and this distinction comes down to the properties of the code $\mathscr{C}$.
+
+\subsection{Properties of Vectors}
+
+One of the key defining properties of a vector is its Hamming weight.
+\begin{definition}[Hamming weight] The Hamming weight of a vector $x = x_1  \ldots x_n$ is the number of nonzero $x_i$, and is denoted by $wt(x)$.
+\end{definition}
+
+\begin{example}
+For example, the vector $x = 0110100111$ has Hamming weight 6.
+\end{example}
+
+Another important property in relating two vectors is their \textit{Hamming distance}.
+\begin{definition}[Hamming distance] The Hamming distance of two vectors $x = x_1  \ldots x_n$  and $y = y_1 \ldots y_n$ is defined $dist(x,y) = wt(x \oplus y)$, where the XOR is bitwise.
+\end{definition}
+
+Note that one could write this definition in many ways (i.e.~addition or subtraction mod 2), but the heuristic idea behind computing the Hamming distance between two vectors is to add up how many of their bits differ. This concept is a fundamental building block for the decoding algorithms we will encounter.
+
+\begin{example}
+dist(010101, 100111) = 3
+\end{example}
+
 \subsection{Errors}
-Error vector. Error-detection vs. error correction.
+Earlier we defined the error vector $e = e_1 \ldots e_n$ where $e_i \in \Z_2$. The received vector is defined $r = m + e$, which implies that $e_i = 1$ if and only if the $i$-th bit of the codeword was corrupted in transmission and $e_i = 0$ otherwise. Since the binary symmetric channel corrupts a single bit with probability $p$, it follows that $P[e_i = 1] = p$.  One may wonder: \textit{what is the most probable error vector?} This would certainly help the decoder to determine which codeword was sent given the noisy codeword.
+
+Since the corruption of bits by the communication channel are independent of one another, we can compute the probability that the error vector $e$ is some particular vector $x$:
+\begin{equation} \label{p_error_vect}
+P[e = x] = \sum_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}.
+\end{equation}
+This perhaps goes without saying, but the error vector is entirely independent of the message.
+\begin{example}
+Suppose $n=5$. Then, $P[e = 10110] = p(1-p)p^2 (1-p) p = p^3(1-p)^2$.
+\end{example}
+So, now we want to maximize the equation $$P[e = x] =  \sum_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}$$ to figure out the most likely error vector $x$ and thus the best decoding algorithm. We have that $p < \frac{1}{2}$, so it follows that the maximum probability is achieved when $n-wt(x)$ is as large as possible. This occurs when $x = \mathbf{0}$, the zero vector. In other words, \textit{the most likely error vector is one that indicates that none of the bits were corrupted}.
+ 
+ In terms of decoding, this fact implies that the optimal decoding algorithm assumes that the weight of $e$ is as small as possible. If the received vector $r$ is not a codeword, then the decoder should output the nearest codeword $c$ with respect to the Hamming distance $dist(r,c)$ In other words, $c = \min_{c' \in \mathscr{C}}\{dist(c', r)\}$. This decoding method is called \textit{nearest neighbor decoding} and it is the strategy we will employ.
 
 \subsection{Properties of Codes}
-hamming distance, hamming weight, minimum distance, nearest neighbor decoding, cosets, syndrome(?), Perr
+Now that we have defined the nearest neighbor decoding strategy, one may wonder how many errors a given code can correct. Before proceeding, note the distinction between \textit{error detection} whereby the code informs the decoder that $x$ number of errors occurred and \textit{error correction} whereby the decoder is able to correct the $x$ errors. Analyzing the error-correcting and error-detecting properties of linear codes will require some additional metrics on codes.
+
+One of the traits of a code that is most pertinent to its error-correcting properties is called its \textit{minimum distance}. This captures the worst-case correction performance of a code on a nearest neighbor decoding algorithm.
+
+\begin{definition}[Minimum Distance] The minimum distance $d$ of a code $\mathscr{C}$ is $$d(\mathscr{C}) = \min_{x,y \in \mathscr{C}} \{dist(x,y)\}.$$
+\end{definition}
+
+The minimum distance of a code $\mathscr{C}$ encapsulates how closely packed the codewords are in $n$-dimensional space. This determines how many errors we can correct with nearest-neighbor decoding.
+\begin{theorem} A linear code $\mathscr{C}$ with minimum distance $d$ can correct at most $\lfloor \frac{1}{2} (d-1) \rfloor$ errors. 
+\end{theorem}
+
+\begin{proof}
+Suppose we have a linear code $\mathscr{C}$ with minimum distance $d$. Given a received codeword $r = c+e$, nearest neighbor decoding will return $c$ if and only if $ dist(c, r) = \min_{c' \in \mathscr{C}}\{dist(c', r)\} $, i.e. if $c$ is the only codeword that $r$ is close to. \\
+
+
+Then, for any given received vector $r = e+c$ the nearest neighbor decoding algorithm will output the correct $c$ with probability 1 as long as $ dist(c, r) = \min_{c' \in \mathscr{C}}\{dist(c', r)\} $
+
+
+$= \min_{c' \in \mathscr{C}}\{dist(c', e+c)\} = \min_{c' \in \mathscr{C}}\{dist(c', c) + dist(c', e)\} < d$.
+\end{proof}
+
+ 
+
+\subsection{Decoding Errors}
+other:  cosets, syndrome(?), Perr
+Error vector. most lik Error-detection vs. error correction.
+
 
 
 
