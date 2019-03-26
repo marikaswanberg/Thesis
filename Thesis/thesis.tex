@@ -592,13 +592,13 @@ Earlier we defined the error vector $e = e_1 \ldots e_n$ where $e_i \in \Z_2$. T
 
 Since the corruption of bits by the communication channel are independent of one another, we can compute the probability that the error vector $e$ is some particular vector $x$:
 \begin{equation} \label{p_error_vect}
-P[e = x] = \sum_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}.
+P[e = x] = \prod_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}.
 \end{equation}
 This perhaps goes without saying, but the error vector is entirely independent of the message.
 \begin{example}
 Suppose $n=5$. Then, $P[e = 10110] = p(1-p)p^2 (1-p) p = p^3(1-p)^2$.
 \end{example}
-So, now we want to maximize the equation $$P[e = x] =  \sum_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}$$ to figure out the most likely error vector $x$ and thus the best decoding algorithm. We have that $p < \frac{1}{2}$, so it follows that the maximum probability is achieved when $n-wt(x)$ is as large as possible. This occurs when $x = \mathbf{0}$, the zero vector. In other words, \textit{the most likely error vector is one that indicates that none of the bits were corrupted}.
+So, now we want to maximize the equation $$P[e = x] =  \prod_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}$$ to figure out the most likely error vector $x$ and thus the best decoding algorithm. We have that $p < \frac{1}{2}$, so it follows that the maximum probability is achieved when $n-wt(x)$ is as large as possible. This occurs when $x = \mathbf{0}$, the zero vector. In other words, \textit{the most likely error vector is one that indicates that none of the bits were corrupted}.
  
  In terms of decoding, this fact implies that the optimal decoding algorithm assumes that the weight of $e$ is as small as possible. If the received vector $r$ is not a codeword, then the decoder should output the nearest codeword $c$ with respect to the Hamming distance $dist(r,c)$ In other words, $c = \min_{c' \in \mathscr{C}}\{dist(c', r)\}$. This decoding method is called \textit{nearest neighbor decoding} and it is the strategy we will employ.
 
@@ -621,9 +621,10 @@ Anyway, if $d = 2t+1$, then spheres with radius $t$ will not overlap. Thus, we h
 \end{proof}
 
 \subsection{Decoding Errors}
-One may wonder what happens if there are more than $\lfloor \frac{1}{2}(d-1)\rfloor$ errors 
-other:  cosets, syndrome(?), Perr
-Error vector. most lik Error-detection vs. error correction.
+One may wonder what happens if there are more than $\lfloor \frac{1}{2}(d-1)\rfloor$ errors occur during transmission. In this case, the received vector $r = e+c$ may be closer to some other codeword $c'$, so nearest neighbor decoding will decide that $c'$ was the original codeword rather than $c$, the actual codeword that was sent. This is called a \textit{decoding error} because the decoder erroneously returned $c'$ instead of $c$. This is not ideal, and code theorists study the probability of this occurrence, denoted $P_{err}$. 
+
+[****If I want to talk about this then I have to introduce cosets and syndromes and I don't feel like doing that so let's just skip it]
+
 
 
 
