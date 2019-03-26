@@ -626,17 +626,73 @@ One may wonder what happens if there are more than $\lfloor \frac{1}{2}(d-1)\rfl
 [****If I want to talk about this then I have to introduce cosets and syndromes and I don't feel like doing that so let's just skip it]
 
 
-
-
-
-
-
-
-
 \chapter{Introduction to Learning Theory}
-Read Ronald de Wolf's thesis section on query complexity! pg. 193
+
+Given oracle (``black box'') access to some function $f$, how many queries would it take to determine some property of $f$? This is precisely the question that learning theory is concerned with. This field is motivated in part by the idea that the oracle computes some ``expensive'' function, i.e.~one that is time or space intensive. Minimizing the number of queries that an algorithm has to make to an oracle keeps the computational cost expended on oracle queries low.
+
 \section{Basics of Concept Learning}
+Consider the oracle function $f$. This is a \textit{Boolean function}, as it takes inputs in $\{0,1\}^n$ for some fixed $n$ and outputs 0 or 1. In the field of learning theory, $f$ is called a \textit{concept}.\footnote{CITE Quantum vs classical learnability by Servedio!!!}
+
+\begin{definition}[Concept] A concept $f$ over $\{0,1\}^n$ is a Boolean function $f: \{0,1\}^n \rightarrow \{0,1\}$. Equivalently, a concept can be viewed as a subset of $\{0,1\}^n$, namely $f = \{x \in \{0,1\}^n \mid f(x) = 1\}$.
+\end{definition}
+
+Computer scientists do not care how many queries it takes to learn the properties of some particular concept, but they are more interested in knowing how the number of queries \textit{scales asymptotically} with the size of the input. To take care of this, they came up with 
+\textit{concept classes}. Traditionally, concept classes are denoted by $\mathcal{C}$, but we will instead call them $\mathcal{F}$ to avoid confusion with codes $\mathscr{C}$. 
+
+\begin{definition}[Concept Class] A concept class $\mathcal{F} = \cup_{n \geq 1} f_n$ is a collection of concepts where $f_n = \{f \in \mathcal{F} \mid f \text{ is a concept over } \{0,1\}^n\}$.
+\end{definition}
+
+\begin{example}
+Suppose the domain we are working with is sets of $2^n$ people instead of $\{0,1\}^n$. Then, we can define a concept like $f = \{ x\in 2^n \text{-set of people} \mid \text{ Marika has met } x\}$. Then, $f(\text{``Jamie Pommersheim''}) = 1$, but $f(\text{``Alan Turing''}) = 0$, sadly. Now, the concept class is just the union of these concepts over all possible domain sizes (ignoring the fact that the number of people that have existed is finite). This example is perhaps not mathematically rigid, but it should give the reader an intuition for what concept classes are.
+\end{example}
+
+The example we outlined refers to a specific kind of function called a \textit{membership oracle}.
+\begin{definition}[Membership Oracle] A membership oracle $MQ_f$ is an oracle that returns 1 on input $x$ if and only if $x \in f$ or equivalently if $f(x)=1$. This is called a \textit{membership query}.
+\end{definition}
+
+Given some membership oracle $MQ_f$, the goal of the learning algorithm is to construct a \textit{hypothesis} $h: \{0,1\}^n \rightarrow \{0,1\}$ that is equivalent to $f$, i.e.~$\forall x \in \{0,1\}^n, f(x) = h(x)$. While their outputs are equal, $f$ and $h$ may compute their outputs quite differently, but this is irrelevant.
+
+As with code theory, focusing on the properties of the concept classes can provide insight into the query complexity of that set of functions. We will look at two particular properties of concept classes: certificate complexity and block sensitivity. They provide some bounds on query complexities, however they are mostly discussed for fun rather than practical results.
 \section{Certificate Complexity}
+
+\begin{definition} (Certificate) For an input $x \in \{0,1\}^n$, a set $S \subseteq [n]$ is a certificate on $x$ if, for all $y \in \{0,1\}^n$ such that $x_i = y_i \forall i \in S$, we have $f(x) = f(y)$. Then, $C_x(f) = \min_{S\in\mathscr{S}_x(f)} \{\lvert S \rvert \}$ where $\mathscr{S}_x(f)$ is the set of all certificates on for input $x$ on function $f$.
+\end{definition}
+Now, obviously we would like to generalize this property to the whole function and not just particular inputs.
+\begin{definition}[Certificate Complexity] The certificate complexity of a concept $f: \{0,1\}^n \rightarrow \{0,1\}$ is 
+\begin{equation*}
+C(f) = \max_{x\in \{0,1\}^n}\{C_x(f)\} = \max_{x\in \{0,1\}^n}\{\min_{S\in\mathscr{S}_x(f)} \{\lvert S \rvert \}\}
+\end{equation*}
+\end{definition}
+
+This may make more sense with some examples.
+\begin{example}
+Let $f(x_1, x_2, \ldots, x_n) = x_1$ where $x_i \in \{0,1\}$. Suppose the input we are looking at is $x = (0, \ldots, 0)$. Then, the smallest certificate for $x$ is $S = \{1\}$, or just the first input since $f(y) = f(x)$ for all $y$ that have a zero in the first bit. Now, this property holds for all $x$ in the input, not just the input of all zeros. So, the overall certificate complexity of $f$ is 1. This makes sense intuitively because we only need to look at one bit of the input to determine what the output will be.
+\end{example}
+\begin{example}
+Now, perhaps the other extreme example. Suppose $f(x_1, \ldots, x_n) = x_1 \oplus x_2 \oplus \ldots \oplus x_n$ i.e.~it outputs whether an even or odd number of the inputs are set to 1. Then, suppose our input is $x = (0, \ldots, 0)$ again. The minimum certificate size for the zero vector is $n$, since there are many inputs $y$ that have $n-1$ bits in common with the zero vector but where $f(x) \neq f(y)$ (e.g.~$y = (1, 0, \ldots, 0)$). So, the overall certificate complexity of $f$ is $n$. This also makes sense intuitively, since one must look at all input bits to evaluate $f$ accurately.
+\end{example}
+These two examples present somewhat extreme, or some may say trivial, evaluations of certificate complexities. Their purpose is merely to acquaint the reader with the idea of certificate complexity. What follows is a less trivial original proof about the certificate complexity of all linear codes.
+
+\begin{theorem}(Swanberg) The certificate complexity for the nearest neighbor decoding algorithm $f$ on a linear code  $\mathscr{C} = [n,k]$ with minimum distance $d$ is 
+\begin{equation*}
+ C(f) = n - 2\bigg\lfloor \frac{1}{2} (d-1) \bigg\rfloor.
+ \end{equation*}
+\end{theorem}
+
+
+\begin{proof}
+A code $\mathscr{C}= [n,k]$ with distance $d$ can correct $\lfloor\frac{1}{2}(d-1)\rfloor$ errors. Thus, there exist two codewords $c_1 = e_1 + c$ and $c_2 = e_2 +c$ where the nearest neighbor decoding function gives $f(c_1) = f(c) = f(c_2)$ provided that $dist(c, c_1), dist(c, c_2) \leq \lfloor\frac{1}{2}(d-1)\rfloor$. 
+
+By the triangle inequality and the fact that inner product distance is in fact a metric on $\Z_2^n$, we have 
+\begin{align*}
+dist(c_1, c_2) 
+& \leq dist(c, c_1) + dist(c, c_2) \\
+& \leq 2 \bigg\lfloor\frac{1}{2}(d-1)\bigg\rfloor.
+\end{align*}
+So, we have an upper bound on the maximum distance between $c_1$ and $c_2$. With some thought, one will see that this maximum is achievable by simply choosing error vectors with disjoint sets of $d$ bits set to 1. nah I need to think about this more
+\end{proof}
+
+
 \section{Block Sensitivity}
 
 \chapter{Simplex Code}
