@@ -611,22 +611,17 @@ One of the traits of a code that is most pertinent to its error-correcting prope
 \end{definition}
 
 The minimum distance of a code $\mathscr{C}$ encapsulates how closely packed the codewords are in $n$-dimensional space. This determines how many errors we can correct with nearest-neighbor decoding.
-\begin{theorem} A linear code $\mathscr{C}$ with minimum distance $d$ can correct at most $\lfloor \frac{1}{2} (d-1) \rfloor$ errors. 
+\begin{theorem} A linear code $\mathscr{C}$ with minimum distance $d$ can correct $\lfloor \frac{1}{2} (d-1) \rfloor$ errors. 
 \end{theorem}
 
 \begin{proof}
-Suppose we have a linear code $\mathscr{C}$ with minimum distance $d$. Given a received codeword $r = c+e$, nearest neighbor decoding will return $c$ if and only if $ dist(c, r) = \min_{c' \in \mathscr{C}}\{dist(c', r)\} $, i.e. if $c$ is the only codeword that $r$ is close to. \\
+Suppose our code $\mathscr{C}$ has minimum distance $d$. Now, imagine each codeword has an $n$-dimensional sphere\footnote{Or, for the topologists among you, let's call it the closed $n$-ball $\overline{B(c, t)}$ where $c\in \Z_2^n$ is a codeword.} of radius $t$ around it. Now, if $t$ is small enough, none of the spheres will overlap. This means that a received vector $r$ with at most $t$ errors will be decoded correctly using nearest neighbor decoding. Now, the question is: what is the largest that the radius $t$ can be and still maintain the non-overlapping $n$-spheres? This is precisely how error-correcting codes can be translated to sphere packing problems.
 
-
-Then, for any given received vector $r = e+c$ the nearest neighbor decoding algorithm will output the correct $c$ with probability 1 as long as $ dist(c, r) = \min_{c' \in \mathscr{C}}\{dist(c', r)\} $
-
-
-$= \min_{c' \in \mathscr{C}}\{dist(c', e+c)\} = \min_{c' \in \mathscr{C}}\{dist(c', c) + dist(c', e)\} < d$.
+Anyway, if $d = 2t+1$, then spheres with radius $t$ will not overlap. Thus, we have that $t = \frac{1}{2}(d-1)$ is the largest that $t$ may be. Now, we can correct up to $t$ errors since the $n$-spheres do not overlap, but the number of errors in a codeword are discrete integer values. Thus, we can only guarantee that $\lfloor t \rfloor$, or $\lfloor \frac{1}{2} (d-1)\rfloor$ errors can be corrected.\\
 \end{proof}
 
- 
-
 \subsection{Decoding Errors}
+One may wonder what happens if there are more than $\lfloor \frac{1}{2}(d-1)\rfloor$ errors 
 other:  cosets, syndrome(?), Perr
 Error vector. most lik Error-detection vs. error correction.
 
