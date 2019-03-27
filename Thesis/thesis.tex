@@ -703,8 +703,24 @@ So, we have an upper bound on the maximum distance between $c_1$ and $c_2$. Now,
 
 
 \section{Block Sensitivity}
+Block sensitivity is a lower bound on all query complexity measures (?)
 
-\chapter{Simplex Code}
+\begin{definition}[Block sensitivity] For an input $x\in \{0,1\}^n$ and a subset of variables $S \subseteq [n]$, $x^{(S)}$ is the input obtained from $x$ by changing all $x_i, i \in S$ to opposite values. The block sensitivity $bs(f)$ is the maximum $k$ for which there is an input $x \in \{0,1\}^n$ and pairwise disjoint subsets $S_1, \ldots, S_k \subseteq [n]$ with $f(x) \neq f(x^{(S_i)})$ for all $1 \leq i \leq k$
+\end{definition}
+
+What does this mean in the context of error-correcting codes? We want to know the block sensitivity of $f$, our decoding algorithm. For linear decoding, we have $f: \{0,1\}^n \rightarrow \{0,1\}^k$ where the messages are of length $k$ and the codewords have $n-k$ check bits. 
+
+\begin{theorem}
+For linear codes $\mathscr{C} = [n,k]$ with minimum distance $d$, the nearest neighbor decoding function $f: \{0,1\}^n \rightarrow \{0,1\}^k$ has a block sensitivity $$
+bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}$$
+\end{theorem}
+
+\begin{proof}
+Our linear code has minimum distance $d$. By (theorem 2 in MacWilliams and Sloane), the code can correct $\lfloor \frac{1}{2}(d-1) \rfloor$ errors. Thus, $f(x) = f(x^{(S)})$ where $\lvert S \rvert \leq \lfloor \frac{1}{2}(d-1) \rfloor$. Correct decoding is not guaranteed when $\lvert S \rvert > \lfloor \frac{1}{2}(d-1) \rfloor$. There are at most $n/(\lfloor \frac{1}{2}(d-1) \rfloor +1)$ pairwise disjoint sets of size $\lfloor \frac{1}{2}(d-1) \rfloor+ 1$ in $\{1, \ldots, n\}$, which could all potentially lead to decoding errors. Thus, $$bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}.$$\\
+\end{proof}
+
+
+\chapter{The Binary Simplex Code}
 One particularly interesting linear code is the simplex code. This is a special case of the Reed-Muller codes we will discuss later. The encoding and decoding algorithms are quite simple, so this is our starting point for further analyzing some of the error-correcting properties of the quantum decoding algorithm.
 \section{Encoding}
 To compute the $i$-th bit of the codeword for a message $m$, take $c_i =i_2 \cdot m$ mod 2, where $i_2$ is the binary representation of the number $i$. Thus, a codeword $c$ for a message $m$ is defined: 
@@ -726,10 +742,45 @@ Suppose $n=3$. Then, the encoding of the message $m = 010$ is:
 \end{align*}
 Thus, $c = 00110011$ for that message. 
 
-Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $n$ has a codeword of length $2^n$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact.
+Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $n$ has a codeword of length $2^n$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact. 
 
+\subsection{Generating Matrix}
+Another way of encoding messages with the binary simplex code is to use a generating matrix. Recall the Hadamard matrix.
+\begin{equation*}
+H = \hadamard
+\end{equation*}
+Now, we will define a similar matrix transformation that is, in fact, the generating matrix for the binary simplex code.
+\begin{equation} \label{2_simplex}
+S = 
+\frac{1}{\sqrt{2}}
+\begin{bmatrix}
+0 & 0 \\
+0 & 1
+\end{bmatrix}
+\end{equation}
+Note that the terms of $S$ are equivalent to the terms of $H$ with the following bijection: $h_{ij} = (-1)^{s_{ij}}$ (where $h_{ij}$ is the term of $H$ in row $i$ column $j$). This property is essential to the quantum decoding algorithm.
+
+Now, to create the generating matrix for a simplex code of length $n = 2^N$ for some $N \in \Z_{>0}$, simply take $N$ tensor products of matrix \ref{2_simplex}, or $S^{\otimes N}$.
+\begin{remark}
+For the geometers among you, you will be pleased to know that the codewords of the binary simplex code do, in fact, lie on the vertices of an $n$-dimensional regular simplex as the name would suggest.
+\end{remark}
 \section{Quantum Decoding Algorithm}
-The quantum decoding algorithm for the simplex code is very pleasing. The first key observation is that the generating matrix for the simplex code is, in a sense, ``equivalent'' to the Hadamard matrix. 
+The quantum decoding algorithm for the simplex code is very pleasing. The Bernstein-Vazirani algorithm is the essence of the algorithm. In this version of the algorithm, we will assume that no errors occurred during the transmission of the message; later, we will analyze the performance of the algorithm with errors.
+
+First, an overview of the algorithm. The $n$-qubit query register will be initialized with $\ket{0}^{\otimes n}$ and an $n$-qubit Hadamard transform will put the query register into an equal superposition. Simultaneously, the $n$-qubit response register will be set to $\Hminus^{\otimes n}$ so we can use the phase-kickback trick. The algorithm does one quantum query to the oracle $\mathcal{O}_m$ to read in the received vector's bits into the phase of each state in the query register. Then, an $n$-qubit Hadamard is applied to the query register. Upon measurement, we obtain the original message with probability 1.
+
+Now, for the algorithm. Let $\ket{\psi_m}$ denote the query register and note that we omit the response register since it remains simply $\Hminus^{\otimes n}$ throughout the computation.
+
+\begin{align}
+\ket{\psi_m}
+& =  \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
+& \xrightarrow{\mathcal{O}_m} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{i \cdot m} \ket{i} \\
+& \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{i \cdot m} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \\
+& = \frac{1}{2^n} \sum_{j \in \Z_2^n} \left( \sum_{i \in \Z_2^n} (-1)^{i\cdot (m +j)} \right) \ket{j} \\
+& = \ket{m}
+\end{align}
+
+
 \section{Rosbustness to Errors Metric}
 
 \chapter{Reed-Muller Codes}
