@@ -64,6 +64,7 @@
 \newtheorem{definition}[theorem]{Definition}
 \newtheorem{example}[theorem]{Example}
 \newtheorem{remark}[theorem]{Remark}
+\newtheorem{conjecture}[theorem]{Conjecture}
 
 %Commands
 \newcommand{\N}{\mathbb{N}}
@@ -679,17 +680,25 @@ These two examples present somewhat extreme, or some may say trivial, evaluation
  \end{equation*}
 \end{theorem}
 
+Before ``proving'' this theorem, we must state a conjecture.
+
+\begin{conjecture}\label{hope_its_true}
+For any linear code $\mathscr{C} = [n,k]$ with minimum distance $d$, 
+\begin{equation*}
+\bigg\lfloor \frac{1}{2}(d-1)\bigg\rfloor < \frac{n}{2}.
+\end{equation*}
+\end{conjecture}
 
 \begin{proof}
-A code $\mathscr{C}= [n,k]$ with distance $d$ can correct $\lfloor\frac{1}{2}(d-1)\rfloor$ errors. Thus, there exist two codewords $c_1 = e_1 + c$ and $c_2 = e_2 +c$ where the nearest neighbor decoding function gives $f(c_1) = f(c) = f(c_2)$ provided that $dist(c, c_1), dist(c, c_2) \leq \lfloor\frac{1}{2}(d-1)\rfloor$. 
+A code $\mathscr{C}= [n,k]$ with distance $d$ can correct $\lfloor\frac{1}{2}(d-1)\rfloor$ errors. Thus, there exist two codewords $c_1 = e_1 + c$ and $c_2 = e_2 +c$ where the nearest neighbor decoding function gives $f(c_1) = f(c) = f(c_2)$ provided that $dist(c, c_1), dist(c, c_2) \leq \lfloor\frac{1}{2}(d-1)\rfloor$. Let $dist(c, c_1) = dist(c, c_2) = \lfloor\frac{1}{2}(d-1)\rfloor$.
 
 By the triangle inequality and the fact that inner product distance is in fact a metric on $\Z_2^n$, we have 
 \begin{align*}
 dist(c_1, c_2) 
 & \leq dist(c, c_1) + dist(c, c_2) \\
-& \leq 2 \bigg\lfloor\frac{1}{2}(d-1)\bigg\rfloor.
+& = 2 \bigg\lfloor\frac{1}{2}(d-1)\bigg\rfloor.
 \end{align*}
-So, we have an upper bound on the maximum distance between $c_1$ and $c_2$. With some thought, one will see that this maximum is achievable by simply choosing error vectors with disjoint sets of $d$ bits set to 1. nah I need to think about this more
+So, we have an upper bound on the maximum distance between $c_1$ and $c_2$. Now, I will show that this upper bound is achievable. By Conjecture \ref{hope_its_true}, the number of errors we can correct is less than $n/2$. Thus, we have that $wt(e_1), wt(e_2) < n/2$. Given this fact, we may choose $e_1$ and $e_2$ such that $dist(e_1, e_2) = 2 wt(e_1) = dist(c, c_1) + dist(c, c_2)$ by choosing $e_1$ and $e_2$ that have at least
 \end{proof}
 
 

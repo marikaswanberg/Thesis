@@ -25,7 +25,7 @@
 \contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{21}
 \contentsline {section}{\numberline {3.1}Basics of Concept Learning}{21}
 \contentsline {section}{\numberline {3.2}Certificate Complexity}{22}
-\contentsline {section}{\numberline {3.3}Block Sensitivity}{23}
+\contentsline {section}{\numberline {3.3}Block Sensitivity}{24}
 \contentsline {chapter}{Chapter 4: Simplex Code}{25}
 \contentsline {section}{\numberline {4.1}Encoding}{25}
 \contentsline {subsection}{\numberline {4.1.1}Example}{26}
