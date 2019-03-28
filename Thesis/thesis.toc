@@ -35,6 +35,7 @@
 \contentsline {subsection}{\numberline {4.2.2}Algorithm}{27}
 \contentsline {section}{\numberline {4.3}Rosbustness to Errors}{29}
 \contentsline {subsection}{\numberline {4.3.1}Noisy Quantum Oracle}{29}
+\contentsline {subsection}{\numberline {4.3.2}Algorithm with Noisy Oracle}{29}
 \contentsline {chapter}{Chapter 5: Reed-Muller Codes}{31}
 \contentsline {section}{\numberline {5.1}Boolean Functions}{31}
 \contentsline {section}{\numberline {5.2}Encoding}{31}

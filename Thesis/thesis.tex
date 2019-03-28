@@ -822,7 +822,7 @@ The reliable oracle is defined above. Now, we will define the unreliable, or noi
 \widehat{\mathcal{O}}_m: \ket{i, -} \longmapsto (-1)^{m \cdot i} - 2\delta_E (-1)^{m \cdot i}
 \end{equation*}
 where $\delta_E$ is simply an indicator function on the set $E$. In other words, if $i \notin E$ then the oracle $\widehat{\mathcal{O}}_m$ returns the $i$-th bit of the codeword associated with $m$ properly in the form $(-1)^{m \cdot i}$. On the other hand, if $i \in E$, the oracle returns $-(-1)^{m\cdot i}$, which is the $i$-th bit of the codeword flipped.
-
+\subsection{Algorithm with Noisy Oracle}
 \begin{theorem} \label{cool_thm}(Swanberg and Pommersheim) The Bernstein-Vazirani quantum decoding algorithm for the binary simplex code $\mathcal{S}_n$ has probability of success
 \begin{equation*}
 P_{succ} = \left(1 - \frac{k}{2^{n-1}}\right)^2
