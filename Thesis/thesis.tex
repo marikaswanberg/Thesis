@@ -65,6 +65,7 @@
 \newtheorem{example}[theorem]{Example}
 \newtheorem{remark}[theorem]{Remark}
 \newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{corollary}[theorem]{Corollary}
 
 %Commands
 \newcommand{\N}{\mathbb{N}}
@@ -765,24 +766,98 @@ Now, to create the generating matrix for a simplex code of length $n = 2^N$ for 
 For the geometers among you, you will be pleased to know that the codewords of the binary simplex code do, in fact, lie on the vertices of an $n$-dimensional regular simplex as the name would suggest.
 \end{remark}
 \section{Quantum Decoding Algorithm}
-The quantum decoding algorithm for the simplex code is very pleasing. The Bernstein-Vazirani algorithm is the essence of the algorithm. In this version of the algorithm, we will assume that no errors occurred during the transmission of the message; later, we will analyze the performance of the algorithm with errors.
+The quantum decoding algorithm for the simplex code is very pleasing. The Bernstein-Vazirani algorithm is the essence of the algorithm. In this version of the algorithm, we will assume that no errors occurred during the transmission of the codeword; later, we will analyze the performance of the algorithm with errors.
+\subsection{Reliable Quantum Oracle}
+The quantum oracle we will use is specific to each message $m$. That is, the oracle $\mathcal{O}_m$ encodes the message $m$ into the corresponding codeword $c$. This oracle is ``reliable'' in the sense that it always gives $c$ with no errors, i.e~the received codeword is the actual codeword. 
 
-First, an overview of the algorithm. The $n$-qubit query register will be initialized with $\ket{0}^{\otimes n}$ and an $n$-qubit Hadamard transform will put the query register into an equal superposition. Simultaneously, the $n$-qubit response register will be set to $\Hminus^{\otimes n}$ so we can use the phase-kickback trick. The algorithm does one quantum query to the oracle $\mathcal{O}_m$ to read in the received vector's bits into the phase of each state in the query register. Then, an $n$-qubit Hadamard is applied to the query register. Upon measurement, we obtain the original message with probability 1.
+Precisely, $\mathcal{O}_m$ is a bijection on $(\C^2)^n \otimes \C^2$ and is defined as follows
+\begin{equation*}
+\mathcal{O}_m: \ket{i, r} \longmapsto \ket{i, r \oplus (i\cdot m)}.
+\end{equation*} 
+This returns precisely the $i$-th bit of the codeword $c$ that corresponds to message $m$. Now, we may put $\Hminus$ in the response register and use the phase-kickback trick to store $c_i$ in the phase of the state:
+\begin{equation*}
+\mathcal{O}_m: \ket{i, -} \longmapsto (-1)^{i \cdot m}\ket{i,-}.
+\end{equation*}
+In the algorithm, we will omit the response register since it remains $\Hminus$ throughout the computation.
+\subsection{Algorithm}
 
-Now, for the algorithm. Let $\ket{\psi_m}$ denote the query register and note that we omit the response register since it remains simply $\Hminus^{\otimes n}$ throughout the computation.
+Now that our query model is defined, we give an overview of the algorithm. The $n$-qubit query register will be initialized with $\ket{0}^{\otimes n}$ and an $n$-qubit Hadamard transform will put the query register into an equal superposition. Simultaneously, the $n$-qubit response register will be set to $\Hminus^{\otimes n}$ so we can use the phase-kickback trick. The algorithm does one quantum query to the oracle $\mathcal{O}_m$ to read in the corresponding codeword's bits into the phase of each state in the query register. Then, an $n$-qubit Hadamard is applied to the query register. Upon measurement, we obtain the original message with probability 1.
+
+Now, for the algorithm. Let $\ket{\psi_m}$ denote the query register.
 
 \begin{align}
 \ket{\psi_m}
 & =  \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
 & \xrightarrow{\mathcal{O}_m} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{i \cdot m} \ket{i} \\
 & \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{i \cdot m} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \\
-& = \frac{1}{2^n} \sum_{j \in \Z_2^n} \left( \sum_{i \in \Z_2^n} (-1)^{i\cdot (m +j)} \right) \ket{j} \\
-& = \ket{m}
+& = \frac{1}{2^n} \sum_{j \in \Z_2^n} \left( \sum_{i \in \Z_2^n} (-1)^{i\cdot (m +j)} \right) \ket{j} \label{confuse}\\
+& = \ket{m} \label{result}
 \end{align}
+Most of these transformations follow directly from definitions. The equality from line \ref{confuse} to \ref{result} is less apparent, but this equality follows the same logic as the analogous part of the Bernstein-Vazirani algorithm. Note that on line \ref{confuse} if $j = m$, the inner sum becomes 
+\begin{align*}
+\sum_{i \in \Z_2^n} (-1)^{i \cdot (2m)} 
+&= \sum_{i \in \Z_2^n} 1 \\
+& = {2^n}.
+\end{align*}
+Thus, the full state on line \ref{confuse} is 
+\begin{align*}
+\frac{1}{2^n} \sum_{j \in \Z_2^n} \left( \sum_{i \in \Z_2^n} (-1)^{i\cdot (m +j)} \right) \ket{j}
+& = \frac{1}{2^n} \left (2^n \ket{m}+  \sum\limits_{\substack{j \in \Z_2^n \\ j \neq m}}
+ (-1)^{i\cdot (m +j)}\ket{j} \right) \\
+ & = \frac{1}{2^n} \left (2^n \ket{m}+  \sum\limits_{\substack{j \in \Z_2^n \\ j \neq m}}
+0\ket{j} \right) \\
+& = \ket{m}.
+\end{align*}
+So, measuring in the computational basis gives us $c$ with probability 1. This algorithm yields the correct message $m$ with probability 1 using only one quantum query.
+\section{Rosbustness to Errors}
+Now we will consider a different scenario. Suppose that the oracle $\mathcal{O}_m$ is a little faulty. The oracle occasionally makes mistakes in transmitting the bits of the codeword $c$ that corresponds to $m$. Instead, it transmits a vector $r = c+ e$ which may not even be a codeword in the simplex code. Since the simplex code is error-correcting, one would hope that the algorithm could still recover the correct $m$ with a high probability. In this section, we formalize the algorithm's robustness to errors, that is, the probability of producing the correct output even with a noisy oracle. 
+\begin{remark}
+Since this algorithm only requires one query to the oracle, we will not distinguish between a stateless and stateful noisy quantum oracle; however, that is to come.
+\end{remark}
 
+\subsection{Noisy Quantum Oracle}
+The reliable oracle is defined above. Now, we will define the unreliable, or noisy, quantum oracle. Again, it is a bijection on $(\C^2)^n \otimes \C^2$. Now, define a set of indices $E \subseteq [N]$, where $N = 2^n$, on which the oracle answers incorrectly. Then, the action of the noisy oracle $\widehat{\mathcal{O}}_m$ is defined as follows:
 
-\section{Rosbustness to Errors Metric}
+\begin{equation*}
+\widehat{\mathcal{O}}_m: \ket{i, -} \longmapsto (-1)^{m \cdot i} - 2\delta_E (-1)^{m \cdot i}
+\end{equation*}
+where $\delta_E$ is simply an indicator function on the set $E$. In other words, if $i \notin E$ then the oracle $\widehat{\mathcal{O}}_m$ returns the $i$-th bit of the codeword associated with $m$ properly in the form $(-1)^{m \cdot i}$. On the other hand, if $i \in E$, the oracle returns $-(-1)^{m\cdot i}$, which is the $i$-th bit of the codeword flipped.
 
+\begin{theorem} \label{cool_thm}(Swanberg and Pommersheim) The Bernstein-Vazirani quantum decoding algorithm for the binary simplex code $\mathcal{S}_n$ has probability of success
+\begin{equation*}
+P_{succ} = \left(1 - \frac{k}{2^{n-1}}\right)^2
+\end{equation*}
+where $k= \lvert E \rvert$, the number of errors introduced by the noisy quantum oracle and $n$ is the length of the message.
+\end{theorem}
+
+\begin{proof}
+We will begin by performing the algorithm with our noisy oracle $\widehat{\mathcal{O}}_m$.
+\begin{align*}
+\ket{\psi_m} 
+& = \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
+& \xrightarrow{\widehat{\mathcal{O}}_m} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{i \cdot m}\ket{i} -2\left( \sum_{p \in E} (-1)^{p \cdot m} \ket{p}\right) \\
+& \xrightarrow{H^{\otimes n}} \ket{m} - \frac{1}{2^{n-1}} \left( \sum_{p \in E}(-1)^{p \cdot m} \sum_{j \in Z_2^n} (-1)^{j \cdot p} \ket{j}\right)\\
+& = \ket{m} - \frac{1}{2^{n-1}} \left( \sum_{p \in E}\sum_{j \in Z_2^n} (-1)^{p \cdot(j+m)} \ket{j} \right)
+\end{align*}
+Now, we want to know $P_{succ}$, which is the probability of measuring $m$ in the computational basis. We have that for any quantum state, the probability of measuring a given result is the square of the coefficient on that state. So,
+\begin{align*}
+P_{succ} 
+& = \left((1 - \frac{1}{2^{n-1}} \left( \sum_{p \in E} (-1)^{2(p \cdot m)} \right)\right)^2 \\
+& = \left(1 - \frac{1}{2^{n-1}} \left( \sum_{p \in E} 1 \right) \right)^2 \\
+& = \left( 1 - \frac{\lvert E \rvert}{2^{n-1}}\right)^2\\
+& = \left( 1 - \frac{k}{2^{n-1}}\right)^2.
+\end{align*}
+\end{proof}
+Perhaps unsurprisingly, 
+\begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code $\mathscr{S}_n$:
+\begin{enumerate}
+\item Does not depend on the message $m$, and
+\item Does not depend on $E$, only $\lvert E \rvert$.
+\end{enumerate} 
+\end{corollary}
+\begin{proof}
+Corollary \ref{corollary} follows from the proof of Theorem \ref{cool_thm}.
+\end{proof}
 \chapter{Reed-Muller Codes}
 \section{Boolean Functions}
 \section{Encoding}
