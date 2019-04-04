@@ -848,7 +848,9 @@ P_{succ}
 & = \left( 1 - \frac{k}{2^{n-1}}\right)^2.
 \end{align*}
 \end{proof}
-Perhaps unsurprisingly, 
+Interestingly, this formula shows that the quantum binary simplex decoding algorithm has $P_{succ} = 1$ if $k = 2^n$. In other words, if the quantum oracle is so noisy that it flips every single bit of the codeword, the decoding algorithm is still able to compute the correct message. This puzzled both the student and adviser on this thesis until we realized that flipping all of the bits leads to a \textit{global phase shift} in the quantum state post-query, which as was discussed in Chapter 1, is essentially an equivalent state. So, in this case the adage that \textit{it's so wrong it's right} holds true.
+
+Additionally some features of the formula in theorem \ref{cool_thm}, 
 \begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code $\mathscr{S}_n$:
 \begin{enumerate}
 \item Does not depend on the message $m$, and
@@ -937,30 +939,41 @@ For example, $f(n)= 25n^3 + 170000n$ is $O(n^{17})$ because $n^3 \leq n^{17} $ a
 	
 \chapter{Tensors}
 \chapter{Finite Geometries}
-\chapter{TODO List}
-      \section{Chapter 1: Quantum}
-      Finish section on phase
-      \section{Chapter 2: Coding Theory}
-      Write this section
-      \section{Chapter 3: Learning Theory}
-      Write this section
-      Include original proofs
-      \section{Chapter 4: Simplex Code}
-      Write this section
-      Include cool formula/proof :)
-      \section{Chapter 5: Reed-Muller Codes}
-      Write this section (maybe write after section on finite geometries)
-      \section{Chapter 6: Quantum Decoding for RM Codes}
-      Write this section
-      \section{Appendices}
-      	\subsection{Asymptotic Complexity}
-      	Write this to be more general for runtime and query complexity.
-      	\subsection{Tensors}
-      	Write this appendix
-      	\subsection{Finite Geometries}
-      	Write this appendix
+Finite geometries are mathematical objects that codes map onto well, and they provide a new way of viewing codes. In this appendix, we will explore the properties of finite geometries that are vital to the classical Reed-Muller decoding algorithm with a focus on the projective geometry and affine or Euclidean geometry. This material is largely based on Appendix B in [REFERENCE MACWILLIAMS AND SLOANE]
 
+\begin{definition}(Projective geometry) A finite projective geometry consists of a finite set $\Omega$ of \textit{points} $p, q, \ldots$ together with a collection of subsets $L, M, \ldots$ of $\Omega$ called \textit{lines}, which satisfies the following axioms (If $p \in L$ we say that $p$ lies on $L$ or $L$ passes through $p$.)
+\begin{enumerate}
+\item There is a unique line (denoted by $(pq)$) passing through any two distinct points $p$ and $q$.
+\item Every line contains at least 3 points.
+\item If distinct lines $L, M$ have a common point $p$, and if $q,  r\neq p$ are points of $L$ and $s, t\neq p$ are points of $M$, then the lines $(qt)$ and $(rs)$ also have a common point.
+\item For any point $p$ there are at least two lines not containing $p$, and for any line $L$ there are at least two points not on $L$.
+\end{enumerate}
+A \textit{subspace} of the projective geometry is a subset $S$ of $\Omega$ such that
+\begin{enumerate}[resume]
+\item If $p,q$ are distinct points of $S$, then $S$ contains all of the points of $(pq)$
+\end{enumerate}
+A \textit{hyperplane} $H$ is a maximal proper subspace, so that $\Omega$ is the only subspace which properly contains $H$.
+\end{definition}
 
+\begin{definition}[Euclidean geometry] An affine or Euclidean geometry is obtained by deleting the points of a fixed hyperplane $H$ (called the hyperplane at infinity) from the subspaces of a projective geometry. The resulting sets are called the subspaces of the affine geometry.
+
+A set $T$ of points in a projective or affine geometry is called \textit{independent} if, for every $x \in T, x$ does not belong to the smallest subspace which contains $T/\{x\}$. The \textit{dimension} of a subspace $S$ is $r-1$, where $r$ is the size of the largest set of independent points in $S$. In particular, if $S = \Omega$ this defines the dimension of the projective geometry.
+\end{definition}
+
+We denote Euclidean and projective geometries of dimension $m$ constructed from a finite field $GF(q)$ by $EG(m,q)$ and $PG(m,q)$, respectively. Now, we will discuss the projective and affine geometries that are obtained from finite fields, as they are most pertinent to Reed-Muller codes.
+
+Let $GF(q)$ be a finite field and suppose $m \geq 2$. We will take the points of $\Omega$ to be the nonzero $(m+1)$-tuples in $GF(q)^{m+1}$ such that
+\begin{equation*}
+(a_0, \ldots, a_m) \equiv (\lambda a_0, \ldots \lambda a_m) \quad \lambda, a_i \in GF(q), \quad \lambda \neq 0.
+\end{equation*}
+These are called \textit{homogenous coordinates} for the points. 
+
+A \textit{hyperplane} of subspace of dimension $m-1$ in $PG(m,q)$ consists of those points $(a_0, \ldots , a_m)$ which satisfy a homogenous linear equation 
+\begin{equation*}
+\lambda_0 a_0 + \lambda_1 a_1 + \ldots + \lambda_m a_m = 0, \quad \lambda_i \in GF(q)
+\end{equation*}
+
+The affine or projective geometry $EG(m,q)$ is obtained from $PG(m,q)$ by deleting the points of any hyperplane $H$. A subspace of $EG(m,q)$ of dimension $r$ is called an \textit{$r$-flat}. 
 %This is where endnotes are supposed to go, if you have them.
 %I have no idea how endnotes work with LaTeX.
 
