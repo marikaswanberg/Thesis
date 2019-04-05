@@ -38,8 +38,8 @@
 \contentsline {subsection}{\numberline {4.3.2}Algorithm with Noisy Oracle}{29}
 \contentsline {chapter}{Chapter 5: Reed-Muller Codes}{33}
 \contentsline {section}{\numberline {5.1}Boolean Functions}{33}
-\contentsline {section}{\numberline {5.2}Encoding}{33}
-\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{33}
+\contentsline {section}{\numberline {5.2}Encoding}{34}
+\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{34}
 \contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{35}
 \contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{35}
 \contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{35}

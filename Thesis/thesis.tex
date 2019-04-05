@@ -861,7 +861,16 @@ Additionally some features of the formula in theorem \ref{cool_thm},
 Corollary \ref{corollary} follows from the proof of Theorem \ref{cool_thm}.
 \end{proof}
 \chapter{Reed-Muller Codes}
+Reed-Muller codes are error-correcting codes with fascinating mathematical properties.  They are used in deep space communications to reliably transmit messages across space and time. Reed-Muller codes may be one of the oldest and most well-studied codes.
+
+While the binary simplex code (singular) only had one parameter, namely the block length, the Reed-Muller codes (plural) have two parameters. In fact, Reed-Muller codes are a generalization of the binary simplex code (also called the Walsh-Hadamard code) and are closely related to other important codes. They belong to the family of \textit{geometrical codes}, as evidenced by their close relationship with projective and Euclidean geometries (for which there is an appendix), and fortunately they are easier to decode than other geometrical codes. While they are used in some instances, such as for deep space communications, they have a smaller minimum distance than BCH (Bose-Chaudhuri-Hocquenghem) codes of the same block length.
+
+
 \section{Boolean Functions}
+One interesting way to conceive of Reed-Muller (RM) codes is as polynomials of Boolean functions. Let the block length $n = 2^m$ for some $m\in \Z^+$. The input to a RM Boolean function will be $m$ variables taking binary values $v_1, \ldots, v_m \in \Z_2$. More precisely,
+
+\begin{definition}(Boolean function) Any function $f: \Z_2^m \rightarrow \Z_2$ which takes $m$ binary input values $v_1, \ldots, v_m$ and outputs 0 or 1 is a Boolean function.
+\end{definition}
 \section{Encoding}
 \section{Classical Decoding Algorithm}
 Projective geometry description
