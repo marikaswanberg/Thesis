@@ -39,6 +39,7 @@
 \usepackage[hyphens]{url}
 \usepackage{rotating}
 \usepackage{natbib}
+\usepackage{mathtools}
 % Comment out the natbib line above and uncomment the following two lines to use the new 
 % biblatex-chicago style, for Chicago A. Also make some changes at the end where the 
 % bibliography is included. 
@@ -936,8 +937,9 @@ G(r, m-1) & G(r, m-1) \\
 \end{equation*}
 \end{theorem}
 
-\begin{example}
-The generator matrix for $\mathscr{R}(4,4)$ is 
+\begin{example} \label{gen_matrix_ex}
+The generator matrix for $\mathscr{R}(4,4)$ is displayed in Table \ref{gen_matrix}.
+\begin{table}
 \begin{center}
 \begin{tabular}{ r c }
  1 & 1111111111111111 \\ 
@@ -961,14 +963,67 @@ $v_1v_2v_3$ & 0000000100000001  \\
 \hline
 $v_1v_2v_3v_4$ & 0000000000000001 
 \end{tabular}
+\caption{Generator matrix for $\mathscr{R}(4,4)$. \label{gen_matrix}}
 \end{center} 
+\end{table}
 So, by simple matrix multiplication with our 16-bit message, we will obtain the corresponding codeword. Note that the generator matrix for $\mathscr{R}(3,4)$ is simply rows 1-15 of the above matrix, and the generator matrix for $\mathscr{R}(2,4)$ is just rows 1-11, and so on. 
 
 The rows of the above matrix form a basis for the code, meaning any codeword in $\mathscr{R}(4,4)$ can be expressed uniquely as a linear combination of the rows in the generator matrix. That unique linear combination is, in fact, the message that corresponds to the codeword. Now, we will look at the classical decoding algorithm.
 \end{example}
 \section{Classical Decoding Algorithm}
-Projective geometry description
+There are a few ways to approach the decoding algorithm for Reed-Muller codes. By far the most elegant is to view RM codes through the lens of finite geometries and utilize the framework that geometries provide. The reader is encouraged to read Appendix \ref{finite_geom_chapter} before proceeding with the geometric description of the RM decoding algorithm.
 
+\subsection{Geometric Connections}
+Recall that the Euclidean geometry of dimension $m$ over $GF(2)$, denoted $EG(m,2)$, contains $2^m$ points whose coordinates are all of the binary vectors of length $m$, $(v_1, \ldots, v_m)$. If the zero point is deleted, the projective geometry $PG(m-1, 2)$ is obtained. We can think of the codewords of $\mathscr{R}(r,m)$ in this context, namely as subsets of $EG(m,2)$. However, we must have a way to specify the subsets. This is achieved by looking at the codewords as \textit{incidence vectors} for these subsets.
+
+\begin{definition}[Incidence vector] Let $S \subseteq X$ where $\lvert X \rvert = 2^m$ and $X$ is well-ordered. Then, $v \in \Z_2^m$ is an incidence vector for $S$ if
+\begin{equation*}
+v_i = 1 \iff x_i \in S,
+\end{equation*}
+where $x_i$ is the $i$-th element of the ordered set $X$. Incidence vectors are also called \textit{indicator vectors}.
+\end{definition}
+
+\begin{example}
+$EG(3,2)$ consists of 8 points, call them $P_0, \ldots, P_7$, whose coordinates we may take to be the following column vectors:
+\begin{center}
+\begin{tabular}{ c | c c c c c c c c }
+ & $P_0$ & $P_1$ & $P_2$ &$ P_3$ &$ P_4$ &$ P_5 $& $P_6$ & $P_7$ \\
+ \hline
+$\bar{v_1}$ & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0\\
+$\bar{v_2}$ & 1 & 1 & 0 & 0 & 1 & 1 & 0 & 0\\
+$\bar{v_3}$ & 1 & 1 & 1 & 1 & 0 & 0 & 0 & 0\\   
+\end{tabular}
+\end{center}
+
+The subset $S = \{P_2, P_3, P_4, P_5\}$ has incidence vector $\chi(S) = 00111100$. This is a codeword of $\mathscr{R}(1,3)$. So, there is a one-to-one correspondence between codewords in $\mathscr{R}(1,3)$ and subsets of $EG(3,2)$. This property will prove useful for decoding.
+\end{example}
+
+For any value $m$, let us take the complements of the vectors $v_m, \ldots, v_1$.
+
+\begin{center}
+\begin{tabular}{ l | c c c c c c c c c }
+& $P_0$ & $P_1$ & $P_2$ & $P_3$ & $\ldots$ &$P_{2^m-4}$ & $P_{2^m-3}$ & $P_{2^m-2}$ & $P_{2^m-1}$\\
+\hline
+$\bar{v}_m$ & 1 & 1 & 1 & 1 &$\ldots$ & 0 & 0 & 0 & 0\\
+$\bar{v}_{m-1}$ &1 & 1 & 1 & 1 &$\ldots$ & 0 & 0 & 0 & 0\\
+$\vdots$ &$\vdots$ &$\vdots$ &$\vdots$ &$\vdots$ &$\ddots$ &$\vdots$ &$\vdots$ &$\vdots$ &$\vdots$ \\
+$\bar{v}_2$ & 1 & 1 & 0 & 0 & $\ldots$ & 1 & 1 & 0 & 0\\   
+$\bar{v}_1$ & 1 & 0 & 1 & 0 &$\ldots$ & 1 & 0 & 1 & 0\\   
+\end{tabular}
+\end{center}
+The columns of this matrix are the points in $EG(m,2)$. Again, there is a one-to-one correspondence between the subsets of $EG(m,2)$ and binary vectors of length $2^m$. In particular, any vector $x \in \Z_2^m$ is an incidence vector for a subset of $EG(m,2)$. The vectors $v_i$ are themselves the characteristic vectors of hyperplanes which pass through the origin (subspaces of dimension $m-1$), the $v_iv_j$ describe subspaces of dimension $m-2$, and so on.
+
+\subsection{Decoding Algorithm}
+The decoding algorithm is a little involved, and in particular it is notationally challenging. Thus, we will work with $\mathscr{R}(2,4)$ to illustrate the algorithm rather than using general notation (recall that rows 1-11 of Table \ref{gen_matrix} contains the generator matrix for this code).
+
+Denote the eleven bits of the message as $m = m_0m_4m_3m_2m_1m_{34}m_{24}m_{14}m_{23}m_{13}m_{12}$. When we apply $m \cdot G$ where $G$ is the generator matrix for $\mathscr{R}(2,4)$, this message gets encoded into the following codeword.
+
+\begin{align*}
+m \cdot G 
+&= m_01 + m_4v_4 + \ldots + m_1v_1 + \ldots + m_{12}v_1v_2 \\
+& \stackrel{\mathclap{call}}{=} c_0c_1c_2\ldots c_{15} \\
+& = c.
+\end{align*}
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
 \section{Multivariate Polynomial Interpolation}
@@ -1041,7 +1096,7 @@ For example, $f(n)= 25n^3 + 170000n$ is $O(n^{17})$ because $n^3 \leq n^{17} $ a
 
 	
 \chapter{Tensors}
-\chapter{Finite Geometries}
+\chapter{Finite Geometries} \label{finite_geom_chapter}
 Finite geometries are mathematical objects that codes map onto well, and they provide a new way of viewing codes. In this appendix, we will explore the properties of finite geometries that are vital to the classical Reed-Muller decoding algorithm with a focus on the projective geometry and affine or Euclidean geometry. This material is largely based on Appendix B in [REFERENCE MACWILLIAMS AND SLOANE]
 
 \begin{definition}(Projective geometry) A finite projective geometry consists of a finite set $\Omega$ of \textit{points} $p, q, \ldots$ together with a collection of subsets $L, M, \ldots$ of $\Omega$ called \textit{lines}, which satisfies the following axioms (If $p \in L$ we say that $p$ lies on $L$ or $L$ passes through $p$.)
