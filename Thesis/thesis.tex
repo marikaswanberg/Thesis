@@ -124,42 +124,14 @@
 
 % Acknowledgements (Acceptable American spelling) are optional
 % So are Acknowledgments (proper English spelling)
-%    \chapter*{Acknowledgements}
+    \chapter*{Acknowledgements}
 %	I want to thank a few people.
 
 % The preface is optional
 % To remove it, comment it out or delete it.
    \chapter*{Preface}
 
-	\begin{theorem}
-	a
-	\end{theorem}
-	
-	\begin{definition}
-	b
-	\end{definition}
-	
-	\begin{example}
-	c
-	\end{example}
-
-    \chapter*{List of Abbreviations}
-		You can always change the way your abbreviations are formatted. Play around with it yourself, use tables, or come to CUS if you'd like to change the way it looks. You can also completely remove this chapter if you have no need for a list of abbreviations. Here is an example of what this could look like:
-
-	\begin{table}[h]
-	\centering % You could remove this to move table to the left
-	\begin{tabular}{ll}
-		\textbf{ABC}  	&  American Broadcasting Company \\
-		\textbf{CBS}  	&  Columbia Broadcasting System\\
-		\textbf{CDC}  	&  Center for Disease Control \\
-		\textbf{CIA}  	&  Central Intelligence Agency\\
-		\textbf{CLBR} 	&  Center for Life Beyond Reed\\
-		\textbf{CUS}  	&  Computer User Services\\
-		\textbf{FBI}  	&  Federal Bureau of Investigation\\
-		\textbf{NBC}  	&  National Broadcasting Corporation\\
-	\end{tabular}
-	\end{table}
-	
+ 
 
     \tableofcontents
 % if you want a list of tables, optional
@@ -169,11 +141,11 @@
 
 % The abstract is not required if you're writing a creative thesis (but aren't they all?)
 % If your abstract is longer than a page, there may be a formatting issue.
- %   \chapter*{Abstract}
+    \chapter*{Abstract}
 %	The preface pretty much says it all.
 	
-%	\chapter*{Dedication}
-%	You can have a dedication here if you wish.
+	\chapter*{Dedication}
+	You can have a dedication here if you wish.
 
   \mainmatter % here the regular arabic numbering starts
   \pagestyle{fancyplain} % turns page numbering back on
@@ -851,7 +823,7 @@ P_{succ}
 Interestingly, this formula shows that the quantum binary simplex decoding algorithm has $P_{succ} = 1$ if $k = 2^n$. In other words, if the quantum oracle is so noisy that it flips every single bit of the codeword, the decoding algorithm is still able to compute the correct message. This puzzled both the student and adviser on this thesis until we realized that flipping all of the bits leads to a \textit{global phase shift} in the quantum state post-query, which as was discussed in Chapter 1, is essentially an equivalent state. So, in this case the adage that \textit{it's so wrong it's right} holds true.
 
 Additionally some features of the formula in theorem \ref{cool_thm}, 
-\begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code $\mathscr{S}_n$:
+\begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code $\mathcal{S}_n$:
 \begin{enumerate}
 \item Does not depend on the message $m$, and
 \item Does not depend on $E$, only $\lvert E \rvert$.
@@ -860,6 +832,9 @@ Additionally some features of the formula in theorem \ref{cool_thm},
 \begin{proof}
 Corollary \ref{corollary} follows from the proof of Theorem \ref{cool_thm}.
 \end{proof}
+
+
+
 \chapter{Reed-Muller Codes}
 Reed-Muller codes are error-correcting codes with fascinating mathematical properties.  They are used in deep space communications to reliably transmit messages across space and time. Reed-Muller codes may be one of the oldest and most well-studied codes.
 
@@ -867,11 +842,45 @@ While the binary simplex code (singular) only had one parameter, namely the bloc
 
 
 \section{Boolean Functions}
-One interesting way to conceive of Reed-Muller (RM) codes is as polynomials of Boolean functions. Let the block length $n = 2^m$ for some $m\in \Z^+$. The input to a RM Boolean function will be $m$ variables taking binary values $v_1, \ldots, v_m \in \Z_2$. More precisely,
+One interesting way to conceive of Reed-Muller (RM) codes is as polynomials of Boolean functions. Let the block length $N = 2^n$ for some $n\in \Z^+$. The input to a RM Boolean function will be $n$ variables taking binary values $v_1, \ldots, v_n \in \Z_2$. More precisely,
 
-\begin{definition}(Boolean function) Any function $f: \Z_2^m \rightarrow \Z_2$ which takes $m$ binary input values $v_1, \ldots, v_m$ and outputs 0 or 1 is a Boolean function.
+\begin{definition}(Boolean function) Any function $f: \Z_2^n \rightarrow \Z_2$ which takes $n$ binary input values $v_1, \ldots, v_n$ and outputs 0 or 1 is a Boolean function.
 \end{definition}
+
+A Boolean function $f$ can be defined in terms of its truth table, that is, a simple enumeration of what $f$ evaluates to on all $2^n$ inputs.
+
+\begin{example}
+Suppose $N = 2^3$. Then, we may represent a Boolean function $f: \Z_2^3 \rightarrow \Z_2$ with its truth table. For example, we could define the following function.
+\begin{center}
+\begin{tabular}{ |c|c| } 
+ \hline
+$ v_1v_2v_3$ &$f(v_1, v_2, v_3)$  \\ 
+\hline
+000 & 0  \\ 
+001 & 0 \\
+010 & 0 \\
+011 & 1\\
+100 & 1\\
+101 & 0\\
+110 & 0\\
+111 & 0 \\
+ \hline
+\end{tabular}
+\end{center}
+Now, a more compact way of representing the same function above is by simply writing $f = 00011000$. 
+\end{example}
+All of the normal Boolean operations apply to Boolean functions, with the following modifications: $f \oplus g = f+g, f \land g = fg, $ and $\lnot f = 1 + f$. In particular, Boolean functions can be written as a polynomial of some particular functions which we will denote $v_1, v_2, \ldots v_n$. This notational overlap is not accidental, for $v_i$ is a function which simply evaluates to whatever the $i$-th bit of the input is. In general, we can write $v_i = (0^{2^{i-1}} 1^{2^{i-1}})^{2^{n-i}}$ where we use the computer science notation for concatenation as multiplication.
+\begin{example}
+For $N=2^3$ again, then the following are the special functions $v_1, v_2, v_3$, which we will care about later,  written in the notation defined above :
+\begin{align*}
+& v_1 = 01010101 \\
+& v_2 = 00110011\\
+&v_3 = 00001111
+\end{align*}
+\end{example}
+We can write any Boolean function $f: \Z_2^n \rightarrow \Z_2$ as a polynomial of the special functions $v_1, \ldots v_n$ together with the constant function 1 (which always returns 1). 
 \section{Encoding}
+Now, consider how one might connect these Boolean functions to error-correcting codes. As was mentioned, any Boolean function can be represented as a polynomial of the functions $1, v_1, \ldots, v_n$. That polynomial has a coefficient vector $(a_1, \ldots, a_n)$, which we will suggestively call the message, and the output of the polynomial $c_1c_2 \ldots c_N$ which represents the codeword.
 \section{Classical Decoding Algorithm}
 Projective geometry description
 

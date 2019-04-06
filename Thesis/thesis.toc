@@ -39,14 +39,14 @@
 \contentsline {chapter}{Chapter 5: Reed-Muller Codes}{33}
 \contentsline {section}{\numberline {5.1}Boolean Functions}{33}
 \contentsline {section}{\numberline {5.2}Encoding}{34}
-\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{34}
-\contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{35}
-\contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{35}
-\contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{35}
-\contentsline {section}{\numberline {6.3}Stateless Noisy Oracle}{35}
-\contentsline {chapter}{Conclusion}{37}
-\contentsline {section}{\numberline {6.1}More info}{37}
-\contentsline {chapter}{Appendix A: Asymptotic Complexity}{39}
-\contentsline {chapter}{Appendix B: Tensors}{41}
-\contentsline {chapter}{Appendix C: Finite Geometries}{43}
-\contentsline {chapter}{Bibliography}{45}
+\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{35}
+\contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{37}
+\contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{37}
+\contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{37}
+\contentsline {section}{\numberline {6.3}Stateless Noisy Oracle}{37}
+\contentsline {chapter}{Conclusion}{39}
+\contentsline {section}{\numberline {6.1}More info}{39}
+\contentsline {chapter}{Appendix A: Asymptotic Complexity}{41}
+\contentsline {chapter}{Appendix B: Tensors}{43}
+\contentsline {chapter}{Appendix C: Finite Geometries}{45}
+\contentsline {chapter}{Bibliography}{47}
