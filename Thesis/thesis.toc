@@ -39,7 +39,8 @@
 \contentsline {chapter}{Chapter 5: Reed-Muller Codes}{33}
 \contentsline {section}{\numberline {5.1}Boolean Functions}{33}
 \contentsline {section}{\numberline {5.2}Encoding}{34}
-\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{35}
+\contentsline {subsection}{\numberline {5.2.1}Generator Matrix}{36}
+\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{36}
 \contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{37}
 \contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{37}
 \contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{37}

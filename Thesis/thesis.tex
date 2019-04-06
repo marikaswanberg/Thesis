@@ -880,7 +880,90 @@ For $N=2^3$ again, then the following are the special functions $v_1, v_2, v_3$,
 \end{example}
 We can write any Boolean function $f: \Z_2^n \rightarrow \Z_2$ as a polynomial of the special functions $v_1, \ldots v_n$ together with the constant function 1 (which always returns 1). 
 \section{Encoding}
-Now, consider how one might connect these Boolean functions to error-correcting codes. As was mentioned, any Boolean function can be represented as a polynomial of the functions $1, v_1, \ldots, v_n$. That polynomial has a coefficient vector $(a_1, \ldots, a_n)$, which we will suggestively call the message, and the output of the polynomial $c_1c_2 \ldots c_N$ which represents the codeword.
+Now, consider how one might connect these Boolean functions to error-correcting codes. As was mentioned, any Boolean function can be represented as a polynomial of the functions $1, v_1, \ldots, v_n$. That polynomial has a coefficient vector $(a_1, \ldots, a_n)$, which we will suggestively call the message, and the output of the polynomial $c_1c_2 \ldots c_N$ which represents the codeword. 
+
+\begin{definition} (Reed-Muller code) The $r$th order Reed-Muller code $\mathscr{R}(r,m)$ of length $n = 2^m$ , where $0 \leq r \leq m$, is the set of all vectors $f$ where $f(v_1, \ldots, v_m)$ is a Boolean function which is a polynomial of degree at most $r$.
+\end{definition}
+
+In other words, the $r$th order Reed-Muller code of length $2^m$ is the set of all linear combinations of products of $v_i$'s up to size $r$, i.e.
+\begin{equation} \label{reed_muller_poly}
+\sum_{\substack{S \subseteq [m] \\ \lvert S \rvert \leq r}} a_S \cdot \prod_{i \in S} v_i,  \quad a_S \in \Z_2.
+\end{equation}
+
+Hopefully a lengthy example will clarify this definition.
+\begin{example}
+The second order RM code of length 8, $\mathscr{R}(2,3)$ consists of the 128 codewords
+\begin{equation*} 
+a_0\mathbf{1} + a_1v_1 + a_2v_2 + a_3v_3 + a_{12}v_1v_2 + a_{13}v_1v_3 + a_{23}v_2v_3, \quad a_i \in \Z_2. 
+\end{equation*}
+This code has order 2 because each term in the polynomial is a product of at most two Boolean functions. By varying the coefficients $a_i$ according to the bits of the message, we obtain a polynomial that corresponds to the codeword. 
+
+For example, suppose we wanted to encode the message $m = 0110101$. We would obtain the following function as the codeword
+\begin{equation*}
+f_c = 0\mathbf{1} + 1v_1 + 1v_2 + 0v_3 + 1v_1v_2 + 0v_1v_3 + 1v_2v_3.
+\end{equation*}
+Now, performing addition and multiplication of the Boolean functions in the terms of $f_c$, we obtain: 
+\begin{align*}
+f_c 
+& = v_1 + v_2 + v_1v_2 + v_2v_3 \\
+& = 01010101 \oplus 00110011 \oplus 00010001 \oplus 00000011 \\
+& = 01110100.
+\end{align*}
+So, for message $m = 0110101$ the corresponding codeword is $c=01110100$, which can also be thought of as the polynomial $f_c$ above.
+\end{example}
+
+The set $\{\Pi_{i \in S}v_i \mid S \subseteq [m], \lvert S \rvert \leq r\} \cup \{\mathbf{1}\}$ forms a basis for the code, and it has size
+\begin{equation*}
+\sum_{i=0}^{r} {m \choose i}
+\end{equation*}
+
+\begin{theorem} 
+$\mathscr{R}(r,m)$ has minimum distance $2^{m-r}$.
+\end{theorem}
+\begin{proof}
+This induction proof will be left as an exercise.\\
+\end{proof}
+\subsection{Generator Matrix}
+For those who prefer to think of encoding functions in terms of generator matrices, the generator matrix for $\mathscr{R}(r,m)$ has as its rows the terms of the polynomial in formula \ref{reed_muller_poly}.
+
+\begin{theorem} The generator matrix $G$ for $\mathscr{R}(r,m)$ has the following property
+\begin{equation*}
+G(r, m) = 
+\begin{bmatrix}
+G(r, m-1) & G(r, m-1) \\
+0 & G(r-1,m-1)
+\end{bmatrix} .
+\end{equation*}
+\end{theorem}
+
+\begin{example}
+The generator matrix for $\mathscr{R}(4,4)$ is 
+\begin{center}
+\begin{tabular}{ r c }
+ 1 & 1111111111111111 \\ 
+ \hline
+$v_4$ & 0000000011111111 \\  
+$v_3$ & 0000111100001111 \\
+$v_2$ & 0011001100110011  \\
+$v_1$ & 0101010101010101 \\
+\hline
+$v_3v_4$ & 0000000000001111  \\
+$v_2v_4$ & 0000000000110011 \\
+$v_1v_4$ & 0000000001010101  \\
+$v_2v_3$ & 0000001100000011  \\
+$v_1v_3$ & 0000010100000101  \\
+$v_1v_2$ & 0001000100010001  \\
+\hline
+$v_2v_3v_4$ & 0000000000000011 \\
+$v_1v_3v_4$ & 0000000000000101 \\
+$v_1v_2v_4$ & 0000000000010001  \\
+$v_1v_2v_3$ & 0000000100000001  \\
+\hline
+$v_1v_2v_3v_4$ & 0000000000000001 
+\end{tabular}
+\end{center} 
+So, by simple matrix multiplication with our 16-bit message, we will obtain the corresponding codeword. Note that the generator matrix for $\mathscr{R}(3,4)$ is simply rows 1-15 of the above matrix, and the generator matrix for $\mathscr{R}(2,4)$ is just rows 1-11, and so on. These rows form a basis for the code, meaning any codeword in $\mathscr{R}(4,4)$ can be expressed uniquely as a linear combination of the rows in the generator matrix.
+\end{example}
 \section{Classical Decoding Algorithm}
 Projective geometry description
 
