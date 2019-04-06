@@ -962,7 +962,9 @@ $v_1v_2v_3$ & 0000000100000001  \\
 $v_1v_2v_3v_4$ & 0000000000000001 
 \end{tabular}
 \end{center} 
-So, by simple matrix multiplication with our 16-bit message, we will obtain the corresponding codeword. Note that the generator matrix for $\mathscr{R}(3,4)$ is simply rows 1-15 of the above matrix, and the generator matrix for $\mathscr{R}(2,4)$ is just rows 1-11, and so on. These rows form a basis for the code, meaning any codeword in $\mathscr{R}(4,4)$ can be expressed uniquely as a linear combination of the rows in the generator matrix.
+So, by simple matrix multiplication with our 16-bit message, we will obtain the corresponding codeword. Note that the generator matrix for $\mathscr{R}(3,4)$ is simply rows 1-15 of the above matrix, and the generator matrix for $\mathscr{R}(2,4)$ is just rows 1-11, and so on. 
+
+The rows of the above matrix form a basis for the code, meaning any codeword in $\mathscr{R}(4,4)$ can be expressed uniquely as a linear combination of the rows in the generator matrix. That unique linear combination is, in fact, the message that corresponds to the codeword. Now, we will look at the classical decoding algorithm.
 \end{example}
 \section{Classical Decoding Algorithm}
 Projective geometry description
