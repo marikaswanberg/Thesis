@@ -1014,9 +1014,12 @@ $\bar{v}_1$ & 1 & 0 & 1 & 0 &$\ldots$ & 1 & 0 & 1 & 0\\
 The columns of this matrix are the points in $EG(m,2)$. Again, there is a one-to-one correspondence between the subsets of $EG(m,2)$ and binary vectors of length $2^m$. In particular, any vector $x \in \Z_2^m$ is an incidence vector for a subset of $EG(m,2)$. The vectors $v_i$ are themselves the characteristic vectors of hyperplanes which pass through the origin (subspaces of dimension $m-1$), the $v_iv_j$ describe subspaces of dimension $m-2$, and so on.
 
 \subsection{Decoding Algorithm}
-The decoding algorithm is a little involved, and in particular it is notationally challenging. Thus, we will work with $\mathscr{R}(2,4)$ to illustrate the algorithm rather than using general notation (recall that rows 1-11 of Table \ref{gen_matrix} contains the generator matrix for this code).
+As with the other error-correcting codes we have studied thus far, RM decoding will rely on parity checks and \textit{majority logic decoding}, which is a slightly different term for \textit{maximum likelihood decoding}, or \textit{nearest neighbor decoding}. Finite geometries will inform the algorithm as to exactly which parity checks to compute.
 
-Denote the eleven bits of the message as $m = m_0m_4m_3m_2m_1m_{34}m_{24}m_{14}m_{23}m_{13}m_{12}$. When we apply $m \cdot G$ where $G$ is the generator matrix for $\mathscr{R}(2,4)$, this message gets encoded into the following codeword.
+The decoding algorithm is a little involved, so we will describe the general decoding algorithm followed by an example of encoding and decoding.
+We will work with $\mathscr{R}(2,4)$ to illustrate the algorithm notation rather than using general notation (recall that rows 1-11 of Table \ref{gen_matrix} contains the generator matrix for this code).
+
+Denote the eleven bits of the message as $m = m_0m_4m_3m_2m_1m_{34}m_{24}m_{14}m_{23}m_{13}m_{12}$. The notation here is taken to match the rows of Table \ref{gen_matrix}. When we apply $m \cdot G$ where $G$ is the generator matrix for $\mathscr{R}(2,4)$, this message gets encoded into the following codeword.
 
 \begin{align*}
 m \cdot G 
@@ -1024,6 +1027,56 @@ m \cdot G
 & \stackrel{\mathclap{call}}{=} c_0c_1c_2\ldots c_{15} \\
 & = c.
 \end{align*}
+Now, the challenge is to decode $\hat{c}$, some noisy version of a codeword (note that $\hat{c}$ may or may not be a codeword itself). In general, to decode a noisy codeword from $\mathscr{R}(r,m)$, we construct a series of parity checks. First, we will find $m_\sigma$ where $\sigma = \sigma_1 \ldots \sigma_r$, say. The corresponding row of the generator matrix $v_{\sigma_1} \ldots v_{\sigma_r}$ is the incidence vector of an $(m-r)$-dimensional subspace $S$ of $EG(m,2)$. To find $S$, use the row of the generator matrix as an indicator vector on the matrix of complements of the Reed-Muller monomial basis vectors. Now, we take $T$ to be the complementary subspace to $S$ with incidence vector $v_{\tau_1}\ldots v_{\tau_{m-r}}$ where $\{\tau_1, \ldots \tau_{m-r}\} = [m]\setminus \{\sigma_1, \ldots, \sigma_r\}$. Then $T$ meets $S$ at a single point, namely the origin. Now, let $U_1, \ldots, U_{2^{m-r}}$ be the \textit{translates} of $T$ in $EG(m,2)$, including $T$ itself. Each $U_i$ meets $S$ in exactly one point.
+
+\begin{theorem} \label{error_correct_thm}
+If there are no errors, $m_\sigma$ is given by
+\begin{equation*}
+m_\sigma = \sum_{P\in U_i} c_{P}, \quad i = 1, \ldots, 2^{m-r}
+\end{equation*}
+\end{theorem}
+Note that there are $2^{m-r}$ equations that should all yield the same $m_{\sigma}$, and if not, one can apply majority logic. This theorem implies that if no more than $\lfloor\frac{1}{2}(2^{m-r} -1)\rfloor$ errors occur, majority logic decoding will recover each of the symbols $v_{\sigma}$ correctly, where $\sigma$ is a string of any $r$ symbols. 
+	After going through this process for all $r$-length subscripts in $m$, we subtract the corresponding $a_{ij}v_iv_j$'s from $c$ to obtain a new codeword $c' = c_0'c_1' \ldots c_{15}'$ and repeat the process for all $r-1$-length subscripts. We continue this process until all we have left is $c_01 + \text{error}$ and $c_0 = 0$ or 1 according to the number of 1's in the remainder of the codeword.
+	
+\subsection{Geometric Decoding Example}
+Again, we will work with $\mathscr{R}(2,4)$ since rows 1-11 of Table \ref{gen_matrix} are the generator matrix for the code. First, let us encode some message $ m_0m_4m_3m_2m_1m_{34}m_{24}m_{14}m_{23}m_{13}m_{12} = 00001010100$, which is three zero's followed by the ascii value for `T' in binary (`T' for thesis). 
+
+Now, we encode this message by matrix multiplication (mod 2) to get $c_0 \ldots c_{15} = 0101011001100101$. Now, suppose the channel flips a bit in the process of sending the codeword, and $\hat{c} = 0101011\underline{1}01100101$ is what the decoder receives (without the flipped bit underlined, obviously).
+
+The first bit of the message that we want to decode is $m_{12}$, so applying the notation used in the general decoding, we have $\sigma = 12$. Now, we look at the row corresponding to $v_1v_2$, which is row 11 of Table \ref{gen_matrix}: 0001000100010001. This is our indicator vector for the complements of $v_1, \ldots,v_4$, which is below:
+
+\begin{center}
+\begin{tabular}{ c | c  }
+$\bar{v_4}$ & 1111111100000000\\
+$\bar{v_3}$ & 1111000011110000 \\ 
+$\bar{v_2}$ & 1100110011001100\\
+$\bar{v_1}$ & 1010101010101010 
+\end{tabular}
+\end{center}
+So, from this table we get $S =\{1100, 1000, 0100, 0000\}$. Now, the incidence vector for $T$ is the row of Table \ref{gen_matrix} corresponding to $v_{34}$. Thus, the incidence vector for $T$ is 0000000001111. So, $T = \{0011,0010, 0001, 0000\}$. Indeed $S \cap T = \{0000\}$. 
+
+Now, we take all translates of $T$ in $EG(4,2)$ (that is, we take each point in $S$ and translate $T$ by that value). The translates of $T$ are: 
+\begin{align*}
+& U_1 =  \{1100 + t \mid t \in T\} = \{1111, 1110, 1101, 1100\} \\
+& U_2 = \{1000 + t \mid t \in T\} = \{1011, 1010, 1001, 1000\} \\
+& U_3 = \{0100 + t \mid t \in T\} = \{0111, 0110, 01010, 0100\} \\
+& U_4 =  \{0000 + t \mid t \in T\} = \{0011, 0010, 0001, 0000\} \\
+\end{align*}
+Now, we will use the bits of the received codeword $\hat{c}$ to compute $m_{12}$, the last bit of the message. By applying Theorem \ref{error_correct_thm}, we have that 
+\begin{equation*}
+m_{12}  = \sum_{P \in U_i} c_P, \quad i = 1,2,3,4 
+\end{equation*}
+This gives us the four following checksums, which should all be equal in the case of no errors.
+\begin{align*}
+ m_{12} 
+& = c_{15} + c_{14} + c_{13} + c_{12}\\
+& = c_{11} + c_{10} + c_{9} + c_{8}\\
+& = c_{7} + c_{6} + c_{5} + c_{4} \\
+& = c_{3} + c_2 + c_1 + c_0
+\end{align*}
+So, these equations give us that $m_{12} =0,0,1,0 $. These equations are \textit{not} equal because bit $c_7$ was flipped by the noisy channel. But, the decoder doesn't know which bit was flipped. Instead, it decides that $m_{12} = 0$ using majority logic. Indeed, this is correct! (Note how if two equations didn't match, the decoder would possibly make a decoding error).
+
+Now, the decoder will continue using this process to decode $m_{13}, m_{23}, m_{14}, $ and $m_{34}$. Once it has figured out those five bits, it will subtract $m_{34}v_3v_4 + m_{14}v_1v_4 + m_{23}v_2v_3 + m_{13}v_1v_3$ from $\hat{c}$ and proceed with the algorithm to decode $m_0 \ldots m_4$. We will spare the reader these details, but that at least conveys the tedium involved in decoding. Next up: quantum decoding.
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
 \section{Multivariate Polynomial Interpolation}
