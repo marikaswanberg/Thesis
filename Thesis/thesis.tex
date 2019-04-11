@@ -75,6 +75,7 @@
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\K}{\mathbb{K}}
+\newcommand{\F}{\mathbb{F}}
 \newcommand{\sn}{\mathfrak{S}}
 \newcommand{\ve}{\varepsilon}
 \newcommand{\ketz}{\ensuremath{\lvert 0\rangle}\xspace}
@@ -95,8 +96,8 @@
 \end{bmatrix}
 }
 
-\title{Stateful and Stateless Noisy Quantum Oracles}
-\author{Marika Louise Swanberg}
+\title{Noisy Quantum $\widehat{\mathcal{O}}$racles}
+\author{Marika Swanberg}
 % The month and year that you submit your FINAL draft TO THE LIBRARY (May or December)
 \date{May 2019}
 \division{Mathematics and Natural Sciences}
@@ -1085,9 +1086,26 @@ In this chapter, we explore the possibility of using quantum algorithms to decod
 In keeping with the theme of this thesis, we will yet again reframe the problem of decoding RM codes. Instead of thinking about the codes in terms of finite geometries, we morph this problem into a \textit{polynomial interpolation} task and adapt the recent work of Chen, Van Dam, and Hung (CITE MULTIVARIATE POLY INTERP PAPER) to this problem. Their work on multivariate polynomial interpolation is multifaceted and extensive, and the parts that we apply to Reed-Muller decoding compose a mere fraction of the total of their work in their paper. In fact, their quantum polynomial interpolation algorithm is much more closely related to quantum-enabled cryptography breaks and a concept in cryptography called \textit{secret sharing}. But, alas, this is not a cryptography thesis.
 
 \section{Multivariate Polynomial Interpolation}
-Before proceeding, we obviously need to define the problem of polynomial interpolation. Suppose an algorithm $\mathcal{A}$ has oracle access to some polynomial $f(v_1, \ldots, v_m) \in \K[v_1, \ldots, v_m]$ of degree $r$. That is, $f$ belongs to the polynomial ring over a field $\K$. Suppose $r$ is known, and algorithm $\mathcal{A}$ can ask the oracle to compute $f$ on any desired input. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. The question that researchers then wonder is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. In our case, we will simply wonder how well our algorithm performs without relating this to upper and lower bounds. 
+Before proceeding, we obviously need to define the problem of polynomial interpolation. Suppose an algorithm $\mathcal{A}$ has oracle access to some polynomial $f(v_1, \ldots, v_m) \in \K[v_1, \ldots, v_m]$ of degree $r$. That is, $f$ belongs to the polynomial ring over a field $\K$. Moreover, $f$ is allowed to be \textit{multivariate}, which simply means that each term (monomial) of $f$ may be a product of more than one of the inputs. For example, $f(x,y,z) = x^2 + xy + xyz^2$ is a degree 2 multivariate polynomial in 3 variables.
+
+Now, suppose $r$ is known, and algorithm $\mathcal{A}$ can ask the oracle to compute $f$ on any desired input. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. The question that researchers then wonder is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. In our case, we will simply wonder how well our algorithm performs without relating this to upper and lower bounds. 
 
 Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${m +r \choose r}$ queries, using a well-chosen system of linear equations.
+
+\section{Quantum Polynomial Interpolation Algorithm}
+This algorithm is rather complicated, so there will be a fair amount of setup before the actual algorithm. To start, we will do an overview of the ``analogy,'' or the connection between polynomial interpolation and Reed-Muller decoding. As was previously discussed, we can view codewords in $\mathscr{R}(r,m)$ as multivariate polynomials of degree at most $r$ with coefficients in the field $\F_2$. The polynomials have the following form:
+\begin{equation*}
+f_c = \sum_{\substack{S \subseteq [m] \\ \lvert S \rvert \leq r}} a_S \cdot \prod_{i \in S} v_i,  \quad a_S \in \Z_2.
+\end{equation*}
+where $f_c$ is the $\mathscr{R}(r,m)$ codeword that corresponds to message $a$. Now, the model that we are building up is that the decoder must use oracle access to $f_c$ in order to determine the coefficients ($a_S$'s) of $f_c$, or the bits of the message $a$.
+
+
+
+To start translating the decoding problem into polynomial interpolation, since the codewords are in $\Z_2^m$, our polynomial $f(v_1, \ldots, v_m)$ will be in the polynomial ring $\F_2[v_1, \ldots, v_m]$. 
+
+
+
+
 \section{Stateful Noisy Oracle}
 \section{Stateless Noisy Oracle}
 

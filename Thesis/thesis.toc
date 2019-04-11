@@ -46,8 +46,9 @@
 \contentsline {subsection}{\numberline {5.3.3}Geometric Decoding Example}{39}
 \contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{41}
 \contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{41}
-\contentsline {section}{\numberline {6.2}Stateful Noisy Oracle}{42}
-\contentsline {section}{\numberline {6.3}Stateless Noisy Oracle}{42}
+\contentsline {section}{\numberline {6.2}Quantum Polynomial Interpolation Algorithm}{42}
+\contentsline {section}{\numberline {6.3}Stateful Noisy Oracle}{42}
+\contentsline {section}{\numberline {6.4}Stateless Noisy Oracle}{42}
 \contentsline {chapter}{Conclusion}{43}
 \contentsline {section}{\numberline {6.1}More info}{43}
 \contentsline {chapter}{Appendix A: Asymptotic Complexity}{45}
