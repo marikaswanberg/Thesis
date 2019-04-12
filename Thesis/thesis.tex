@@ -1078,12 +1078,29 @@ This gives us the four following checksums, which should all be equal in the cas
 \end{align*}
 So, these equations give us that $m_{12} =0,0,1,0 $. These equations are \textit{not} equal because bit $c_7$ was flipped by the noisy channel. But, the decoder doesn't know which bit was flipped. Instead, it decides that $m_{12} = 0$ using majority logic. Indeed, this is correct! (Note how if two equations didn't match, the decoder would possibly make a decoding error).
 
-Now, the decoder will continue using this process to decode $m_{13}, m_{23}, m_{14}, $ and $m_{34}$. Once it has figured out those five bits, it will subtract $m_{34}v_3v_4 + m_{14}v_1v_4 + m_{23}v_2v_3 + m_{13}v_1v_3$ from $\hat{c}$ and proceed with the algorithm to decode $m_0 \ldots m_4$. We will spare the reader these details, but that at least conveys the tedium involved in decoding. Next up: quantum decoding.
+Now, the decoder will continue using this process to decode $m_{13}, m_{23}, m_{14}, $ and $m_{34}$. Once it has figured out those five bits, it will subtract $m_{34}v_3v_4 + m_{14}v_1v_4 + m_{23}v_2v_3 + m_{13}v_1v_3$ from $\hat{c}$ and proceed with the algorithm to decode $m_0 \ldots m_4$. We will spare the reader these details, but that at least conveys the tedium involved in decoding. In the chapters that follow, we will explore a quantum way of decoding RM codes.
+
+\chapter{Quantum Multivariate Polynomial Interpolation}
+Before we dive into quantum decoding algorithms for Reed-Muller codes, we must understand the mechanisms behind such an algorithm. The contents of this chapter are largely taken from the recent work [CITE MULTIVARIATE AND OTHER INTERPOLATION PAPER]. In this chapter, we set up the general algorithm that we will later tailor to our Reed-Muller decoding problem. 
+
+It is worth noting that the papers upon which this chapter is based ([CITE THEM]) is far more extensive than what will be covered here. In fact, their quantum polynomial interpolation algorithm is much more closely related to quantum cryptanalysis and a concept in cryptography called \textit{secret sharing}. Alas, this is not a cryptography thesis.
+
+\section{The Problem Definition}
+Let $f(x_1, \ldots, x_n)\in \F_q[x_1, \ldots, x_n]$, that is, $f$ is a multivariate polynomial over the finite field of size $q$, and let $f$ be of degree $d$. Suppose an algorithm $\mathcal{A}$ has oracle access to $f$, and $d$ is known. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. In other words, $f$ must learn the coefficient vector of $f$.
+
+The learning theory question that researchers then ask is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. 
+
+Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${n+d \choose d}$ queries, using a well-chosen system of linear equations.
+\section{Quantum Query Model}
+
+\subsection{Quantum Fourier Transform}
+\subsection{$k$ Parallel Phase Queries}
+\section{The Algorithm}
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
 In this chapter, we explore the possibility of using quantum algorithms to decode Reed-Muller codes. The information that the decoder receives will still be classical, that is, we are not proposing a \textit{quantum error-correcting code}. The decoder will simply be allowed to use quantum computing algorithms on the received codeword instead of just the classical decoding that we saw in the previous chapter.
 
-In keeping with the theme of this thesis, we will yet again reframe the problem of decoding RM codes. Instead of thinking about the codes in terms of finite geometries, we morph this problem into a \textit{polynomial interpolation} task and adapt the recent work of Chen, Van Dam, and Hung (CITE MULTIVARIATE POLY INTERP PAPER) to this problem. Their work on multivariate polynomial interpolation is multifaceted and extensive, and the parts that we apply to Reed-Muller decoding compose a mere fraction of the total of their work in their paper. In fact, their quantum polynomial interpolation algorithm is much more closely related to quantum-enabled cryptography breaks and a concept in cryptography called \textit{secret sharing}. But, alas, this is not a cryptography thesis.
+In keeping with the theme of this thesis, we will yet again reframe the problem of decoding RM codes. Instead of thinking about the codes in terms of finite geometries, we morph this problem into a \textit{polynomial interpolation} task and adapt the recent work of Chen, Van Dam, and Hung (CITE MULTIVARIATE POLY INTERP PAPER) to this problem. Their work on multivariate polynomial interpolation is multifaceted and extensive, and the parts that we apply to Reed-Muller decoding compose a mere fraction of the total of their work in their paper. 
 
 \section{Multivariate Polynomial Interpolation}
 Before proceeding, we obviously need to define the problem of polynomial interpolation. Suppose an algorithm $\mathcal{A}$ has oracle access to some polynomial $f(v_1, \ldots, v_m) \in \K[v_1, \ldots, v_m]$ of degree $r$. That is, $f$ belongs to the polynomial ring over a field $\K$. Moreover, $f$ is allowed to be \textit{multivariate}, which simply means that each term (monomial) of $f$ may be a product of more than one of the inputs. For example, $f(x,y,z) = x^2 + xy + xyz^2$ is a degree 2 multivariate polynomial in 3 variables.
