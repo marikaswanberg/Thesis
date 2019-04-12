@@ -1091,11 +1091,43 @@ Let $f(x_1, \ldots, x_n)\in \F_q[x_1, \ldots, x_n]$, that is, $f$ is a multivari
 The learning theory question that researchers then ask is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. 
 
 Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${n+d \choose d}$ queries, using a well-chosen system of linear equations.
+
 \section{Quantum Query Model}
+Much like phase kickback, queries to the oracle will be encoded in the phase of the response register. However, the algorithm will perform queries in the Fourier basis using a technique that is a generalization of the phase kickback trick. Moreover, the algorithm will make $k$ quantum queries in parallel to extract all of this information at once.
 
 \subsection{Quantum Fourier Transform}
-\subsection{$k$ Parallel Phase Queries}
+Defining the quantum Fourier transform requires some background. First, it is a well-known fact that the order of any finite field can be written as a prime to some power. In other words, the finite field $\F_q$ has order $q = p^r$ where $p$ is prime. Now, define the trace function $T: \F_q \rightarrow \F_q$ by $z \mapsto z + z^p + z^{p^2} + \ldots + z^{p^{r-1}}$. Next, we will define the exponential function $E: \F_q \rightarrow \C$ by $E(z) = e^{i2\pi T(z)/p}$. Now we are ready to define the quantum Fourier transform (QFT).
+
+\begin{definition}[QFT] The quantum Fourier transform over $\F_q$ is a unitary transformation acting as 
+\begin{equation*}
+\ket{x} \longmapsto \frac{1}{\sqrt{q}} \sum_{y \in \F_q} E(xy) \ket{y}.
+\end{equation*}
+The $k$-dimensional quantum Fourier transform is given by
+\begin{equation*}
+\ket{x} \longmapsto \frac{1}{q^{k/2}} \sum_{y\in \F_q^k} E(x \cdot y) \ket{y}.
+\end{equation*}
+\end{definition}
+This will be key to the phase query algorithm.
+\subsection{Phase Query}
+The authors of [CITE] describe what they call a \textit{phase query}. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$), performing a query to oracle $\mathcal{O}$, and then doing a quantum Fourier transform (QFT) as follows
+\begin{align}
+\ket{x,y} 
+& \xrightarrow{QFT^{-1}} \frac{1}{\sqrt{q}} \sum_{z\in \F_q} E(-yz) \ket{x,z} \\
+& \xrightarrow{\mathcal{O}} \frac{1}{\sqrt{q}} \sum_{z \in \F_q} E(-yz) \ket{x, z + f(x)} \\
+& \xrightarrow{QFT} \frac{1}{q} \sum_{z,w \in \F_q} E(-yz + (z + f(x))w) \ket{x,w} \\
+& = E(yf(x)) \ket{x,y}.
+\end{align}
+So, overall the phase query has the following action $\ket{x,y} \mapsto E(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on the input $x$, we want to query it on $k$ inputs. So, we choose a subset of $\F_q^k$ on which to perform $k$ parallel queries, each in a separate register. For $x,y \in \F_q^k$, the $k$ parallel phase queries has the following action
+\begin{equation*}
+\ket{x,y} \longmapsto E\left(\sum_{i=1}^{k} y_i f(x_i) \right) \ket{x,y}
+\end{equation*}
+where $x_i$ and $y_i$ are the $i$-th bits of $x$ and $y$, respectively.
 \section{The Algorithm}
+
+
+
+
+
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
 In this chapter, we explore the possibility of using quantum algorithms to decode Reed-Muller codes. The information that the decoder receives will still be classical, that is, we are not proposing a \textit{quantum error-correcting code}. The decoder will simply be allowed to use quantum computing algorithms on the received codeword instead of just the classical decoding that we saw in the previous chapter.
