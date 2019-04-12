@@ -1097,12 +1097,21 @@ This algorithm is rather complicated, so there will be a fair amount of setup be
 \begin{equation*}
 f_c = \sum_{\substack{S \subseteq [m] \\ \lvert S \rvert \leq r}} a_S \cdot \prod_{i \in S} v_i,  \quad a_S \in \Z_2.
 \end{equation*}
-where $f_c$ is the $\mathscr{R}(r,m)$ codeword that corresponds to message $a$. Now, the model that we are building up is that the decoder must use oracle access to $f_c$ in order to determine the coefficients ($a_S$'s) of $f_c$, or the bits of the message $a$.
+where $f_c$ is the $\mathscr{R}(r,m)$ codeword that corresponds to message $a$. Now, the model that we are building up is that the decoder must use oracle access to $f_c$ in order to determine the coefficients ($a_S$'s) of $f_c$, or the bits of the message $a$. We begin discussing the algorithm by explaining the query model that [CITE PAPER]Chen et al.~used.
 
 
+\subsection{Parallel Quantum Phase Queries}
+ First, we will define a function $E: \F_2 \rightarrow \C$ by $E(z) \longmapsto e^{2i\pi Tr(z)/p}$ (adapted from the paper to match our use case). The algorithm relies on a type of quantum query called \textit{quantum phase query}, and it is simply the Fourier transform of a regular query. Thus, we will begin by defining the quantum Fourier transform (QFT).
+ 
+\begin{definition}(QFT over $\F_q$) The quantum Fourier transform over $\F_q$ acts on a state $\ket{x}$, $x\in \F_q$, as follows
+\begin{equation*}
+\ket{x}  \longmapsto \frac{1}{\sqrt{2}}\sum_{y\in \F_2} E(xy)\ket{y}
+=  \frac{1}{\sqrt{2}}\sum_{y\in \F_2} e^{i\pi xy}\ket{y}.
+\end{equation*}
+But, since $x,y \in \F_2$, this is just the transformation
+\end{definition}
 
-To start translating the decoding problem into polynomial interpolation, since the codewords are in $\Z_2^m$, our polynomial $f(v_1, \ldots, v_m)$ will be in the polynomial ring $\F_2[v_1, \ldots, v_m]$. 
-
+If we combine the QFT with the oracle query, then one could presumably store $f(x)$ in the phase of the query register, similar to the phase kickback trick. 
 
 
 

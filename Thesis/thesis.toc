@@ -47,11 +47,12 @@
 \contentsline {chapter}{Chapter 6: Quantum Decoding Algorithm for Reed-Muller Codes}{41}
 \contentsline {section}{\numberline {6.1}Multivariate Polynomial Interpolation}{41}
 \contentsline {section}{\numberline {6.2}Quantum Polynomial Interpolation Algorithm}{42}
-\contentsline {section}{\numberline {6.3}Stateful Noisy Oracle}{42}
-\contentsline {section}{\numberline {6.4}Stateless Noisy Oracle}{42}
-\contentsline {chapter}{Conclusion}{43}
-\contentsline {section}{\numberline {6.1}More info}{43}
-\contentsline {chapter}{Appendix A: Asymptotic Complexity}{45}
-\contentsline {chapter}{Appendix B: Tensors}{47}
-\contentsline {chapter}{Appendix C: Finite Geometries}{49}
-\contentsline {chapter}{Bibliography}{51}
+\contentsline {subsection}{\numberline {6.2.1}Parallel Quantum Phase Queries}{42}
+\contentsline {section}{\numberline {6.3}Stateful Noisy Oracle}{43}
+\contentsline {section}{\numberline {6.4}Stateless Noisy Oracle}{43}
+\contentsline {chapter}{Conclusion}{45}
+\contentsline {section}{\numberline {6.1}More info}{45}
+\contentsline {chapter}{Appendix A: Asymptotic Complexity}{47}
+\contentsline {chapter}{Appendix B: Tensors}{49}
+\contentsline {chapter}{Appendix C: Finite Geometries}{51}
+\contentsline {chapter}{Bibliography}{53}
