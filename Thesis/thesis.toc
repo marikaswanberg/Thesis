@@ -49,7 +49,8 @@
 \contentsline {section}{\numberline {6.2}Quantum Query Model}{42}
 \contentsline {subsection}{\numberline {6.2.1}Quantum Fourier Transform}{42}
 \contentsline {subsection}{\numberline {6.2.2}Phase Query}{42}
-\contentsline {section}{\numberline {6.3}The Algorithm}{43}
+\contentsline {section}{\numberline {6.3}More Preliminaries}{43}
+\contentsline {section}{\numberline {6.4}The Algorithm}{44}
 \contentsline {chapter}{Chapter 7: Quantum Decoding Algorithm for Reed-Muller Codes}{45}
 \contentsline {section}{\numberline {7.1}Multivariate Polynomial Interpolation}{45}
 \contentsline {section}{\numberline {7.2}Quantum Polynomial Interpolation Algorithm}{46}

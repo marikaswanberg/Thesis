@@ -1117,16 +1117,38 @@ The authors of [CITE] describe what they call a \textit{phase query}. Essentiall
 & \xrightarrow{QFT} \frac{1}{q} \sum_{z,w \in \F_q} E(-yz + (z + f(x))w) \ket{x,w} \\
 & = E(yf(x)) \ket{x,y}.
 \end{align}
-So, overall the phase query has the following action $\ket{x,y} \mapsto E(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on the input $x$, we want to query it on $k$ inputs. So, we choose a subset of $\F_q^k$ on which to perform $k$ parallel queries, each in a separate register. For $x,y \in \F_q^k$, the $k$ parallel phase queries has the following action
+So, overall the phase query has the following action $\ket{x,y} \mapsto E(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on one input $x \in \F_q$, we want to query it on $k$ inputs. So, we choose a subset of $\F_q^k$ on which to perform $k$ parallel queries, each in a separate register. For $x,y \in \F_q^k$, the $k$ parallel phase queries has the following action
 \begin{equation*}
 \ket{x,y} \longmapsto E\left(\sum_{i=1}^{k} y_i f(x_i) \right) \ket{x,y}
 \end{equation*}
 where $x_i$ and $y_i$ are the $i$-th bits of $x$ and $y$, respectively.
+\section{More Preliminaries}
+Next, we define a mapping $Z: \F_q^{nk} \times \F_q^{k} \rightarrow \F_q^{J}$ by 
+\begin{equation*}
+Z(x,y)_j = \sum_{i = 1}^k y_ix_i^j \quad \text{for }j \in \mathbb{J}
+\end{equation*}
+so that
+\begin{equation*}
+Z(x,y) \cdot c = \sum_{i=1}^k y_i f(x_i)
+\end{equation*}
+where $\mathbb{J}$ is the set of allowed exponents, and $J \coloneqq \lvert \mathbb{J} \rvert$.
+
+Now, we restrict the codomain of $Z$ so that it forms a bijection. Let $R_k \coloneqq Z(\F_q^{nk}, \F_q^k)$ be the image of $Z$. Now, for each $z \in R_k$, choose a unique $(x,y) \in \F_q^{nk} \times \F_q^{k}$ such that $Z(x,y) = z$. Call $T_k$ this set of unique representatives. Then, $Z: T_k \rightarrow R_k$ is a bijection.
+
 \section{The Algorithm}
+The algorithm has three steps. It starts in a superposition over $T_k$. First, it performs $k$ phase queries (denoted $k$-$\mathcal{PQ}$), then it simply computes $Z$ in place. Finally, we measure in the Fourier basis to get an approximation of the coefficients. More precisely,
 
+\begin{align*}
+\frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} \ket{x,y} 
+& \xmapsto{k\text{-}\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} E(Z(x,y) \cdot c) \ket{x,y} \\
+& \xmapsto{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z\in R_k} E(Z(z \cdot c) \ket{z}. 
+\end{align*}
 
-
-
+Measuring in the basis of Fourier states defined as follows
+\begin{equation*}
+\ket{\hat{c}} \coloneqq \frac{1}{\sqrt{q^J}} \sum_{z \in \F_q^J} E(z \cdot c) \ket{z}
+\end{equation*}
+results in the correct vector of coefficients with probability $\lvert R_K \rvert / q^J$.
 
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
