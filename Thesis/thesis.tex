@@ -1153,12 +1153,11 @@ The algorithm has three steps. It starts in a superposition over $T_k$. First, i
 & \xmapsto{k\text{-}\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} E(Z(x,y) \cdot c) \ket{x,y} \\
 & \xmapsto{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z\in R_k} E(Z(z \cdot c) \ket{z}. 
 \end{align*}
-
 Measuring in the basis of Fourier states defined as follows
 \begin{equation*}
-\ket{\hat{c}} \coloneqq \frac{1}{\sqrt{q^J}} \sum_{z \in \F_q^J} E(z \cdot c) \ket{z}
+\ket{\hat{c}} \coloneqq \frac{1}{\sqrt{q^J}} \sum_{z \in \F_q^J} E(z \cdot c) \ket{z},
 \end{equation*}
-results in the correct vector of coefficients with probability $\lvert R_K \rvert / q^J$.
+where $c$ are the computational basis states, results in the correct vector of coefficients with probability $\lvert R_K \rvert / q^J$.
 
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
