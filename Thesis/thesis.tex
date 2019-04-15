@@ -1103,7 +1103,7 @@ The learning theory question that researchers then ask is: \textit{how many quer
 Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${n+d \choose d}$ queries, using a well-chosen system of linear equations.
 
 \section{Quantum Query Model}
-Much like phase kickback, queries to the oracle will be encoded in the phase of the response register. However, the algorithm will perform queries in the Fourier basis using a technique that is a generalization of the phase kickback trick. Moreover, the algorithm will make $k$ quantum queries in parallel to extract all of this information at once.
+Much like phase kickback, queries to the oracle will be encoded in the phase of the response register. However, the algorithm will perform queries in the Fourier basis using a technique that is a generalization of the phase kickback trick. Moreover, the algorithm will make $k$ quantum queries in parallel to extract all of this information at once. These $k$ queries are chosen \textit{non-adaptively}, that is, the algorithm prepares the questions all at once.
 
 \subsection{Quantum Fourier Transform}
 Defining the quantum Fourier transform requires some background. First, it is a well-known fact that the order of any finite field can be written as a prime to some power. In other words, the finite field $\F_q$ has order $q = p^r$ where $p$ is prime. Now, define the trace function $T: \F_q \rightarrow \F_q$ by $z \mapsto z + z^p + z^{p^2} + \ldots + z^{p^{r-1}}$. Next, we will define the exponential function $E: \F_q \rightarrow \C$ by $E(z) = e^{i2\pi T(z)/p}$. Now we are ready to define the quantum Fourier transform (QFT).
@@ -1161,39 +1161,43 @@ where $c$ are the computational basis states, results in the correct vector of c
 
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
-In this chapter, we explore the possibility of using quantum algorithms to decode Reed-Muller codes. The information that the decoder receives will still be classical, that is, we are not proposing a \textit{quantum error-correcting code}. The decoder will simply be allowed to use quantum computing algorithms on the received codeword instead of just the classical decoding that we saw in the previous chapter.
 
-In keeping with the theme of this thesis, we will yet again reframe the problem of decoding RM codes. Instead of thinking about the codes in terms of finite geometries, we morph this problem into a \textit{polynomial interpolation} task and adapt the recent work of Chen, Van Dam, and Hung (CITE MULTIVARIATE POLY INTERP PAPER) to this problem. Their work on multivariate polynomial interpolation is multifaceted and extensive, and the parts that we apply to Reed-Muller decoding compose a mere fraction of the total of their work in their paper. 
-
-\section{Multivariate Polynomial Interpolation}
-Before proceeding, we obviously need to define the problem of polynomial interpolation. Suppose an algorithm $\mathcal{A}$ has oracle access to some polynomial $f(v_1, \ldots, v_m) \in \K[v_1, \ldots, v_m]$ of degree $r$. That is, $f$ belongs to the polynomial ring over a field $\K$. Moreover, $f$ is allowed to be \textit{multivariate}, which simply means that each term (monomial) of $f$ may be a product of more than one of the inputs. For example, $f(x,y,z) = x^2 + xy + xyz^2$ is a degree 2 multivariate polynomial in 3 variables.
-
-Now, suppose $r$ is known, and algorithm $\mathcal{A}$ can ask the oracle to compute $f$ on any desired input. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. The question that researchers then wonder is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. In our case, we will simply wonder how well our algorithm performs without relating this to upper and lower bounds. 
-
-Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${m +r \choose r}$ queries, using a well-chosen system of linear equations.
-
-\section{Quantum Polynomial Interpolation Algorithm}
-This algorithm is rather complicated, so there will be a fair amount of setup before the actual algorithm. To start, we will do an overview of the ``analogy,'' or the connection between polynomial interpolation and Reed-Muller decoding. As was previously discussed, we can view codewords in $\mathscr{R}(r,m)$ as multivariate polynomials of degree at most $r$ with coefficients in the field $\F_2$. The polynomials have the following form:
+In this chapter, we explore the possibility of using the quantum polynomial interpolation algorithm to decode Reed-Muller codes. The decoder will have oracle access to the received codeword $f_c$ and, through a well-chosen series of queries and computations, will need to output the correct message $m$. The task of this chapter is to yet again reframe the Reed-Muller decoding algorithm. This time, instead of thinking about decoding in terms of finite geometries, we will explain it in terms of polynomial interpolation. Furthermore, the algorithm described in the previous chapter will be tailored to the task of decoding.
+ 
+\section{Polynomial : Coefficient Vector :: Codeword : Message}
+As was previously discussed, we can view codewords in $\mathscr{R}(r,m)$ as multivariate polynomials of degree at most $r$ with coefficients in the field $\F_2$. The polynomials have the following form:
 \begin{equation*}
 f_c = \sum_{\substack{S \subseteq [m] \\ \lvert S \rvert \leq r}} a_S \cdot \prod_{i \in S} v_i,  \quad a_S \in \Z_2.
 \end{equation*}
-where $f_c$ is the $\mathscr{R}(r,m)$ codeword that corresponds to message $a$. Now, the model that we are building up is that the decoder must use oracle access to $f_c$ in order to determine the coefficients ($a_S$'s) of $f_c$, or the bits of the message $a$. We begin discussing the algorithm by explaining the query model that [CITE PAPER]Chen et al.~used.
+where $f_c$ is the $\mathscr{R}(r,m)$ codeword that corresponds to message $a$. So, by applying the polynomial interpolation algorithm to $f_c$, we should be able to extract $a$. 
 
 
-\subsection{Parallel Quantum Phase Queries}
- First, we will define a function $E: \F_2 \rightarrow \C$ by $E(z) \longmapsto e^{2i\pi Tr(z)/p}$ (adapted from the paper to match our use case). The algorithm relies on a type of quantum query called \textit{quantum phase query}, and it is simply the Fourier transform of a regular query. Thus, we will begin by defining the quantum Fourier transform (QFT).
+\subsection{Adapting Polynomial Interpolation}
+A lot of nice things happen when we adapt the polynomial interpolation algorithm to our use case. For one, the notation gets substantially less painful to look at. More importantly, many components of the algorithm become simpler.
+
+First, the polynomials in $\mathscr{R}(r,m)$ are over the field $\F_2$. So, the order of the field is simply 2 and the trace function defined earlier $T:\F_2 \rightarrow \F_2$ defined by $z \mapsto z + z^p + z^{p^2} + \ldots + z^{p^{r-1}}$ is just the identity transformation. This simplifies the quantum Fourier transform. The function $E: \F_2 \rightarrow \C$ is now defined by $z \longmapsto e^{i\pi z}$.
+
  
-\begin{definition}(QFT over $\F_q$) The quantum Fourier transform over $\F_q$ acts on a state $\ket{x}$, $x\in \F_q$, as follows
+\begin{theorem} The quantum Fourier transform over $\F_2$ is just the Hadamard transform.
+\end{theorem}
+
+\begin{proof}
+The QFT acts on a state $\ket{x}$, $x\in \F_2$, as follows
 \begin{equation*}
 \ket{x}  \longmapsto \frac{1}{\sqrt{2}}\sum_{y\in \F_2} E(xy)\ket{y}
 =  \frac{1}{\sqrt{2}}\sum_{y\in \F_2} e^{i\pi xy}\ket{y}.
 \end{equation*}
 But, since $x,y \in \F_2$, this is just the transformation
-\end{definition}
-
-If we combine the QFT with the oracle query, then one could presumably store $f(x)$ in the phase of the query register, similar to the phase kickback trick. 
-
-
+\begin{align*}
+\ket{x}  \longmapsto 
+&\frac{1}{\sqrt{2}}\bigg( E(x\cdot 0)\ket{0} + E(x\cdot 1)\ket{1} \bigg) \\
+ = &  \frac{1}{\sqrt{2}}\bigg( e^{i\pi x\cdot 0}\ket{0} + e^{i\pi x\cdot 1}\ket{1} \bigg) \\
+ = & \frac{1}{\sqrt{2}}\bigg( 1\ket{0} + e^{i\pi x}\ket{1} \bigg) \\
+ = & \frac{1}{\sqrt{2}}\bigg( 1\ket{0} + (-1)^x\ket{1} \bigg). 
+\end{align*}
+This is the Hadamard transform. \\
+\end{proof}
+Now, the only thing left to define is the mapping $Z: T_k \rightarrow R_k$ where $T_k \subseteq \F_2^{nk} \times \F_2^k$ and $R_k \subseteq \F_2^J$. In this mapping, the coordinate $(x,y) \in T_k$ is comprised of the query and response registers, respectively. As we've learned by now, the response register is essentially just an appendage of the ``unitary'' requirement, so we can ignore that. Now, $x \in \F_2^{nk}$ is a set of $k$ queries on the $n$ input bits of $f_c$. Ideally, those queries would uniquely identify one message; however, this may not be the case for sufficiently small $k$. 
 
 \section{Stateful Noisy Oracle}
 \section{Stateless Noisy Oracle}
