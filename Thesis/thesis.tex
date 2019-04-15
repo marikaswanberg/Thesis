@@ -431,6 +431,16 @@ This computation looks a mess for the beginner, so let's try to make sense of it
 & = \frac{1}{2^n}  \sum_{j \in \{0,1\}^n}\sum_{i \in \{0,1\}^n} (-1)^{i \cdot(a + j)}  \ket{j} \label{equals_a}
 \end{align}
 Now, note that $(-1)^{i \cdot(a + j)}$ is equal to 1 if and only if $j = a$. Thus, the inner summation evaluates to $1/2^n$ when $j =a$ and zero otherwise. So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
+
+\section{Measuring in Non-Computational Bases}
+Thus far, all of the measurements we have performed have been done in the \textit{computational basis}. Given a state $\ket{\psi} = \alpha\ketz + \beta\keto$, upon measurement in the computational basis ($\ketz$ and $\keto$) this state will collapse to $\ketz$ with probability $\lvert \alpha \rvert^2$ and $\keto$ with probability  $\lvert \beta \rvert^2.$ But, this choice of basis is arbitrary. We could instead measure $\ket{\psi}$ in the Hadamard basis, $\Hplus$ and $\Hminus$. Then, we can re-express the state $\ket{\psi}$ as follows
+\begin{equation*}
+\ket{\psi} = \alpha\ketz + \beta\keto = \alpha \frac{\Hplus + \Hminus}{\sqrt{2}} + \beta \frac{\Hplus - \Hminus}{\sqrt{2}} = \frac{\alpha + \beta}{\sqrt{2}} \Hplus + \frac{\alpha - \beta}{\sqrt{2}} \Hminus.
+\end{equation*}
+So, measuring $\ket{\psi}$ in the Hadamard basis yields $\Hplus$ with probability $(\alpha + \beta)^2/2$ and $\Hminus$ with probability $(\alpha - \beta)^2/2$.
+
+More generally, we can represent any state $\ket{\psi}$ as a unique linear combination of any orthonormal basis, $\ket{\psi} = \alpha \ket{a}+ \beta \ket{b}$ (where $\ket{a}$ and $\ket{b}$ form an orthonormal basis). Then, the probabilities of measuring $\ket{a}$ and $\ket{b}$ are $\alpha^2$ and $\beta^2$, respectively.
+
 \section{A Note on Asymptotic Complexity}
 
 In this thesis, we will be studying the asymptotic complexity of various different metrics, including: runtime, query complexity, certificate complexity, block sensitivity, and perhaps circuit complexity\footnote{These complexity metrics will be defined later.}. Those who are unfamiliar with asymptotic complexity (also termed Landau-Bachmann notation in mathematics) should review the appendix on the topic. 
