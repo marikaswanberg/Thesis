@@ -71,13 +71,10 @@
 %Commands
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
-\newcommand{\Q}{\mathbb{Q}}
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\C}{\mathbb{C}}
 \newcommand{\K}{\mathbb{K}}
 \newcommand{\F}{\mathbb{F}}
-\newcommand{\sn}{\mathfrak{S}}
-\newcommand{\ve}{\varepsilon}
 \newcommand{\ketz}{\ensuremath{\lvert 0\rangle}\xspace}
 \newcommand{\keto}{\ensuremath{\lvert 1\rangle}\xspace}
 \newcommand{\ket}[1]{\ensuremath{\lvert #1\rangle}\xspace}
@@ -95,6 +92,7 @@
 1 & -1 
 \end{bmatrix}
 }
+\input{notation.tex}
 
 \title{Noisy Quantum Oracles: A Study of Algorithmic Robustness}
 \author{Marika Swanberg}
@@ -103,7 +101,7 @@
 \division{Mathematics and Natural Sciences}
 \advisor{James D. Pommersheim}
 %If you have two advisors for some reason, you can use the following
-\altadvisor{Adam Groce}
+%\altadvisor{Adam Groce}
 %%% Remember to use the correct department!
 \department{Mathematics}
 % if you're writing a thesis in an interdisciplinary major,
@@ -127,12 +125,12 @@
 
 % Acknowledgements (Acceptable American spelling) are optional
 % So are Acknowledgments (proper English spelling)
-    \chapter*{Acknowledgements}
+ %   \chapter*{Acknowledgements}
 %	I want to thank a few people.
 
 % The preface is optional
 % To remove it, comment it out or delete it.
-   \chapter*{Preface}
+ %  \chapter*{Preface}
 
  
 
@@ -145,11 +143,10 @@
 % The abstract is not required if you're writing a creative thesis (but aren't they all?)
 % If your abstract is longer than a page, there may be a formatting issue.
   \chapter*{Abstract}
-My abstract
 	
-\chapter*{Dedication}
+%\chapter*{Dedication}
 
-I dedicate this thesis to all of the individuals who funded my education at Reed College. Truly, I could not have done this without you.
+%I dedicate this thesis to all of the individuals who funded my education at Reed College. Truly, I could not have done this without you.
 
   \mainmatter % here the regular arabic numbering starts
   \pagestyle{fancyplain} % turns page numbering back on
@@ -1237,6 +1234,41 @@ And here's some other random info: the first paragraph after a chapter title or 
 
 %If you feel it necessary to include an appendix, it goes here.
     \appendix
+    \chapter{Notation Guide}
+    This guide is aimed to help the reader parse the notation throughout the thesis. 
+    
+Depending on the context, we have used $\Z_2^n, \{0,1\}^n,$ and $\F_2^n$ to denote essentially the same sets. These distinctions are merely dependent on the \textit{operations} we are performing on elements of the set. For example, Boolean operations occur in $\Z_2^n$, string operations occur in $\{0,1\}^n,$ and Fourier transforms and other field operations occur in $\F_2^n$.
+
+\begin{center}
+\begin{tabular}{ | c | c |}
+\hline
+ Symbol & Usage  \\
+ \hline 
+ \amp{i} & $i$-th amplitude on a qubit \\
+ \mlen & Message length \\  
+ \Hplus & $(\ketz + \keto)/\sqrt{2}$ \\
+  \Hminus & $(\ketz - \keto)/\sqrt{2}$ \\
+ \hline
+\end{tabular}
+\end{center}
+
+\begin{center}
+\begin{tabular}{ | c | c |}
+\hline
+Operation & Usage  \\
+ \hline 
+$\cdot$ & Inner product \\
+$\oplus$ & Bitwise exclusive or \\
+$\otimes$ & Tensor product \\
+ \Had & Hadamard transform \\
+ $\Had^{\otimes n}$ & $n$-qubit Hadamard transform \\
+  \NOT & Quantum not gate \\
+ \hline
+\end{tabular}
+\end{center}
+
+
+
     	\chapter{Asymptotic Complexity}
     	Computer scientists are very interested in how long their algorithm or function will take to run on given inputs. The crudest, most theoretical, runtime analysis looks at the \textit{asymptotic runtime} of an algorithm. In practice, the actual runtime can be affected significantly by any number of factors like the operating system and memory  latency, but for our purposes the 
 \textit{asymptotic} runtime is the only metric we will care about (particularly because current existent quantum computers are rather rudimentary).

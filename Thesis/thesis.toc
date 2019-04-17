@@ -60,7 +60,8 @@
 \contentsline {section}{\numberline {7.3}Stateless Noisy Oracle}{47}
 \contentsline {chapter}{Conclusion}{49}
 \contentsline {section}{\numberline {6.1}More info}{49}
-\contentsline {chapter}{Appendix A: Asymptotic Complexity}{51}
-\contentsline {chapter}{Appendix B: Tensors}{53}
-\contentsline {chapter}{Appendix C: Finite Geometries}{55}
-\contentsline {chapter}{Bibliography}{57}
+\contentsline {chapter}{Appendix A: Notation Guide}{51}
+\contentsline {chapter}{Appendix B: Asymptotic Complexity}{53}
+\contentsline {chapter}{Appendix C: Tensors}{55}
+\contentsline {chapter}{Appendix D: Finite Geometries}{57}
+\contentsline {chapter}{Bibliography}{59}
