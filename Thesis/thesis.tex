@@ -1151,13 +1151,13 @@ The algorithm has three steps. It starts in a superposition over $T_k$. First, i
 \begin{align*}
 \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} \ket{x,y} 
 & \xmapsto{k\text{-}\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} E(Z(x,y) \cdot c) \ket{x,y} \\
-& \xmapsto{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z\in R_k} E(Z(z \cdot c) \ket{z}. 
+& \xmapsto{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z\in R_k} E(z \cdot c) \ket{z}. 
 \end{align*}
 Measuring in the basis of Fourier states defined as follows
 \begin{equation*}
 \ket{\hat{c}} \coloneqq \frac{1}{\sqrt{q^J}} \sum_{z \in \F_q^J} E(z \cdot c) \ket{z},
 \end{equation*}
-where $c$ are the computational basis states, results in the correct vector of coefficients with probability $\lvert R_K \rvert / q^J$.
+where $c$ are the computational basis states, results in the correct vector of coefficients with probability $\lvert R_k \rvert / q^J$.
 
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
@@ -1197,8 +1197,25 @@ But, since $x,y \in \F_2$, this is just the transformation
 \end{align*}
 This is the Hadamard transform. \\
 \end{proof}
+
+This simplifies the phase query. In the previous chapter we showed that the phase query has the following action $\ket{x,y} \mapsto E(yf(x))\ket{x,y}$. Given the simplified definition of QFT and $E$, we have that the phase query ($\mathcal{PQ}$) in $\F_2$ has the action
+\begin{equation}
+\ket{x,y} \xrightarrow{\mathcal{PQ}} (-1)^{yf(x)} \ket{x,y}.
+\end{equation}
+
 Now, the only thing left to define is the mapping $Z: T_k \rightarrow R_k$ where $T_k \subseteq \F_2^{nk} \times \F_2^k$ and $R_k \subseteq \F_2^J$. In this mapping, the coordinate $(x,y) \in T_k$ is comprised of the query and response registers, respectively. As we've learned by now, the response register is essentially just an appendage of the ``unitary'' requirement, so we can ignore that. Now, $x \in \F_2^{nk}$ is a set of $k$ queries on the $n$ input bits of $f_c$. Ideally, those queries would uniquely identify one message; however, this may not be the case for sufficiently small $k$. 
 
+The authors of [CITE PAPER] leave the exact mechanism of $Z$ ambiguous. It is tempting to simply assert that $Z$ will pick the most likely message given a received codeword, or it will choose uniformly among the most likely candidates if more than one are equally likely. This, I think, defeats the point of algorithms research; indeed, although the input and corresponding output are well-defined, the process of computing the output is yet to be discovered. This is one of the defining differences between mathematics and computer science theory. We will revisit $Z$.
+
+\subsection{The Algorithm}
+This algorithm is simplified by the query model. Suppose that $\lvert T_k \rvert = 2^d$ for some $d$. Again, we begin in a superposition over $T_k$, make $k$ parallel phase queries, compute $Z$ in place, and then measure in the Fourier basis over $\F_2$. We have
+
+\begin{align*}
+\frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k} \ket{x,y}
+& \xrightarrow{k-\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k}  (-1)^{Z(x,y) \cdot c} \ket{x,y} \\
+& \xrightarrow{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z\cdot c} \ket{z}
+\end{align*}
+Now, measuring
 \section{Stateful Noisy Oracle}
 \section{Stateless Noisy Oracle}
 
