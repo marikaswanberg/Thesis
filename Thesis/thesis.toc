@@ -56,8 +56,8 @@
 \contentsline {section}{\numberline {7.1}Polynomial : Coefficient Vector :: Codeword : Message}{45}
 \contentsline {subsection}{\numberline {7.1.1}Adapting Polynomial Interpolation}{46}
 \contentsline {subsection}{\numberline {7.1.2}The Algorithm}{47}
-\contentsline {section}{\numberline {7.2}Stateful Noisy Oracle}{47}
-\contentsline {section}{\numberline {7.3}Stateless Noisy Oracle}{47}
+\contentsline {section}{\numberline {7.2}Stateful Noisy Oracle}{48}
+\contentsline {section}{\numberline {7.3}Stateless Noisy Oracle}{48}
 \contentsline {chapter}{Conclusion}{49}
 \contentsline {section}{\numberline {6.1}More info}{49}
 \contentsline {chapter}{Appendix A: Notation Guide}{51}

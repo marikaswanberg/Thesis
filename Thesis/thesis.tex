@@ -1206,14 +1206,20 @@ Now, the only thing left to define is the mapping $Z: T_k \rightarrow R_k$ where
 The authors of [CITE PAPER] leave the exact mechanism of $Z$ ambiguous. It is tempting to simply assert that $Z$ will pick the most likely message given a received codeword, or it will choose uniformly among the most likely candidates if more than one are equally likely. This, I think, defeats the point of algorithms research; indeed, although the input and corresponding output are well-defined, the process of computing the output is yet to be discovered. This is one of the defining differences between mathematics and computer science theory. We will revisit $Z$.
 
 \subsection{The Algorithm}
-This algorithm is simplified by the query model. Suppose that $\lvert T_k \rvert = 2^d$ for some $d$. Again, we begin in a superposition over $T_k$, make $k$ parallel phase queries, compute $Z$ in place, and then measure in the Fourier basis over $\F_2$. We have
+This algorithm is simplified by the query model. Suppose that $\lvert T_k \rvert = 2^d$ for some $d$. Again, we begin in a superposition over $T_k$, make $k$ parallel phase queries, compute $Z$ in place, and then instead of  measuring in the Fourier basis, we will take the Hadamard and measure in the computational basis. We have
 
 \begin{align*}
 \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k} \ket{x,y}
 & \xrightarrow{k-\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k}  (-1)^{Z(x,y) \cdot c} \ket{x,y} \\
-& \xrightarrow{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z\cdot c} \ket{z}
+& \xrightarrow{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z\cdot c} \ket{z} \\
+& \xrightarrow{H^{\otimes n}} \frac{1}{\sqrt{2^n \lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z \cdot c} \sum_{j \in \Z_2^n} (-1)^{z \cdot j} \ket{j} \\
+& = \frac{1}{\sqrt{2^n \lvert R_k \rvert}}  \sum_{z \in R_k} \sum_{j \in \Z_2^n}(-1)^{z(c + j)}\ket{j} \\
 \end{align*}
-Now, measuring
+Now, measuring in the computational basis, we measure $\ket{c}$ with probability 
+\begin{equation*}
+\bigg(\frac{\lvert R_k \rvert}{\sqrt{2^n \lvert R_k \rvert}}\bigg )^2 = \bigg (\sqrt{\frac{\lvert R_k \rvert}{2^n}} \bigg)^2 = \frac{\lvert R_k \rvert}{2^n}
+\end{equation*}
+So, for $k$ queries, $P_{succ} = \lvert R_k \rvert /2^n$ for Reed-Muller decoding.
 \section{Stateful Noisy Oracle}
 \section{Stateless Noisy Oracle}
 
