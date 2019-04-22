@@ -14,7 +14,7 @@
 \contentsline {section}{\numberline {1.11}Bernstein-Vazirani Algorithm}{10}
 \contentsline {section}{\numberline {1.12}Measuring in Non-Computational Bases}{11}
 \contentsline {section}{\numberline {1.13}A Note on Asymptotic Complexity}{12}
-\contentsline {chapter}{Chapter 2: Introduction to Code Theory and Error-Correcting Codes}{13}
+\contentsline {chapter}{Chapter 2: Introduction to Error-Correcting Codes}{13}
 \contentsline {section}{\numberline {2.1}Preliminaries}{14}
 \contentsline {section}{\numberline {2.2}Overview of Transmission}{14}
 \contentsline {section}{\numberline {2.3}Encoding}{15}
