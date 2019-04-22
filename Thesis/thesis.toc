@@ -62,6 +62,5 @@
 \contentsline {section}{\numberline {6.1}More info}{49}
 \contentsline {chapter}{Appendix A: Notation Guide}{51}
 \contentsline {chapter}{Appendix B: Asymptotic Complexity}{53}
-\contentsline {chapter}{Appendix C: Tensors}{55}
-\contentsline {chapter}{Appendix D: Finite Geometries}{57}
-\contentsline {chapter}{Bibliography}{59}
+\contentsline {chapter}{Appendix C: Finite Geometries}{55}
+\contentsline {chapter}{Bibliography}{57}
