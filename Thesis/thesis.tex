@@ -1201,40 +1201,66 @@ This simplifies the phase query. In the previous chapter we showed that the phas
 \ket{x,y} \xrightarrow{\mathcal{PQ}} (-1)^{yf(x)} \ket{x,y}.
 \end{equation}
 
-Now, the only thing left to define is the mapping $Z: T_k \rightarrow R_k$ where $T_k \subseteq \F_2^{nk} \times \F_2^k$ and $R_k \subseteq \F_2^J$. In this mapping, the coordinate $(x,y) \in T_k$ is comprised of the query and response registers, respectively. As we've learned by now, the response register is essentially just an appendage of the ``unitary'' requirement, so we can ignore that. Now, $x \in \F_2^{nk}$ is a set of $k$ queries on the $n$ input bits of $f_c$. Ideally, those queries would uniquely identify one message; however, this may not be the case for sufficiently small $k$. 
+Now, the only thing left to inspect is the mapping $Z: T_k \rightarrow R_k$ where $T_k \subseteq \F_2^{nk} \times \F_2^k$ and $R_k \subseteq \F_2^J$. In this mapping, the coordinate $(x,y) \in T_k$ is comprised of the query register ($x$) and response register ($y$). Each pair is a set of $k$ queries to the oracle and the corresponding results from the oracle of the $k$ queries. In other words, we have that
 
-The authors of [CITE PAPER] leave the exact mechanism of $Z$ ambiguous. It is tempting to simply assert that $Z$ will pick the most likely message given a received codeword, or it will choose uniformly among the most likely candidates if more than one are equally likely. This, I think, defeats the point of algorithms research; indeed, although the input and corresponding output are well-defined, the process of computing the output is yet to be discovered. This is one of the defining differences between mathematics and computer science theory. We will revisit $Z$.
+\begin{equation*}
+(x, y) =
+\begin{bmatrix}
+x_1 & \mathcal{O}_f(x_1) \\
+x_2 & \mathcal{O}_f(x_2)\\
+\vdots & \vdots \\
+x_k & \mathcal{O}_f(x_1)
+\end{bmatrix}.
+\end{equation*}
+Now,  we may have that the response register $y$ stores $r \oplus \mathcal{O}_f(x_i)$  where $r$ is whatever was in the register prior to the query; these details are omitted because they yield equivalent definitions of $Z$.
+
+The thing which $Z$ computes is fundamentally difficult. The question that $Z$ answers is: \textit{Given $k$ pairs of query inputs and query outputs, which polynomial is most likely?}. This problem is, in many ways, more difficult than plain polynomial interpolation. In order to even define $Z$, one must decide how it should behave given every possible $k$-set of input queries and all possible responses from the oracle. The one guarantee on $Z$ is that it computes the results in place without any oracle access. Since this thesis is concerned with quantum query complexity, we may leave $Z$ undefined with the understanding that the exact implementation of $Z$ will not affect the query complexity of the algorithm.
 
 \subsection{The Algorithm}
-This algorithm is simplified by the query model. Suppose that $\lvert T_k \rvert = 2^d$ for some $d$. Again, we begin in a superposition over $T_k$, make $k$ parallel phase queries, compute $Z$ in place, and then instead of  measuring in the Fourier basis, we will take the Hadamard and measure in the computational basis. We have
+We begin in a superposition over $T_k$, make $k$ parallel phase queries, compute $Z$ in place, and then instead of  measuring in the Fourier basis, we will take the Hadamard and measure in the computational basis. More precisely,
 
 \begin{align*}
 \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k} \ket{x,y}
 & \xrightarrow{k-\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k}  (-1)^{Z(x,y) \cdot c} \ket{x,y} \\
 & \xrightarrow{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z\cdot c} \ket{z} \\
 & \xrightarrow{H^{\otimes n}} \frac{1}{\sqrt{2^n \lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z \cdot c} \sum_{j \in \Z_2^n} (-1)^{z \cdot j} \ket{j} \\
-& = \frac{1}{\sqrt{2^n \lvert R_k \rvert}}  \sum_{z \in R_k} \sum_{j \in \Z_2^n}(-1)^{z(c + j)}\ket{j} \\
+& = \frac{1}{\sqrt{2^n \lvert R_k \rvert}}  \sum_{z \in R_k} \sum_{j \in \Z_2^n}(-1)^{z(c + j)}\ket{j}. \\
 \end{align*}
 Now, measuring in the computational basis, we measure $\ket{c}$ with probability 
 \begin{equation*}
 \bigg(\frac{\lvert R_k \rvert}{\sqrt{2^n \lvert R_k \rvert}}\bigg )^2 = \bigg (\sqrt{\frac{\lvert R_k \rvert}{2^n}} \bigg)^2 = \frac{\lvert R_k \rvert}{2^n}
 \end{equation*}
 So, for $k$ queries, $P_{succ} = \lvert R_k \rvert /2^n$ for Reed-Muller decoding.
-\section{Stateful Noisy Oracle}
-\section{Stateless Noisy Oracle}
+\section{Two Types of Noisy Oracles}
+One may wonder how the probability of success of the above algorithm is affected by an unreliable oracle, which is similar to the question that we answered about the binary simplex code. In the case of the simplex code, the algorithm only required one quantum query, but this algorithm makes $k$ quantum queries. After some thought about noise models, two kinds of unreliable or noisy oracles arise: one which we will call stateful or self-consistent and one which we call stateless or contradictory.
+
+First, we define these two models intuitively and later rigorously. Both oracles are unreliable or noisy in some way. The stateful oracle, when queried multiple times on a given input, will always output the same answer. 
+One can imagine that the oracle \textit{memoizes}\footnote{That is, it saves its answers.} computations to all of the queries it has recieved and always checks the table to see if it was previously queried on the given input. In this way, it remains self-consistent. 
+
+
+The second model is the stateless, or contradictory, oracle. When the oracle is queried multiple times, it may give different answers to the same query. So, the query $\widehat{\mathcal{O}}_f(x)$ may yield $f(x)$ with some probability $p$ and $\lnot f(x)$ with probability $1-p$. We called this model \textit{stateless} because the oracle cannot store the results of its previous computations and thus must recompute queries every time.
+
+\subsection{Connection to Message Transmission}
+
+In the context of error-correction, this relates to how the oracle is connected to the communication channel. If the noisy oracle is stateless, this is analogous to the message being transmitted once and stored in the oracle, with errors. As the oracle is queried, it simply consults the noisy codeword that it stored in memory somewhere rather than requesting the codeword to be resent on every query. 
+
+The stateless noisy oracle is analogous to the oracle requesting a retransmission of the codeword on every query. In other words, a new error vector is present on each query and this presumably comes from the noise in the communication channel as the codeword is retransmitted.
+
+
+
 
 \chapter*{Conclusion}
          \addcontentsline{toc}{chapter}{Conclusion}
 	\chaptermark{Conclusion}
 	\markboth{Conclusion}{Conclusion}
-	\setcounter{chapter}{6}
+	\setcounter{chapter}{8}
 	\setcounter{section}{0}
 	
 Here's a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
 
 So, if you remove all that stuff because you don't like it to say ``Chapter 4: Conclusion'', then you have to manually add all the things \LaTeX\ would normally do for you. Maybe someday we'll write a new chapter macro that doesn't add ``Chapter X'' to the beginning of every chapter title.
 
-\section{More info}
+\section{Further Work}
 And here's some other random info: the first paragraph after a chapter title or section head \emph{shouldn't be} indented, because indents are to tell the reader that you're starting a new paragraph. Since that's obvious after a chapter or section title, proper typesetting doesn't add an indent there. 
 
 
