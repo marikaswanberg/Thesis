@@ -10,7 +10,7 @@
 \contentsline {section}{\numberline {1.8}No-Cloning Theorem}{8}
 \contentsline {section}{\numberline {1.9}Quantum Oracles}{9}
 \contentsline {subsection}{\numberline {1.9.1}Quantum Queries}{9}
-\contentsline {section}{\numberline {1.10}Phase-kickback Trick}{10}
+\contentsline {section}{\numberline {1.10}Phase-kickback Trick}{9}
 \contentsline {section}{\numberline {1.11}Bernstein-Vazirani Algorithm}{10}
 \contentsline {section}{\numberline {1.12}Measuring in Non-Computational Bases}{11}
 \contentsline {section}{\numberline {1.13}A Note on Asymptotic Complexity}{12}

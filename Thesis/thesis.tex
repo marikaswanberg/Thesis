@@ -228,12 +228,13 @@ There are a few problems with this transformation. First, applying this transfor
 1 & 1 
 \end{bmatrix}
 \end{align*}
-Now, applying the transformation to our basis vectors, we get $\widehat{H} \ketz =(\ketz + \keto)/\sqrt{2}$ and $\widehat{H} \keto =(\ketz + \keto)/\sqrt{2}$. There is still a problem with this transformation. All quantum transformations must be \textit{reversible}, but we have mapped the two basis vectors to the same state, so the transformation is not reversible. To fix this, we will simply change the image of this transformation under \keto:
+This transformation still isn't \textit{unitary}, meaning it doesn't preserve the magnitude of the input vector. For example, $\widehat{H} \Hminus = 0\ketz + 0 \keto$. This is not a valid state, because the squares of the amplitudes do not add to 1. So, we must fix this transformation to the following:
+
 \begin{align*}
 H = \hadamard
 \end{align*}
 
-The quantum gate above ($H$) is called the \textit{Hadamard transform} or \textit{Hadamard gate}. We will precisely define this quantum gate later in this chapter, as it is absolutely critical to work in quantum algorithms. It acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. 
+The quantum gate above ($H$) is called the \textit{Hadamard transform} or \textit{Hadamard gate}. We will precisely define this quantum gate later in this chapter, as it is absolutely critical for work in quantum algorithms. $H$ acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. 
 
 Both of these states are in an equal superposition between \ketz and \keto, but they are distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
 
@@ -245,15 +246,19 @@ The requirements that quantum transformations be reversible and normalized are e
 
 \section{Multiple Qubits}
 
-To represent multiple qubits, we expand our two quantum states to many using tensor products \footnote{See appendix on tensor products--not yet written}. For example, in a two qubit system, we have the following basis states:
+To represent multiple qubits, we expand our two quantum states to many using tensor products. For example, in a two qubit system, we have the following basis states:
 $$ \ketz \otimes \ketz,~\ketz \otimes \keto,~\keto \otimes \ketz, \text{ and } \keto \otimes \keto.$$ 
-These four states can equivalently be written as:
+All single-qubit states could be expressed as a vector in $\C^2$. Analogously, all two-qubit states can be thought of as a vector in $\C^2 \otimes \C^2 = \C^4$. With that in mind, the four basis states above can also be written as:
 $$ \ket{00},~\ket{01},~\ket{10}, \text{ and } \ket{11}.$$
-Thus, any two-qubit state can be represented as a linear combination of these basis states, namely $\ket{\psi} = \alpha_{00}\ket{00}+ \alpha_{01}\ket{01} + \alpha_{10}\ket{10} + \alpha_{11}\ket{11}.$ In general, an $n$-qubit state can be represented as 
+Thus, any two-qubit state can be represented as a linear combination of these basis states, namely $\ket{\psi} = \alpha_{00}\ket{00}+ \alpha_{01}\ket{01} + \alpha_{10}\ket{10} + \alpha_{11}\ket{11}.$ In general, an $n$-qubit state can be represented as a linear combination of basis states, 
 \begin{equation*}
-\ket{\psi} = \sum_{i \in \Z_2^n} \alpha_{i}\ket{i},
+\ket{\psi} = \sum_{i \in \Z_2^n} \alpha_{i}\ket{i}, \quad \alpha_i \in \C
 \end{equation*}
-where $i$ is the binary representation of the numbers $0, \ldots, n-1.$ The probability of observing a state \ket{i} upon measuring \ket{\psi} is $\lvert \alpha_{i} \rvert ^2.$ 
+where
+\begin{equation*}
+\sum_{i \in \Z_2^n} \lvert \alpha_{i}\rvert^2 = 1.
+\end{equation*}
+The probability of observing a state \ket{i} upon measuring \ket{\psi} is $\lvert \alpha_{i} \rvert ^2.$ 
 
 We may measure qubits individually as well. For example, measuring just the first qubit gives us 0 with probability 
 \begin{equation*}
@@ -282,11 +287,10 @@ Now that we have the means to represent an $n$-qubit state, the state transforma
 
 As promised, a more precise definition of the Hadamard transform follows. This is by far the most important unitary transformation in the field of quantum algorithms.
 
-\begin{definition}[Hadamard Transform] The n-qubit Hadamard transform, $H^{\otimes n}$ acts on a state $\ket{\psi}$ as follows:
+\begin{definition}[Hadamard Transform] The $n$-qubit Hadamard transform, $H^{\otimes n}$ acts on a basis state $\ket{k}$ as follows:
 \begin{equation*}
-H^{\otimes n} \ket{\psi} = \frac{1}{\sqrt{2^n}} \sum_{j \in \{0,1\}^n} (-1)^{\psi \cdot j} \ket{j}
+H^{\otimes n} \ket{k} = \frac{1}{\sqrt{2^n}} \sum_{j \in \{0,1\}^n} (-1)^{k \cdot j} \ket{j}.
 \end{equation*}
-where $\psi$ and $j$ are $n$-bit binary numbers.
 \end{definition}
 Upon first glance, this formula is quite uninviting, so I will provide a quick guide for some common states. 
 \begin{align*}
@@ -303,9 +307,9 @@ This concludes the section on the Hadamard transform, though the careful (or con
 \section{Phase}
 Up to this point, we have used the term \textit{phase} slightly ambiguously. The exact meaning of the word differs depending on context, so we will flesh these out. In fact, some of the original results in this thesis puzzled both student and adviser until we revisited the exact distinction between \textit{global phase} and \textit{relative phase}.
 
-Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$,\footnote{HOW TO FORMAT EULERS NUMBER} where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two phases are equivalent up to their \textit{global phase shift}. As a thought experiment, one may wonder what happens upon measuring the two states. Suppose $M_x$ is our measurement operator. Then, the probabilities for $x$ occurring upon measurement are: $\bra{\psi}M_x^\dagger M_x \ket{\psi}$ and $\bra{\psi}e^{-i\theta}M_x^\dagger M_x e^{i\theta}\ket{\psi} = \bra{\psi}M_x^\dagger M_x \ket{\psi}.$ So, the two states are indistinguishable with respect to measurements. 
+Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$,\footnote{HOW TO FORMAT EULERS NUMBER} where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two phases are equivalent up to their \textit{global phase shift}. This just means that the probability of observing some basis state $x$ under measurement in any basis is the same for both states. Observationally, they are identical states, so we can ignore global phase shifts. 
 
-The other notion of phase that will come up is \textit{relative phase}. Consider the states $\Hplus = (\ketz + \keto)/\sqrt{2}$ and $\Hminus = (\ketz- \keto)/\sqrt{2}$. These two states have the same \textit{magnitude} on their amplitudes (i.e.~$1/\sqrt{2}$) on both $\ketz$ and $\keto$. Thus, they have the same \textit{relative phase}. However, we can distinguish between the states $\Hplus$ and $\Hminus$ if we apply a 45 degree clockwise rotation to the states, we may distinguish between the states with probability 1 upon measurement. So, despite having the same relative phase, the states are, in fact, computationally distinct.
+The other notion of phase that will come up is \textit{relative phase}. Consider the states $\Hplus = (\ketz + \keto)/\sqrt{2}$ and $\Hminus = (\ketz- \keto)/\sqrt{2}$. These two states have amplitudes on basis state $\keto$ equal to $1/\sqrt{2}$ and $-1/\sqrt{2}$, respectively. So, although their magnitudes are equal, their signs are not. Now, observing both of these in the computational basis yields $\ketz$ with probability $1/2$ and $\keto$ with probability $1/2$ for both states. In the computational basis they are indistinguishable; however, measuring in the \textit{Hadamard basis}, with basis states $\Hplus$ and $\Hminus$, they are distinguishable with probability 1. Despite having the same relative phase, the states are in fact computationally distinct.
 
 \section{Universal Quantum Gate}
 In classical computation, there are three basic logic gates: NOT, AND, and OR. We can combine these gates to represent any possible logical expression. Furthermore, the NAND gate and the NOR gate, which we get from taking the negation (NOT) of the output of AND and OR respectively, are said to be \textit{universal gates}. This means that we can construct the three basic logic gates just from NAND gates or just from NOR gates. So, NAND and NOR are universal in that any logical expression can be represented with just NAND or NOR circuits. This is very useful in practice because NAND gates are very cheap to construct, so using only NANDs can keep the cost of a computer chip down.
