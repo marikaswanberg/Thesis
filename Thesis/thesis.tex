@@ -126,7 +126,8 @@
 % Acknowledgements (Acceptable American spelling) are optional
 % So are Acknowledgments (proper English spelling)
  %   \chapter*{Acknowledgements}
-%	I want to thank a few people.
+
+	
 
 % The preface is optional
 % To remove it, comment it out or delete it.
@@ -143,10 +144,14 @@
 % The abstract is not required if you're writing a creative thesis (but aren't they all?)
 % If your abstract is longer than a page, there may be a formatting issue.
   \chapter*{Abstract}
-	
-%\chapter*{Dedication}
+This thesis is an exploration and analysis of quantum decoding algorithms for geometric error-correcting codes. While quantum algorithms have been analyzed for their success probability, this is the first analysis of algorithmic robustness to unreliable quantum oracles. This analysis is applied to the binary simplex quantum decoding algorithm in chapter 4 where we prove
+the probability of success given a noisy quantum oracle. Our main result, presented in chapter 7, is the repurposing of a quantum algorithm for multivariate polynomial interpolation to the problem of quantum decoding for Reed-Muller codes.
 
-%I dedicate this thesis to all of the individuals who funded my education at Reed College. Truly, I could not have done this without you.
+\chapter*{Dedication}
+\textit{Till Carina,} 
+
+\textit{min allra k\"{a}raste syster.}
+
 
   \mainmatter % here the regular arabic numbering starts
   \pagestyle{fancyplain} % turns page numbering back on
@@ -314,7 +319,7 @@ The other notion of phase that will come up is \textit{relative phase}. Consider
 \section{Universal Quantum Gate}
 In classical computation, there are three basic logic gates: NOT, AND, and OR. We can combine these gates to represent any possible logical expression. Furthermore, the NAND gate and the NOR gate, which we get from taking the negation (NOT) of the output of AND and OR respectively, are said to be \textit{universal gates}. This means that we can construct the three basic logic gates just from NAND gates or just from NOR gates. So, NAND and NOR are universal in that any logical expression can be represented with just NAND or NOR circuits. This is very useful in practice because NAND gates are very cheap to construct, so using only NANDs can keep the cost of a computer chip down.
 
-A natural question, then, is whether there exists a quantum analogue, a universal quantum gate. The short answer is that there is no one universal quantum gate, however the following three gates are enough to make an \textit{arbitrary approximation} of any quantum gate: Hadamard, CNOT, and phase gate. 
+A natural question, then, is whether there exists a quantum analogue, a universal quantum gate. The short answer is that there is no single universal quantum gate, however the following three gates are enough to make an \textit{arbitrarily good approximation} of any quantum gate \citep{nielsenchuang}: Hadamard, CNOT, and phase gate. 
 
 The phase gate is defined
 \begin{align}
@@ -345,27 +350,29 @@ The quantum case is a bit trickier. Suppose \ket{\psi} is only known to our frie
 \ket{\psi} \otimes \ket{s} \xrightarrow{U} U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
 \end{equation}
 Now, suppose this quantum copying circuit works for two arbitrary states \ket{\psi} and \ket{\phi}. Then, we have
-\begin{equation}
+\begin{equation} \label{noclone1}
 U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
 \end{equation}
 and
-\begin{equation}
+\begin{equation} \label{noclone2}
 U(\ket{\phi} \otimes \ket{s}) = \ket{\phi} \otimes \ket{\phi}
 \end{equation}
-Now, taking the inner product of these two equations gives\footnote{Check this math???} 
-\begin{align}
-(\bra{\psi} \otimes \bra{s})U^{\dagger}U \ket{\phi} \otimes \ket{s}
-& = \inner{\psi}{\phi} \otimes \inner{s}{s} \otimes I \\
- & = \inner{\psi}{\phi}\\
-& = (\bra{\psi}\otimes \bra{\psi})(\ket{\phi}\otimes \ket{\phi}) \\
-& = \inner{\psi}{\phi} \otimes \inner{\psi}{\phi} \\
+Now, taking the inner product of the left-hand sides of equations \ref{noclone1} and \ref{noclone2} gives
+\begin{align} 
+(\bra{\psi} \otimes \bra{s})U^{\dagger}U (\ket{\phi} \otimes \ket{s})
+& = (\bra{\psi} U^\dagger U \ket{\phi})(\bra{s} U^\dagger U \ket{s}) \\
+& = \inner{\psi}{\phi} \label{noclone3}
+\end{align}
+However, taking the inner products of the right-hand sides of equations \ref{noclone1} and \ref{noclone2} gives
+\begin{align} \label{noclone4}
+(\bra{\psi} \otimes \bra{\psi})(\ket{\phi} \otimes \ket{\phi})
 & = (\inner{\psi}{\phi})^2
 \end{align}
-Line (5) holds because $s$ is normalized. Critically, lines (5) and (8) give
+Now, equations \ref{noclone3} and \ref{noclone4} give
 \begin{equation*}
  \inner{\psi}{\phi} = (\inner{\psi}{\phi})^2.
 \end{equation*}
-However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\psi}$ is orthogonal to $\ket{\phi}$. Thus, a general cloning device can only clone states that are orthogonal, which means that we cannot clone states which we know nothing about. 
+However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\psi}$ is orthogonal to $\ket{\phi}$. Thus, a general cloning device can only clone states that are orthogonal, which means that we cannot clone two arbitrary states.
 
 This is an important fundamental difference between the classical and quantum models of computation. We take for granted in classical computing that we can copy any unknown states, and much of classical computation relies upon this fact. 
 
@@ -376,17 +383,18 @@ Within any computational model, some computations are ``expensive'' for any numb
 Classical oracles are used throughout computer science theory to abstract computations and reason about algorithms and protocols. Quantum oracles differ  from classical oracles in significant ways. 
 
 \subsection{Quantum Queries}
-First, consider the action of the query. In order to ensure the reversibility of quantum queries, we must maintain two registers: a query register, and a response register. The query register contains the input $x$ on which we wish to query the oracle. This register remains untouched by the oracle. The response register has some initial state $\ket{r}$ and after the quantum query takes place, has the state $\ket{r\oplus f(x)}$ where $f$ is the function that the oracle computed. 
+First, consider the action of the query. Suppose the function operates on the following spaces $f: \Z_2^n \rightarrow \Z_2^m$, and oracle $\mathcal{O}_f$ computes $f$. Clearly, if $n \neq m$, this function could not possibly be bijective. In order to ensure the reversibility of queries to $\mathcal{O}_f$, we must maintain two registers: a query register, and a response register. The query register contains the input $x$ on which we wish to query the oracle and remains unchanged by the query. The response register is initialized to some known basis state $\ket{r} \in \Z_2^m$. After the quantum query takes place, the oracle records the response by taking the bitwise exclusive OR, or addition modulo two of $f(x)$ and $r$. Thus, the response register has the post-query state $\ket{r\oplus f(x)}$. 
 
-\begin{definition}[Quantum Oracle Query] A quantum oracle has the following action on the query and response registers $\mathcal{O}_f : \ket{x, r} \rightarrow \ket{x, r \oplus f(x)}$.
+\begin{definition}[Quantum Oracle Query] Let $f: \Z_2^n \rightarrow \Z_2^m$ be a function. Then, the quantum oracle $\mathcal{O}_f : \Z_2^n \times \Z_2^m \rightarrow \Z_2^n \times \Z_2^m$ that computes $f$ has the following action on the query and response registers 
+\begin{equation*}
+\mathcal{O}_f : \ket{x, r} \rightarrow \ket{x, r \oplus f(x)}.
+\end{equation*}
 \end{definition}
-
 In addition to the query and response registers, quantum oracles have the special ability to take as input a \textit{superposition of queries} and output a \textit{superposition of responses}. More precisely, suppose we have a superposition of queries of length $n$ 
 \begin{equation*}
-\ket{x} = \sum_{i \in \Z_2^n} \alpha_i \ket{i}
+\ket{x, r} = \sum_{i \in \Z_2^n} \alpha_i \ket{i, r}
 \end{equation*}
-
-and $n$ response registers $\ket{r} = \ket{r_1} \otimes \ldots \ket{r_n}$. Then, the query $\mathcal{O}(\ket{x, r})$ results in the following state
+and $n$ response registers each of $m$ qubits $\ket{r} = \ket{r_1} \otimes \ldots \otimes\ket{r_m}$, $r_i \in \Z_2^m$. Then, the query $\mathcal{O}_f: (\ket{x, r})$ results in the following state
 \begin{equation*}
 \ket{x} = \sum_{i \in \Z_2^n} \alpha_i \ket{i, r_i \oplus f(i)}.
 \end{equation*}
@@ -442,10 +450,6 @@ Thus far, all of the measurements we have performed have been done in the \texti
 So, measuring $\ket{\psi}$ in the Hadamard basis yields $\Hplus$ with probability $(\alpha + \beta)^2/2$ and $\Hminus$ with probability $(\alpha - \beta)^2/2$.
 
 More generally, we can represent any state $\ket{\psi}$ as a unique linear combination of any orthonormal basis, $\ket{\psi} = \alpha \ket{a}+ \beta \ket{b}$ (where $\ket{a}$ and $\ket{b}$ form an orthonormal basis). Then, the probabilities of measuring $\ket{a}$ and $\ket{b}$ are $\alpha^2$ and $\beta^2$, respectively.
-
-\section{A Note on Asymptotic Complexity}
-
-In this thesis, we will be studying the asymptotic complexity of various different metrics, including: runtime, query complexity, certificate complexity, block sensitivity, and perhaps circuit complexity\footnote{These complexity metrics will be defined later.}. Those who are unfamiliar with asymptotic complexity (also termed Landau-Bachmann notation in mathematics) should review the appendix on the topic. 
 
 
 \chapter{Introduction to Error-Correcting Codes}	
@@ -634,79 +638,11 @@ Computer scientists do not care how many queries it takes to learn the propertie
 \begin{example}
 Suppose the domain we are working with is sets of $2^n$ people instead of $\{0,1\}^n$. Then, we can define a concept like $f = \{ x\in 2^n \text{-set of people} \mid \text{ Marika has met } x\}$. Then, $f(\text{``Jamie Pommersheim''}) = 1$, but $f(\text{``Alan Turing''}) = 0$, sadly. Now, the concept class is just the union of these concepts over all possible domain sizes (ignoring the fact that the number of people that have existed is finite). This example is perhaps not mathematically rigid, but it should give the reader an intuition for what concept classes are.
 \end{example}
-
 The example we outlined refers to a specific kind of function called a \textit{membership oracle}.
 \begin{definition}[Membership Oracle] A membership oracle $MQ_f$ is an oracle that returns 1 on input $x$ if and only if $x \in f$ or equivalently if $f(x)=1$. This is called a \textit{membership query}.
 \end{definition}
 
 Given some membership oracle $MQ_f$, the goal of the learning algorithm is to construct a \textit{hypothesis} $h: \{0,1\}^n \rightarrow \{0,1\}$ that is equivalent to $f$, i.e.~$\forall x \in \{0,1\}^n, f(x) = h(x)$. While their outputs are equal, $f$ and $h$ may compute their outputs quite differently, but this is irrelevant.
-
-As with code theory, focusing on the properties of the concept classes can provide insight into the query complexity of that set of functions. We will look at two particular properties of concept classes: certificate complexity and block sensitivity. They provide some bounds on query complexities, however they are mostly discussed for fun rather than practical results.
-\section{Certificate Complexity}
-
-\begin{definition} (Certificate) For an input $x \in \{0,1\}^n$, a set $S \subseteq [n]$ is a certificate on $x$ if, for all $y \in \{0,1\}^n$ such that $x_i = y_i \forall i \in S$, we have $f(x) = f(y)$. Then, $C_x(f) = \min_{S\in\mathscr{S}_x(f)} \{\lvert S \rvert \}$ where $\mathscr{S}_x(f)$ is the set of all certificates on for input $x$ on function $f$.
-\end{definition}
-Now, obviously we would like to generalize this property to the whole function and not just particular inputs.
-\begin{definition}[Certificate Complexity] The certificate complexity of a concept $f: \{0,1\}^n \rightarrow \{0,1\}$ is 
-\begin{equation*}
-C(f) = \max_{x\in \{0,1\}^n}\{C_x(f)\} = \max_{x\in \{0,1\}^n}\{\min_{S\in\mathscr{S}_x(f)} \{\lvert S \rvert \}\}
-\end{equation*}
-\end{definition}
-
-This may make more sense with some examples.
-\begin{example}
-Let $f(x_1, x_2, \ldots, x_n) = x_1$ where $x_i \in \{0,1\}$. Suppose the input we are looking at is $x = (0, \ldots, 0)$. Then, the smallest certificate for $x$ is $S = \{1\}$, or just the first input since $f(y) = f(x)$ for all $y$ that have a zero in the first bit. Now, this property holds for all $x$ in the input, not just the input of all zeros. So, the overall certificate complexity of $f$ is 1. This makes sense intuitively because we only need to look at one bit of the input to determine what the output will be.
-\end{example}
-\begin{example}
-Now, perhaps the other extreme example. Suppose $f(x_1, \ldots, x_n) = x_1 \oplus x_2 \oplus \ldots \oplus x_n$ i.e.~it outputs whether an even or odd number of the inputs are set to 1. Then, suppose our input is $x = (0, \ldots, 0)$ again. The minimum certificate size for the zero vector is $n$, since there are many inputs $y$ that have $n-1$ bits in common with the zero vector but where $f(x) \neq f(y)$ (e.g.~$y = (1, 0, \ldots, 0)$). So, the overall certificate complexity of $f$ is $n$. This also makes sense intuitively, since one must look at all input bits to evaluate $f$ accurately.
-\end{example}
-These two examples present somewhat extreme, or some may say trivial, evaluations of certificate complexities. Their purpose is merely to acquaint the reader with the idea of certificate complexity. What follows is a less trivial original proof about the certificate complexity of all linear codes.
-
-\begin{theorem}(Swanberg) The certificate complexity for the nearest neighbor decoding algorithm $f$ on a linear code  $\mathscr{C} = [n,k]$ with minimum distance $d$ is 
-\begin{equation*}
- C(f) = n - 2\bigg\lfloor \frac{1}{2} (d-1) \bigg\rfloor.
- \end{equation*}
-\end{theorem}
-
-Before ``proving'' this theorem, we must state a conjecture.
-
-\begin{conjecture}\label{hope_its_true}
-For any linear code $\mathscr{C} = [n,k]$ with minimum distance $d$, 
-\begin{equation*}
-\bigg\lfloor \frac{1}{2}(d-1)\bigg\rfloor < \frac{n}{2}.
-\end{equation*}
-\end{conjecture}
-
-\begin{proof}
-A code $\mathscr{C}= [n,k]$ with distance $d$ can correct $\lfloor\frac{1}{2}(d-1)\rfloor$ errors. Thus, there exist two codewords $c_1 = e_1 + c$ and $c_2 = e_2 +c$ where the nearest neighbor decoding function gives $f(c_1) = f(c) = f(c_2)$ provided that $dist(c, c_1), dist(c, c_2) \leq \lfloor\frac{1}{2}(d-1)\rfloor$. Let $dist(c, c_1) = dist(c, c_2) = \lfloor\frac{1}{2}(d-1)\rfloor$.
-
-By the triangle inequality and the fact that inner product distance is in fact a metric on $\Z_2^n$, we have 
-\begin{align*}
-dist(c_1, c_2) 
-& \leq dist(c, c_1) + dist(c, c_2) \\
-& = 2 \bigg\lfloor\frac{1}{2}(d-1)\bigg\rfloor.
-\end{align*}
-So, we have an upper bound on the maximum distance between $c_1$ and $c_2$. Now, I will show that this upper bound is achievable. By Conjecture \ref{hope_its_true}, the number of errors we can correct is less than $n/2$. Thus, we have that $wt(e_1), wt(e_2) < n/2$. Given this fact, we may choose $e_1$ and $e_2$ such that $dist(e_1, e_2) = 2 wt(e_1) = dist(c, c_1) + dist(c, c_2)$ by choosing $e_1$ and $e_2$ that have at least
-\end{proof}
-
-
-\section{Block Sensitivity}
-Block sensitivity is a lower bound on all query complexity measures (?)
-
-\begin{definition}[Block sensitivity] For an input $x\in \{0,1\}^n$ and a subset of variables $S \subseteq [n]$, $x^{(S)}$ is the input obtained from $x$ by changing all $x_i, i \in S$ to opposite values. The block sensitivity $bs(f)$ is the maximum $k$ for which there is an input $x \in \{0,1\}^n$ and pairwise disjoint subsets $S_1, \ldots, S_k \subseteq [n]$ with $f(x) \neq f(x^{(S_i)})$ for all $1 \leq i \leq k$
-\end{definition}
-
-What does this mean in the context of error-correcting codes? We want to know the block sensitivity of $f$, our decoding algorithm. For linear decoding, we have $f: \{0,1\}^n \rightarrow \{0,1\}^k$ where the messages are of length $k$ and the codewords have $n-k$ check bits. 
-
-\begin{theorem}
-For linear codes $\mathscr{C} = [n,k]$ with minimum distance $d$, the nearest neighbor decoding function $f: \{0,1\}^n \rightarrow \{0,1\}^k$ has a block sensitivity $$
-bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}$$
-\end{theorem}
-
-\begin{proof}
-Our linear code has minimum distance $d$. By (theorem 2 in MacWilliams and Sloane), the code can correct $\lfloor \frac{1}{2}(d-1) \rfloor$ errors. Thus, $f(x) = f(x^{(S)})$ where $\lvert S \rvert \leq \lfloor \frac{1}{2}(d-1) \rfloor$. Correct decoding is not guaranteed when $\lvert S \rvert > \lfloor \frac{1}{2}(d-1) \rfloor$. There are at most $n/(\lfloor \frac{1}{2}(d-1) \rfloor +1)$ pairwise disjoint sets of size $\lfloor \frac{1}{2}(d-1) \rfloor+ 1$ in $\{1, \ldots, n\}$, which could all potentially lead to decoding errors. Thus, $$bs(f) \leq \frac{n}{\lfloor \frac{1}{2}(d-1)  \rfloor +1}.$$\\
-\end{proof}
-
 
 \chapter{The Binary Simplex Code}
 One particularly interesting linear code is the simplex code. This is a special case of the Reed-Muller codes we will discuss later. The encoding and decoding algorithms are quite simple, so this is our starting point for further analyzing some of the error-correcting properties of the quantum decoding algorithm.
@@ -1304,54 +1240,6 @@ $\otimes$ & Tensor product \\
 \end{center}
 
 
-
-    	\chapter{Asymptotic Complexity}
-    	Computer scientists are very interested in how long their algorithm or function will take to run on given inputs. The crudest, most theoretical, runtime analysis looks at the \textit{asymptotic runtime} of an algorithm. In practice, the actual runtime can be affected significantly by any number of factors like the operating system and memory  latency, but for our purposes the 
-\textit{asymptotic} runtime is the only metric we will care about (particularly because current existent quantum computers are rather rudimentary).
-
-The basic idea behind asymptotic runtime analysis is that we consider how long our algorithm takes to compute as a function of the \textit{length} (number of bits) of the input, where the time interval is calculated as the number of basic operations required. Classically, the basic operations are generally considered to be the ones that the Arithmetic Logic Unit (ALU) in the CPU can do. These include: addition, subtraction, multiplication, division, boolean comparisons, and variable assignment. Quantumly, the basic operations are the same as above in addition to arbitrary unitary transformations and oracle queries (which take one time step). 
-
-Now that we have the basic idea, time to get technical. We define notions of relative asymptotic growth rates of functions: $O, \Omega, o, \omega$, and $\Theta$. We will define these notions rigorously below, but for all practical purposes, the following distinctions are sufficient. Suppose we have two functions $f(n)$ and $g(n)$. Then, 
-\begin{itemize}
-\item We say $f(n) = O(g(n))$,\textit{``$f$ is big-oh of $g$,''} if $f(n) \leq g(n)$ as $n$ gets large;
-\item $f(n) = o(g(n))$,\textit{``$f$ is little-oh of $g$,''} if $f(n) < g(n)$ (strictly) as $n$ gets large;
-\item $f(n) = \Omega(g(n))$,\textit{``$f$ is big-omega of $g$,''} if $f(n) \geq g(n)$ as $n \rightarrow \infty$;
-\item $f(n) = \omega(g(n))$,\textit{``$f$ is little-omega of $g$,''} if $f(n) > g(n)$ (strictly) as $n$ gets large.
-\item Lastly, $f(n) = \Theta(g(n))$, \textit{``$f$ is theta of $g$,''} if $f(n) = g(n)$ (up to constant factors) as $n$ gets large.
-\end{itemize}
-The above imprecise definitions are rigorous enough for our discussions; however, I present the formal definitions below for the overly pedantic or curious reader. 
- 
-\begin{theorem}
-A function f(n) is O(g(n)), denoted f(n) = O(g(n)), if there exist $c>0, n_0>0$ such that
-$$f(n) \leq c g(n) \quad \forall n\geq n_0.$$
-\end{theorem}
-
-\begin{theorem}
-A function f(n) is o(g(n)), denoted f(n) = o(g(n)), if there exists $n_0>0$ such that for all $c>0$,
-$$f(n) < c g(n) \quad \forall n\geq n_0.$$
-\end{theorem}
-
-\begin{theorem}
-A function f(n) is $\Omega(g(n))$, denoted $f(n) = \Omega(g(n))$, if there exist $c>0, n_0>0$ such that
-$$f(n) \geq c g(n) \quad \forall n\geq n_0.$$
-\end{theorem}
-
-\begin{theorem}
-A function f(n) is $\omega(g(n))$, denoted $f(n) = \omega(g(n))$, if there exists $n_0>0$ such that for all $c>0$,
-$$f(n) > c g(n) \quad \forall n\geq n_0.$$
-\end{theorem}
-
-\begin{theorem}
-A function f(n) is $\Theta(g(n))$, denoted $f(n) = \Theta(g(n))$, if f(n) = O(g(n)) and g(n) = O(f(n)).
-\end{theorem}
-
-Determining the exact values of $n_0$ and $c$ is not necessary. Instead, we will present a few heuristics:
-\begin{enumerate}
-\item Constant factors don't matter. 
-\item Only the largest complexity class matters if we are adding terms.
-\end{enumerate}
-For example, $f(n)= 25n^3 + 170000n$ is $O(n^{17})$ because $n^3 \leq n^{17} $ as $n$ grows, and $f(n) = \Theta(n^3)$ because the $170000n$ doesn't matter as $n$ grows and we don't care about the constant factor of 25 either, and $f(n) = \omega(n^2)$, because $n^2 < n^3$ as $n$ goes to infinity.
-
 	
 \chapter{Finite Geometries} \label{finite_geom_chapter}
 Finite geometries are mathematical objects that codes map onto well, and they provide a new way of viewing codes. In this appendix, we will explore the properties of finite geometries that are vital to the classical Reed-Muller decoding algorithm with a focus on the projective geometry and affine or Euclidean geometry. This material is largely based on Appendix B in [REFERENCE MACWILLIAMS AND SLOANE]
@@ -1402,10 +1290,10 @@ The affine or projective geometry $EG(m,q)$ is obtained from $PG(m,q)$ by deleti
 % \renewcommand{\bibname}{Works Cited}
 
 %    \bibliographystyle{bsts/mla-good} % there are a variety of styles available; 
-%  \bibliographystyle{plainnat}
+  \bibliographystyle{plainnat}
 % replace ``plainnat'' with the style of choice. You can refer to files in the bsts or APA 
 % subfolder, e.g. 
- \bibliographystyle{APA/apa-good}  % or
+% \bibliographystyle{APA/apa-good}  % or
  \bibliography{thesis}
  % Comment the above two lines and uncomment the next line to use biblatex-chicago.
  %\printbibliography[heading=bibintoc]

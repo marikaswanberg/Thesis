@@ -10,10 +10,9 @@
 \contentsline {section}{\numberline {1.8}No-Cloning Theorem}{8}
 \contentsline {section}{\numberline {1.9}Quantum Oracles}{9}
 \contentsline {subsection}{\numberline {1.9.1}Quantum Queries}{9}
-\contentsline {section}{\numberline {1.10}Phase-kickback Trick}{9}
+\contentsline {section}{\numberline {1.10}Phase-kickback Trick}{10}
 \contentsline {section}{\numberline {1.11}Bernstein-Vazirani Algorithm}{10}
-\contentsline {section}{\numberline {1.12}Measuring in Non-Computational Bases}{11}
-\contentsline {section}{\numberline {1.13}A Note on Asymptotic Complexity}{12}
+\contentsline {section}{\numberline {1.12}Measuring in Non-Computational Bases}{12}
 \contentsline {chapter}{Chapter 2: Introduction to Error-Correcting Codes}{13}
 \contentsline {section}{\numberline {2.1}Preliminaries}{14}
 \contentsline {section}{\numberline {2.2}Overview of Transmission}{14}
@@ -25,42 +24,39 @@
 \contentsline {subsection}{\numberline {2.4.4}Decoding Errors}{19}
 \contentsline {chapter}{Chapter 3: Introduction to Learning Theory}{21}
 \contentsline {section}{\numberline {3.1}Basics of Concept Learning}{21}
-\contentsline {section}{\numberline {3.2}Certificate Complexity}{22}
-\contentsline {section}{\numberline {3.3}Block Sensitivity}{24}
-\contentsline {chapter}{Chapter 4: The Binary Simplex Code}{25}
-\contentsline {section}{\numberline {4.1}Encoding}{25}
-\contentsline {subsection}{\numberline {4.1.1}Example}{26}
-\contentsline {subsection}{\numberline {4.1.2}Generating Matrix}{26}
-\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{27}
-\contentsline {subsection}{\numberline {4.2.1}Reliable Quantum Oracle}{27}
-\contentsline {subsection}{\numberline {4.2.2}Algorithm}{27}
-\contentsline {section}{\numberline {4.3}Rosbustness to Errors}{29}
-\contentsline {subsection}{\numberline {4.3.1}Noisy Quantum Oracle}{29}
-\contentsline {subsection}{\numberline {4.3.2}Algorithm with Noisy Oracle}{29}
-\contentsline {chapter}{Chapter 5: Reed-Muller Codes}{33}
-\contentsline {section}{\numberline {5.1}Boolean Functions}{33}
-\contentsline {section}{\numberline {5.2}Encoding}{34}
-\contentsline {subsection}{\numberline {5.2.1}Generator Matrix}{36}
-\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{37}
-\contentsline {subsection}{\numberline {5.3.1}Geometric Connections}{37}
-\contentsline {subsection}{\numberline {5.3.2}Decoding Algorithm}{38}
-\contentsline {subsection}{\numberline {5.3.3}Geometric Decoding Example}{39}
-\contentsline {chapter}{Chapter 6: Quantum Multivariate Polynomial Interpolation}{41}
-\contentsline {section}{\numberline {6.1}The Problem Definition}{41}
-\contentsline {section}{\numberline {6.2}Quantum Query Model}{42}
-\contentsline {subsection}{\numberline {6.2.1}Quantum Fourier Transform}{42}
-\contentsline {subsection}{\numberline {6.2.2}Phase Query}{42}
-\contentsline {section}{\numberline {6.3}More Preliminaries}{43}
-\contentsline {section}{\numberline {6.4}The Algorithm}{44}
-\contentsline {chapter}{Chapter 7: Quantum Decoding Algorithm for Reed-Muller Codes}{45}
-\contentsline {section}{\numberline {7.1}Polynomial : Coefficient Vector :: Codeword : Message}{45}
-\contentsline {subsection}{\numberline {7.1.1}Adapting Polynomial Interpolation}{46}
-\contentsline {subsection}{\numberline {7.1.2}The Algorithm}{47}
-\contentsline {section}{\numberline {7.2}Two Types of Noisy Oracles}{48}
-\contentsline {subsection}{\numberline {7.2.1}Connection to Message Transmission}{48}
-\contentsline {chapter}{Conclusion}{49}
-\contentsline {section}{\numberline {8.1}Further Work}{49}
-\contentsline {chapter}{Appendix A: Notation Guide}{51}
-\contentsline {chapter}{Appendix B: Asymptotic Complexity}{53}
-\contentsline {chapter}{Appendix C: Finite Geometries}{55}
-\contentsline {chapter}{Bibliography}{57}
+\contentsline {chapter}{Chapter 4: The Binary Simplex Code}{23}
+\contentsline {section}{\numberline {4.1}Encoding}{23}
+\contentsline {subsection}{\numberline {4.1.1}Example}{24}
+\contentsline {subsection}{\numberline {4.1.2}Generating Matrix}{24}
+\contentsline {section}{\numberline {4.2}Quantum Decoding Algorithm}{25}
+\contentsline {subsection}{\numberline {4.2.1}Reliable Quantum Oracle}{25}
+\contentsline {subsection}{\numberline {4.2.2}Algorithm}{25}
+\contentsline {section}{\numberline {4.3}Rosbustness to Errors}{27}
+\contentsline {subsection}{\numberline {4.3.1}Noisy Quantum Oracle}{27}
+\contentsline {subsection}{\numberline {4.3.2}Algorithm with Noisy Oracle}{27}
+\contentsline {chapter}{Chapter 5: Reed-Muller Codes}{31}
+\contentsline {section}{\numberline {5.1}Boolean Functions}{31}
+\contentsline {section}{\numberline {5.2}Encoding}{32}
+\contentsline {subsection}{\numberline {5.2.1}Generator Matrix}{34}
+\contentsline {section}{\numberline {5.3}Classical Decoding Algorithm}{35}
+\contentsline {subsection}{\numberline {5.3.1}Geometric Connections}{35}
+\contentsline {subsection}{\numberline {5.3.2}Decoding Algorithm}{36}
+\contentsline {subsection}{\numberline {5.3.3}Geometric Decoding Example}{37}
+\contentsline {chapter}{Chapter 6: Quantum Multivariate Polynomial Interpolation}{39}
+\contentsline {section}{\numberline {6.1}The Problem Definition}{39}
+\contentsline {section}{\numberline {6.2}Quantum Query Model}{40}
+\contentsline {subsection}{\numberline {6.2.1}Quantum Fourier Transform}{40}
+\contentsline {subsection}{\numberline {6.2.2}Phase Query}{40}
+\contentsline {section}{\numberline {6.3}More Preliminaries}{41}
+\contentsline {section}{\numberline {6.4}The Algorithm}{42}
+\contentsline {chapter}{Chapter 7: Quantum Decoding Algorithm for Reed-Muller Codes}{43}
+\contentsline {section}{\numberline {7.1}Polynomial : Coefficient Vector :: Codeword : Message}{43}
+\contentsline {subsection}{\numberline {7.1.1}Adapting Polynomial Interpolation}{44}
+\contentsline {subsection}{\numberline {7.1.2}The Algorithm}{45}
+\contentsline {section}{\numberline {7.2}Two Types of Noisy Oracles}{46}
+\contentsline {subsection}{\numberline {7.2.1}Connection to Message Transmission}{46}
+\contentsline {chapter}{Conclusion}{47}
+\contentsline {section}{\numberline {8.1}Further Work}{47}
+\contentsline {chapter}{Appendix A: Notation Guide}{49}
+\contentsline {chapter}{Appendix B: Finite Geometries}{51}
+\contentsline {chapter}{Bibliography}{53}
