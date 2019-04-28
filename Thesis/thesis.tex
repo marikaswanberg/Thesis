@@ -1196,12 +1196,17 @@ The stateless noisy oracle is analogous to the oracle requesting a retransmissio
 	\setcounter{chapter}{8}
 	\setcounter{section}{0}
 	
-Here's a conclusion, demonstrating the use of all that manual incrementing and table of contents adding that has to happen if you use the starred form of the chapter command. The deal is, the chapter command in \LaTeX\ does a lot of things: it increments the chapter counter, it resets the section counter to zero, it puts the name of the chapter into the table of contents and the running headers, and probably some other stuff. 
-
-So, if you remove all that stuff because you don't like it to say ``Chapter 4: Conclusion'', then you have to manually add all the things \LaTeX\ would normally do for you. Maybe someday we'll write a new chapter macro that doesn't add ``Chapter X'' to the beginning of every chapter title.
+Many questions arose during the course of the year. Some of them yielded a satisfactory answer, while others turned up disappointing results and were not included. Yet more remained unanswered. The project of this thesis was to: 1) shed clarity on these confusing topics, and in doing so, 2) inspire further work in this area. Perhaps one day the topics that were left unpursued can be realized concretely. They are described below.
 
 \section{Further Work}
-And here's some other random info: the first paragraph after a chapter title or section head \emph{shouldn't be} indented, because indents are to tell the reader that you're starting a new paragraph. Since that's obvious after a chapter or section title, proper typesetting doesn't add an indent there. 
+In this thesis we presented the idea of algorithmic robustness to noisy quantum oracles. That is, for a given quantum algorithm $\mathcal{A}$ which relies on quantum queries to oracle $\mathcal{O}$, what is $P_{succ}$ of the algorithm if the oracle is replaced with a noisy oracle $\widehat{\mathcal{O}}$?
+
+We were able to answer this question for the binary simplex decoding algorithm if we had a specific known error rate $(k/2^n)$ for the noisy oracle. This topic could be generalized by considering the probability of success given that the noise added to the oracle \emph{follows some particular distribution}. This is more realistic because it is unlikely that one would know the exact number of errors that occurred in the query process. 
+
+A second way to expand upon this thesis is to answer questions about robustness to noisy oracles of a \emph{wide variety} of algorithms. For example, Grover's search algorithm \citep{grover1996fast} seems particularly suited for this line of inquiry. 
+
+Lastly, for an algorithm which relies on \emph{multiple} oracle queries, one could analyze the difference in $P_{succ}$ when the oracle is replaced with a \emph{stateless} versus a \emph{stateful} noisy oracle (as described in chapter 7).
+
 
 
 %If you feel it necessary to include an appendix, it goes here.
