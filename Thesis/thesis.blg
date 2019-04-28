@@ -3,44 +3,44 @@ Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
 The top-level auxiliary file: thesis.aux
 The style file: plainnat.bst
 Database file #1: thesis.bib
-You've used 13 entries,
+You've used 16 entries,
             2773 wiz_defined-function locations,
-            672 strings with 6660 characters,
-and the built_in function-call counts, 5604 in all, are:
-= -- 514
-> -- 235
-< -- 16
-+ -- 82
-- -- 69
-* -- 390
-:= -- 832
-add.period$ -- 40
-call.type$ -- 13
-change.case$ -- 59
-chr.to.int$ -- 13
-cite$ -- 26
-duplicate$ -- 291
-empty$ -- 518
-format.name$ -- 93
-if$ -- 1211
+            692 strings with 7202 characters,
+and the built_in function-call counts, 6949 in all, are:
+= -- 633
+> -- 312
+< -- 18
++ -- 109
+- -- 93
+* -- 500
+:= -- 1044
+add.period$ -- 49
+call.type$ -- 16
+change.case$ -- 76
+chr.to.int$ -- 16
+cite$ -- 32
+duplicate$ -- 351
+empty$ -- 629
+format.name$ -- 120
+if$ -- 1486
 int.to.chr$ -- 1
 int.to.str$ -- 1
-missing$ -- 14
-newline$ -- 72
-num.names$ -- 52
-pop$ -- 135
+missing$ -- 17
+newline$ -- 87
+num.names$ -- 64
+pop$ -- 167
 preamble$ -- 1
-purify$ -- 48
+purify$ -- 62
 quote$ -- 0
-skip$ -- 227
+skip$ -- 271
 stack$ -- 0
-substring$ -- 239
-swap$ -- 45
+substring$ -- 295
+swap$ -- 48
 text.length$ -- 5
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 133
+type$ -- 166
 warning$ -- 0
-while$ -- 56
+while$ -- 69
 width$ -- 0
-write$ -- 173
+write$ -- 211
