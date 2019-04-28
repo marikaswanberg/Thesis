@@ -1,1 +1,3 @@
-# Thesis
+# Abstract
+
+This thesis is an analysis of the query complexity of quantum decoding algorithms for geometric error-correcting codes. Many quantum decoding algorithms for error-correcting codes have already been devised, and we study the robustness of such algorithms to noisy or unreliable oracles, given a fixed query complexity. In chapter 4, we define one type of noisy quantum oracle and proceed with an original analysis of the quantum decoding algorithm for the binary simplex code. The remainder of the thesis is dedicated to exploring and reinterpreting a class of generalized simplex codes, called Reed-Muller codes, in two ways: as finite geometries and as polynomials. Chapter 7, the main result, presents the transformation of Reed-Muller decoding into multivariate polynomial interpolation and the  successful simplification of a generalized quantum multivariate polynomial interpolation algorithm for decoding Reed-Muller codes.
