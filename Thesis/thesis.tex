@@ -37,6 +37,7 @@
 \usepackage{longtable,booktabs,setspace} 
 \usepackage{chemarr} %% Useful for one reaction arrow, useless if you're not a chem major
 \usepackage[hyphens]{url}
+\usepackage{imakeidx}
 \usepackage{rotating}
 \usepackage{natbib}
 \usepackage{mathtools}
@@ -92,6 +93,7 @@
 1 & -1 
 \end{bmatrix}
 }
+
 \input{notation.tex}
 
 \title{Noisy Quantum Oracles: A Study of Algorithmic Robustness}
@@ -114,6 +116,7 @@
 
 \setlength{\parskip}{0pt}
 %%
+\makeindex
 %% End Preamble
 %%
 %% The fun begins:
@@ -181,7 +184,7 @@ Due to the complex nature of quantum mechanics, there are a plethora of misconce
 The quantum mechanical properties upon which quantum computers are based have been studied extensively by physicists; we will avoid discussing such details and instead take these properties for granted in order to focus on the information-theoretic behavior of this new model of computation. 
 
 \section{Information Representation}
-Classical computers, i.e.~the computers that we all know and love, run on \textit{bits} or 1's and 0's. This is the fundamental unit of information in classical computers. In quantum computers, information is built upon an analagous concept, the \textit{quantum bit} or \textit{qubit}. We will discuss the defining properties of qubits, some of which may seem very different from those of bits.
+Classical computers, i.e.~the computers that we all know and love, run on \textit{bits} or 1's and 0's. This is the fundamental unit of information in classical computers. In quantum computers, information is built upon an analagous concept, the \textit{quantum bit} or \textit{qubit}. We will discuss the defining properties of qubits\index{qubit}, some of which may seem very different from those of bits.
 
 In classical computing, each bit can be in one of two states--1 or 0.  We denote \textit{quantum states} by \ketz and \keto, pronounced ``\textit{ket zero}'' and ``\textit{ket one},'' respectively. This follows traditional \textit{Dirac notation}\footnote{See reference on notation--not yet written}. Unlike classical bits, qubits can be in a \textit{superposition} between these two states. That is, a qubit can lie in one of the infinite states ``between'' \ketz and \keto. We describe a quantum state as follows: $\ketpsi = \alpha \ketz + \beta \keto$, where $\alpha$ and $\beta$ are complex numbers and $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1$. This describes a probability distribution over the quantum states \ketz and \keto with \textit{amplitudes} $\alpha$ and $\beta$ that each take values from $\C$, the complex field. In this way, we can think of \ketpsi as a vector in $\C^2$. The states \ketz and \keto form an orthonomal basis in this complex vector space and are called the \textit{computational basis states}.
 
@@ -400,26 +403,23 @@ First, consider the action of the query. Suppose the function operates on the fo
 \mathcal{O}_f : \ket{x, r} \rightarrow \ket{x, r \oplus f(x)}.
 \end{equation*}
 \end{definition}
-In addition to the query and response registers, quantum oracles have the special ability to take as input a \textit{superposition of queries} and output a \textit{superposition of responses}. More precisely, suppose we have a superposition of queries of length $n$ 
+In addition to the query and response registers, quantum oracles have the special ability to take as input a \textit{superposition of queries} and output a \textit{superposition of responses}. More precisely, suppose we want to query the oracle on the following valid superposition of points $S \subseteq \Z_2^n$.
 \begin{equation*}
-\ket{x, r} = \sum_{i \in \Z_2^n} \alpha_i \ket{i, r}
+\ket{x} = \sum_{s \in S} \alpha_s \ket{s}, \quad \text{ where } \sum_{s \in S} \lvert \alpha_s\rvert^2 = 1.
 \end{equation*}
-and $n$ response registers each of $m$ qubits $\ket{r} = \ket{r_1} \otimes \ldots \otimes\ket{r_m}$, $r_i \in \Z_2^m$. Then, the query $\mathcal{O}_f: (\ket{x, r})$ results in the following state
+Then, we need to append an $m$-qubit response register to each query register $\ket{s}$  and initialize the response registers to some known value $\ket{r_s}$. The pre-query state becomes
 \begin{equation*}
-\ket{x} = \sum_{i \in \Z_2^n} \alpha_i \ket{i, r_i \oplus f(i)}.
+\sum_{\substack{s \in S \\ r_s \in \Z_2^m}} \alpha_s \ket{s, r_s} .
+\end{equation*}
+Then, the query $\mathcal{O}_f:  \Z_2^n \times \Z_2^m \rightarrow \Z_2^n \times \Z_2^m$ produces the following unitary transformation
+\begin{equation*}
+\sum_{\substack{s \in S \\ r_s \in \Z_2^m}} \alpha_s \ket{s, r_s}  \xrightarrow{\mathcal{O}_f} \sum_{\substack{s \in S \\ r_s \in \Z_2^m}} \alpha_s \ket{s, r_s \oplus f(s)}.
 \end{equation*}
 It is important to note that this only constitutes \textit{one} quantum query to the oracle.
 
 
 \section{Phase-kickback Trick}
-
-Suppose we have ``black-box access'' to some function $f$. That is, we can query $f$ on some input $x$ and it will compute $f(x)$. We record the output in a \textit{response register}, the second qubit in the example below; the first qubit is called the \textit{query register}. This can be modeled as the following unitary transformation:
-\begin{equation*}
-\ket{x, z} \xrightarrow{f} \ket{x, z \oplus f(x)}
-\end{equation*}
-Given $z$, we can deduce what $f(x)$ is by taking $z \oplus f(x) \oplus z = f(x)$, addition mod 2. This is essential to keeping the transformation unitary. 
-
-One common query method is using what is called the \textit{phase kickback trick}. The basic idea is that we initialize the response register to \Hminus so that both the query and response registers stay the same after the query, and the value of $f(x)$ is encapsulated by the phase of the state. More concretely, we have:
+ One common query method is using what is called the \textit{phase kickback trick}. The basic idea is that we initialize the response register to \Hminus so that both the query and response registers stay the same after the query, and the value of $f(x)$ is encapsulated by the phase of the state. More concretely, we have:
 \begin{align*}
 \ket{x} \otimes \Hminus 
 & = \ket{x} \otimes \frac{1}{\sqrt{2}}(\ketz - \keto)\\
@@ -433,33 +433,41 @@ Since the response register remains unchanged, we will generally omit this from 
 
 Now that we have seen a few tricks of the trade, we will dive into a quantum algorithm. The Bernstein-Vazirani algorithm forms the foundation for many of the algorithms in the rest of this thesis, so a solid grasp of this section will yield high dividends. 
 
-[CITATION TO VAZIRANI PAPER] The Bernstein-Vazirani algorithm solves the following problem: for $N = 2^n$, we are given $x \in \{0,1\}^N$ with the property that there exists some unknown $a \in \{0,1\}^n$ such that $x_i = i \cdot a$ mod 2. The goal is to find $a$. In other words, $x_i$ is the $i$th bit of the binary representation of $x$. 
+The Bernstein-Vazirani algorithm solves the following problem: for $N = 2^n$, we are given a function $f: \Z_2^n \rightarrow \Z_2$ with the property that there exists some unknown $a \in \Z_2^n$ such that $f(i) = i \cdot a \pmod{2}$. The goal is to find $a$. 
 
-First, an overview of the algorithm: we will start in the state $\ketz^{\otimes n}$, the $n$-qubit zero state, and apply a $n$-qubit Hadamard transform to get an equal superposition of the states, i.e.~ $\Hplus^{\otimes n}$. Next, we perform a quantum query using the phase kickback trick to store the bits of $x$ in the phase of our state. Then, another Hadamard transform on all $n$ qubits. With a simple measurement, we obtain $a$ with probability 1. Now, for the details.
+First, an overview of the algorithm: we will start in the state $\ketz^{\otimes n}$, the $n$-qubit zero state, and apply a $n$-qubit Hadamard transform to get an equal superposition of the states, i.e.~ $\Hplus^{\otimes n}$. Next, we perform a quantum query using the phase kickback trick to store $f(i)$ in the phase of state $\ket{i}$. Then, another Hadamard transform on all $n$ qubits. With a simple measurement, we obtain $a$ with probability 1. Now, for the details.
 
 \begin{align}
  \ketz^{\otimes n}
-& \xrightarrow{H^{\otimes n}}\frac{1}{\sqrt{2^n}} \sum_{i \in \{0,1\}^n} \ket{i} \\
-& \xrightarrow{\mathcal{O}_x} \frac{1}{\sqrt{2^n}} \sum_{i \in \{0,1\}^n} (-1)^{x_i}\ket{i}\\
-& \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \{0,1\}^n} (-1)^{x_i} \sum_{j \in \{0,1\}^n} (-1)^{i \cdot j} \ket{j} \label{confusingline}\\
+& \xrightarrow{H^{\otimes n}}\frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
+& \xrightarrow{\mathcal{O}_f} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{f(i)}\ket{i}\\
+& \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{f(i)} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \label{confusingline}\\
 & = \ket{a}
 \end{align}
-This computation looks a mess for the beginner, so let's try to make sense of it. The first three lines follow from the definitions of the functions (confused readers may need to review the defined action of $H$ and $\mathcal{O}$ with phase-kickback). The last step, however, is less clear-cut. Note that $(-1)^{x_i} = (-1)^{(i \cdot a) \text{ mod } 2} = (-1)^{(i \cdot a)}$, given by $x_i = (i \cdot a)$ mod 2 in the problem statement. Thus, we may manipulate \ref{confusingline} as follows:
+This computation looks a mess for the beginner, so let's try to make sense of it. The first three lines follow from the definitions of the functions (confused readers may need to review the defined action of $H$ and $\mathcal{O}$ with phase-kickback). The last step, however, is less clear-cut. Note that $(-1)^{f(i)} = (-1)^{(i \cdot a) \mod{2}}= (-1)^{(i \cdot a)}$, given by $f(i) = i \cdot a \pmod{2}$ in the problem statement. Thus, we may manipulate \ref{confusingline} as follows:
 \begin{align}
- \frac{1}{2^n} \sum_{i \in \{0,1\}^n} (-1)^{x_i} \sum_{j \in \{0,1\}^n} (-1)^{i \cdot j} \ket{j}
-& = \frac{1}{2^n} \sum_{i \in \{0,1\}^n} (-1)^{(i \cdot a)} \sum_{j \in \{0,1\}^n} (-1)^{i \cdot j} \ket{j} \\
-& = \frac{1}{2^n}  \sum_{j \in \{0,1\}^n}\sum_{i \in \{0,1\}^n} (-1)^{i \cdot(a + j)}  \ket{j} \label{equals_a}
+ \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{f(i)} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j}
+& = \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{i \cdot a} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \\
+& = \frac{1}{2^n}  \sum_{j \in \Z_2^n}\sum_{i \in \Z_2^n} (-1)^{i \cdot(a + j)}  \ket{j} \label{equals_a}
 \end{align}
-Now, note that $(-1)^{i \cdot(a + j)}$ is equal to 1 if and only if $j = a$. Thus, the inner summation evaluates to $1/2^n$ when $j =a$ and zero otherwise. So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
+Now, suppose $j=a$ (note that $(-1)^{2k} = 1~\forall k \in \Z$). Then, from \ref{equals_a} we have
+\begin{align*}
+\frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{i \cdot (2a)}  \ket{a} 
+& = \frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{2(i \cdot a)}  \ket{a} \\
+& = \frac{1}{2^n}  \sum_{i \in \Z_2^n} 1 \ket{a}  \\
+& = \ket{a}.
+\end{align*}
 
-\section{Measuring in Non-Computational Bases}
+So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
+
+\section{Measuring in Other Bases}
 Thus far, all of the measurements we have performed have been done in the \textit{computational basis}. Given a state $\ket{\psi} = \alpha\ketz + \beta\keto$, upon measurement in the computational basis ($\ketz$ and $\keto$) this state will collapse to $\ketz$ with probability $\lvert \alpha \rvert^2$ and $\keto$ with probability  $\lvert \beta \rvert^2.$ But, this choice of basis is arbitrary. We could instead measure $\ket{\psi}$ in the Hadamard basis, $\Hplus$ and $\Hminus$. Then, we can re-express the state $\ket{\psi}$ as follows
 \begin{equation*}
 \ket{\psi} = \alpha\ketz + \beta\keto = \alpha \frac{\Hplus + \Hminus}{\sqrt{2}} + \beta \frac{\Hplus - \Hminus}{\sqrt{2}} = \frac{\alpha + \beta}{\sqrt{2}} \Hplus + \frac{\alpha - \beta}{\sqrt{2}} \Hminus.
 \end{equation*}
-So, measuring $\ket{\psi}$ in the Hadamard basis yields $\Hplus$ with probability $(\alpha + \beta)^2/2$ and $\Hminus$ with probability $(\alpha - \beta)^2/2$.
+So, measuring $\ket{\psi}$ in the Hadamard basis yields $\Hplus$ with probability $\lvert \alpha + \beta \rvert^2/2$ and $\Hminus$ with probability $\lvert\alpha - \beta\rvert^2/2$.
 
-More generally, we can represent any state $\ket{\psi}$ as a unique linear combination of any orthonormal basis, $\ket{\psi} = \alpha \ket{a}+ \beta \ket{b}$ (where $\ket{a}$ and $\ket{b}$ form an orthonormal basis). Then, the probabilities of measuring $\ket{a}$ and $\ket{b}$ are $\alpha^2$ and $\beta^2$, respectively.
+More generally, given an orthonormal basis $\{\ket{a}, \ket{b}\}$, we can represent any state $\ket{\psi}$ as a unique linear combination of this basis, $\ket{\psi} = \alpha \ket{a}+ \beta \ket{b}$.Then, the probabilities of measuring $\ket{a}$ and $\ket{b}$ are $\lvert \alpha\rvert^2$ and $\lvert\beta\rvert^2$, respectively.
 
 
 \chapter{Introduction to Error-Correcting Codes}	
@@ -467,7 +475,7 @@ More generally, we can represent any state $\ket{\psi}$ as a unique linear combi
 No real-life communication channel is perfect: internet packets occasionally get dropped, radio transmissions are drowned out by static interference, and data on storage media get corrupted. Distinguishing signal from noise is a problem as old as communication itself. One way of adapting to this problem is introducing redundancy into the transmission. If the information we want to transmit is encoded in more than one place, then there is a higher probability that at least one of the copies will make it through even if some of the copies are plagued with errors. This is precisely the approach that error-correcting codes take. 
 
 
-Error-correcting codes were developed to enable the reliable transmission of messages over noisy communication channels. There are many examples of their use today, and many error-correcting codes have been developed for specific noise models. In CDs, error-correcting codes prevent (small) scratches from leading to data loss. They are also used for transmitting photographs from rovers and telescopes throughout the solar system to earth. 
+Error-correcting codes were developed to enable the reliable transmission of messages over noisy communication channels. There are many examples of their use today, and many error-correcting codes have been developed for specific noise models. In CDs\footnote{If they still exist\ldots}, error-correcting codes prevent (small) scratches from leading to data loss. They are also used for transmitting photographs from rovers and telescopes throughout the solar system to earth. 
 
 Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the code theory.
 
@@ -513,7 +521,7 @@ where $P$ is the \textit{parity check matrix} for the code $\mathscr{C}$.
 \begin{equation*}
 P = [A \mid I_{n-k}]
 \end{equation*}
-where $A$ is some fixed $(n-k) \times n$ binary matrix and $I_{n-k}$ is the $(n-k)\times(n-k)$ identity matrix.
+where $A$ is some fixed $(n-k) \times k$ binary matrix and $I_{n-k}$ is the $(n-k)\times(n-k)$ identity matrix.
 \end{definition}
 A code $\mathscr{C}\subset \Z_2^n$ is simply the set of all codewords $c$ that satisfy the equation $P\mathbf{c}^{tr} = 0$. In other words, $\mathscr{C} = \{c\in \Z_2^n \mid P\mathbf{c}^{tr} = 0\}$.
 \begin{example} \label{P_ex} Suppose our parity check matrix is
@@ -566,7 +574,7 @@ G =
 \end{example}
 
 \section{Decoding}
-As was alluded to, the channel will (term-wise) add some unknown error vector $e = c_1 \ldots e_n$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $r = c + m \pmod 2$. 
+As was alluded to, the channel will (term-wise) add some unknown error vector $e = e_1 \ldots e_n$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $r = m + e \pmod 2$. 
 
 The decoder has a significantly harder job than the encoder. Namely, it must take this noisy codeword $r$ and return the message $m$ that produced the vector. Any given decoding algorithm will not always be successful; sometimes there will be so many errors in a given received codeword that it is impossible to parse which message was sent. That said, some decoding algorithms are more effective than others, and this distinction comes down to the properties of the code $\mathscr{C}$.
 
@@ -599,11 +607,11 @@ P[e = x] = \prod_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}.
 \end{equation}
 This perhaps goes without saying, but the error vector is entirely independent of the message.
 \begin{example}
-Suppose $n=5$. Then, $P[e = 10110] = p(1-p)p^2 (1-p) p = p^3(1-p)^2$.
+Suppose $n=5$. Then, $P[e = 10110] = p(1-p)p^2 (1-p) = p^3(1-p)^2$.
 \end{example}
 So, now we want to maximize the equation $$P[e = x] =  \prod_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}$$ to figure out the most likely error vector $x$ and thus the best decoding algorithm. We have that $p < \frac{1}{2}$, so it follows that the maximum probability is achieved when $n-wt(x)$ is as large as possible. This occurs when $x = \mathbf{0}$, the zero vector. In other words, \textit{the most likely error vector is one that indicates that none of the bits were corrupted}.
  
- In terms of decoding, this fact implies that the optimal decoding algorithm assumes that the weight of $e$ is as small as possible. If the received vector $r$ is not a codeword, then the decoder should output the nearest codeword $c$ with respect to the Hamming distance $dist(r,c)$ In other words, $c = \min_{c' \in \mathscr{C}}\{dist(c', r)\}$. This decoding method is called \textit{nearest neighbor decoding} and it is the strategy we will employ.
+ In terms of decoding, this fact implies that the optimal decoding algorithm assumes that the weight of $e$ is as small as possible. If the received vector $r$ is not a codeword, then the decoder should output the nearest codeword $c$ with respect to the Hamming distance. This decoding method is called \textit{nearest neighbor decoding} and it is the strategy we will employ.
 
 \subsection{Properties of Codes}
 Now that we have defined the nearest neighbor decoding strategy, one may wonder how many errors a given code can correct. Before proceeding, note the distinction between \textit{error detection} whereby the code informs the decoder that $x$ number of errors occurred and \textit{error correction} whereby the decoder is able to correct the $x$ errors. Analyzing the error-correcting and error-detecting properties of linear codes will require some additional metrics on codes.
@@ -657,12 +665,11 @@ Given some membership oracle $MQ_f$, the goal of the learning algorithm is to co
 \chapter{The Binary Simplex Code}
 One particularly interesting linear code is the simplex code. This is a special case of the Reed-Muller codes we will discuss later. The encoding and decoding algorithms are quite simple, so this is our starting point for further analyzing some of the error-correcting properties of the quantum decoding algorithm.
 \section{Encoding}
-To compute the $i$-th bit of the codeword for a message $m$, take $c_i =i_2 \cdot m$ mod 2, where $i_2$ is the binary representation of the number $i$. Thus, a codeword $c$ for a message $m$ is defined: 
+To encode a message $m$ with \mlen bits, simply append the inner product of each binary number of length \mlen (in order) with the message. The $2^\mlen$ bits of codeword $c$ for message $m$ are: 
 \begin{equation*}
-c_1 \ldots c_{2^n} = 1_2 \cdot m ||2_2 \cdot m || \ldots ||(2^n)_2 \cdot m
+c_i= i \cdot m \pmod{2} \quad{i \in \Z_2^\mlen}.
 \end{equation*}
-computing all of the inner products modulo 2.
-\subsection{Example}
+\begin{example}
 Suppose $n=3$. Then, the encoding of the message $m = 010$ is:
 \begin{align*}
 &c_1 = (0,0,0) \cdot (0,1,0) = 0\\
@@ -675,7 +682,7 @@ Suppose $n=3$. Then, the encoding of the message $m = 010$ is:
 &c_8 = (1,1,1) \cdot (0,1,0) = 1\\
 \end{align*}
 Thus, $c = 00110011$ for that message. 
-
+\end{example}
 Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $n$ has a codeword of length $2^n$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact. 
 
 \subsection{Generating Matrix}
@@ -1206,7 +1213,7 @@ The stateless noisy oracle is analogous to the oracle requesting a retransmissio
 	\setcounter{chapter}{8}
 	\setcounter{section}{0}
 	
-Many questions arose during the course of the year. Some of them yielded a satisfactory answer, while others turned up disappointing results and were not included. Yet more remained unanswered. The project of this thesis was to: 1) shed clarity on these confusing topics, and in doing so, 2) inspire further work in this area. Perhaps one day the topics that were left unpursued can be realized concretely. They are described below.
+Many questions arose during the course of the year. Some of them yielded satisfactory answers, while others turned up disappointing results and were not included. Yet more remained unanswered. The project of this thesis was to: 1) shed clarity on these confusing topics, and in doing so, 2) inspire further work in this area. Perhaps one day the topics that were left unpursued can be realized concretely. They are described below.
 
 \section{Further Work}
 In this thesis we presented the idea of algorithmic robustness to noisy quantum oracles. That is, for a given quantum algorithm $\mathcal{A}$ which relies on quantum queries to oracle $\mathcal{O}$, what is $P_{succ}$ of the algorithm if the oracle is replaced with a noisy oracle $\widehat{\mathcal{O}}$?
@@ -1221,39 +1228,6 @@ Lastly, for an algorithm which relies on \emph{multiple} oracle queries, one cou
 
 %If you feel it necessary to include an appendix, it goes here.
     \appendix
-    \chapter{Notation Guide}
-    This guide is aimed to help the reader parse the notation throughout the thesis. 
-    
-Depending on the context, we have used $\Z_2^n, \{0,1\}^n,$ and $\F_2^n$ to denote essentially the same sets. These distinctions are merely dependent on the \textit{operations} we are performing on elements of the set. For example, Boolean operations occur in $\Z_2^n$, string operations occur in $\{0,1\}^n,$ and Fourier transforms and other field operations occur in $\F_2^n$.
-
-\begin{center}
-\begin{tabular}{ | c | c |}
-\hline
- Symbol & Usage  \\
- \hline 
- \amp{i} & $i$-th amplitude on a qubit \\
- \mlen & Message length \\  
- \Hplus & $(\ketz + \keto)/\sqrt{2}$ \\
-  \Hminus & $(\ketz - \keto)/\sqrt{2}$ \\
- \hline
-\end{tabular}
-\end{center}
-
-\begin{center}
-\begin{tabular}{ | c | c |}
-\hline
-Operation & Usage  \\
- \hline 
-$\cdot$ & Inner product \\
-$\oplus$ & Bitwise exclusive or \\
-$\otimes$ & Tensor product \\
- \Had & Hadamard transform \\
- $\Had^{\otimes n}$ & $n$-qubit Hadamard transform \\
-  \NOT & Quantum not gate \\
- \hline
-\end{tabular}
-\end{center}
-
 
 	
 \chapter{Finite Geometries} \label{finite_geom_chapter}
@@ -1314,4 +1288,5 @@ The affine or projective geometry $EG(m,q)$ is obtained from $PG(m,q)$ by deleti
  %\printbibliography[heading=bibintoc]
 
 % Finally, an index would go here... but it is also optional.
+\printindex
 \end{document}
