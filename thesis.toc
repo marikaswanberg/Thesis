@@ -57,5 +57,4 @@
 \contentsline {chapter}{Conclusion}{47}
 \contentsline {section}{\numberline {8.1}Further Work}{47}
 \contentsline {chapter}{Appendix A: Finite Geometries}{49}
-\contentsline {chapter}{Bibliography}{51}
-\contentsline {chapter}{Index}{53}
+\contentsline {chapter}{Index}{51}
