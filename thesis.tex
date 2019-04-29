@@ -70,6 +70,9 @@
 \newtheorem{corollary}[theorem]{Corollary}
 
 %Commands
+\newlength{\arrow}
+\settowidth{\arrow}{\scriptsize$k-\mathcal{PQ}$}
+\newcommand*{\myrightarrow}[1]{\xrightarrow{\mathmakebox[\arrow]{#1}}}
 \newcommand{\N}{\mathbb{N}}
 \newcommand{\Z}{\mathbb{Z}}
 \newcommand{\R}{\mathbb{R}}
@@ -101,7 +104,7 @@
 % The month and year that you submit your FINAL draft TO THE LIBRARY (May or December)
 \date{May 2019}
 \division{Mathematics and Natural Sciences}
-\advisor{James D. Pommersheim}
+\advisor{James Pommersheim}
 %If you have two advisors for some reason, you can use the following
 %\altadvisor{Adam Groce}
 %%% Remember to use the correct department!
@@ -135,7 +138,6 @@
 % The preface is optional
 % To remove it, comment it out or delete it.
    \chapter*{Preface}
-
   
 \emph{``It's not a Turing machine, but a machine of a different kind''} \citep{feynman1982simulating}. Quantum computing was proposed by Richard Feynman in 1981 for simulating quantum physical phenomena. He was the first to suggest that a computer based upon quantum mechanics could potentially have a computational advantage to classical computers. 
 
@@ -172,28 +174,45 @@ This thesis is an analysis of the query complexity of quantum decoding algorithm
 %if you want special chapter formatting, you'll probably want to avoid using it altogether
 
 	
-\chapter{Introduction to Quantum Computing}
+\chapter{Quantum Computing}
 
 
 In the following chapter, we will delve into the basics of quantum computing. Before proceeding, it is important to realize that quantum computing describes a  fundamentally different \textit{model of computation} than the computer systems currently on the market. Much like the first programmable computer was realized by Alan Turing far before anyone built his remarkable invention, we too study quantum computing at a time when only the most rudimentary quantum computers are available in practice.
 
 
-Due to the complex nature of quantum mechanics, there are a plethora of misconceptions about quantum computing. One of the most widespread is that quantum computers gain computational speedups by \textit{trying all possible solutions at once}. This is simply not true; the state of the quantum bits may be unknown, but they are still in only one state. We will go into this more later. Perhaps my favorite that I have heard upon starting my thesis is that \textit{quantum computers are like classical computers but in trinary}. False, we cannot efficiently simulate a quantum computer on a classical one. Lastly, probably the most optimistic is that \textit{quantum computers are faster at all tasks compared to classical computers}. Quantum computers are faster than classical computers at some tasks, such as searching an unstructured list, but they have the same asymptotic runtime\footnote{We will discuss what this means later} as classical computers for other tasks. I outline these common misconceptions not to criticize them, but rather to encourage the reader to exert patience and care with the following section, as quantum computing is so fundamentally different from classical computing.
+Due to the complex nature of quantum mechanics, there are a plethora of misconceptions about quantum computing. One of the most widespread is that quantum computers gain computational speedups by \emph{trying all possible solutions at once}. This is simply not true; the state of the quantum bits may be unknown, but they are still in only one state. We will go into this more later. Perhaps my favorite that I have heard upon starting my thesis is that \emph{quantum computers are like classical computers but in trinary}. False, we cannot efficiently simulate a quantum computer on a classical one. Lastly, probably the most optimistic is that \emph{quantum computers are faster at all tasks compared to classical computers}. Quantum computers are faster than classical computers at some, \emph{but not all}, computations.
+
+I outline these common misconceptions not to criticize them, but rather to encourage the reader to exert patience and care with the following section, as quantum computing is so fundamentally different from classical computing.
 
 The quantum mechanical properties upon which quantum computers are based have been studied extensively by physicists; we will avoid discussing such details and instead take these properties for granted in order to focus on the information-theoretic behavior of this new model of computation. 
 
 \section{Information Representation}
 Classical computers, i.e.~the computers that we all know and love, run on \textit{bits} or 1's and 0's. This is the fundamental unit of information in classical computers. In quantum computers, information is built upon an analagous concept, the \textit{quantum bit} or \textit{qubit}. We will discuss the defining properties of qubits\index{qubit}, some of which may seem very different from those of bits.
 
-In classical computing, each bit can be in one of two states--1 or 0.  We denote \textit{quantum states} by \ketz and \keto, pronounced ``\textit{ket zero}'' and ``\textit{ket one},'' respectively. This follows traditional \textit{Dirac notation}\footnote{See reference on notation--not yet written}. Unlike classical bits, qubits can be in a \textit{superposition} between these two states. That is, a qubit can lie in one of the infinite states ``between'' \ketz and \keto. We describe a quantum state as follows: $\ketpsi = \alpha \ketz + \beta \keto$, where $\alpha$ and $\beta$ are complex numbers and $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1$. This describes a probability distribution over the quantum states \ketz and \keto with \textit{amplitudes} $\alpha$ and $\beta$ that each take values from $\C$, the complex field. In this way, we can think of \ketpsi as a vector in $\C^2$. The states \ketz and \keto form an orthonomal basis in this complex vector space and are called the \textit{computational basis states}.
+In classical computing, each bit can be in one of two states--1 or 0.  We denote \textit{quantum states} by \ketz and \keto, pronounced ``\textit{ket zero}'' and ``\textit{ket one},'' respectively. This follows traditional \textit{Dirac notation}. Unlike classical bits, qubits can be in a \textit{superposition} between these two states. That is, a qubit can lie in one of the infinite states ``between'' \ketz and \keto. We describe a quantum state as follows: $\ketpsi = \alpha \ketz + \beta \keto$, where $\alpha$ and $\beta$ are complex numbers and $\lvert \alpha \rvert ^2+ \lvert \beta \rvert ^2= 1$. This describes a probability distribution over the quantum states \ketz and \keto with \textit{amplitudes} $\alpha$ and $\beta$ that each take values from $\C$, the complex field. In this way, we can think of \ketpsi as a vector in $\C^2$. The states \ketz and \keto form an orthonomal basis in this complex vector space and are called the \textit{computational basis states}.
+\begin{definition} (Qubit) A qubit is a unit vector of $\C^2$, denoted
+\begin{equation*}
+\ket{\psi} = \alpha\ketz + \beta\keto 
+\end{equation*}
+where $\alpha, \beta \in \C$ and $\lvert \alpha \rvert^2 + \lvert \beta \rvert^2 = 1$. Equivalently, $\ket{\psi}$ can also be represented as 
+\begin{equation*}
+\ket{\psi} = 
+\begin{bmatrix}
+\alpha \\
+\beta
+\end{bmatrix}.
+\end{equation*}
+\end{definition}
+So how can we know which state a bit or qubit is in? In classical computing, we can simply read the bit to determine whether it's a 0 or a 1. Qubits are a little trickier. We cannot read \ketpsi to determine its exact amplitudes, $\alpha$ and $\beta$. As soon as we measure \ketpsi, the superposition will collapse to either \ketz with probability $ \lvert \alpha \rvert ^2$ or \keto with probability $ \lvert \beta \rvert ^2$. As soon as \ketpsi has been measured to reveal some quantum state, \ketpsi will permanently collapse to that state, i.e.~$\ketpsi = 1\ketz + 0 \keto$ or $\ketpsi = 0\ketz + 1\keto$. Every time we measure it thereafter, we will observe the same state that we measured the first time.
 
-So how can we know which state a bit or qubit is in? In classical computing, we can simply read the bit to determine whether it's a 0 or a 1. Qubits are a little trickier. We cannot read \ketpsi to determine its exact amplitudes, $\alpha$ and $\beta$. As soon as we measure \ketpsi, the superposition will collapse to either \ketz with probability $ \lvert \alpha \rvert ^2$ or \keto with probability $ \lvert \beta \rvert ^2$. In other words, \ketpsi is like a weighted coin that we can flip once to get either heads or tails, but we have no way to directly measure the bias in the coin. Unlike a coin, as soon as \ketpsi has been measured to reveal some quantum state, \ketpsi will permanently collapse to that state, i.e.~$\ketpsi = 1\ketz + 0 \keto$ or $\ketpsi = 0\ketz + 1\keto$. Every time we measure it thereafter, we will observe the same state that we measured the first time. In the coin analogy, it's like we have a weighted coin that we can flip once to reveal heads or tails, and every subsequent flip always yields the initial state that we flipped to.
-
-You may be wondering why this is useful. It seems impossible to build a model of computation on a fundamental unit of information that is unknowable, immeasurable. The beauty of quantum computation lies in the \textit{manipulation} of these immeasurable qubits such that by the time we measure them at the end, the result will inform us of the state they started in. Simply measuring the qubits before doing any transformations is fundamentally the same as  running a random number generator on a classical computer and trying a random possible solution. Obviously, this is not very useful, so we must \textit{transform} the qubits to say anything intelligent about the end result that we measure.
+\begin{remark}
+Suppose you are given a weighted coin and you are asked to determine, through measurement, the weights on heads and tails. Obviously, with enough flips, the law of large numbers states that your measurements would approach the true weights. Now, suppose you are only allowed to flip the coin once. The task of determining the weights becomes impossible. This is why we cannot measure the amplitudes of qubits only through measurement.
+\end{remark}
+You may be wondering why quantum phenomenon are useful in the context of computation. It seems impossible to build a model of computation on a fundamental unit of information that is unknowable, immeasurable. The beauty of quantum computation lies in the \textit{manipulation} of these immeasurable qubits such that by the time we measure them at the end, the result will inform us of the state they started in. Simply measuring the qubits before doing any transformations is fundamentally the same as  running a random number generator on a classical computer and trying a random possible solution. Obviously, this is not very useful, so we must \textit{transform} the qubits to say anything intelligent about the end result that we measure.
 
 \section{Quantum Logic Gates}
 
-As we already glossed over, $\ketz = 1 \ketz + 0  \keto$ and $\keto = 0 \ketz + 1 \keto$. We sometimes represent these quantum states as column vectors of the amplitudes: 
+As we discussed earlier, $\ketz = 1 \ketz + 0  \keto$ and $\keto = 0 \ketz + 1 \keto$. We sometimes represent these quantum states as column vectors of the amplitudes: 
 \begin{align*}
 \ketz = \begin{bmatrix}
 1\\
@@ -213,7 +232,7 @@ X = \begin{bmatrix}
 1 & 0 
 \end{bmatrix}
 \end{align*}
-This takes a state $\ketpsi = \alpha \ketz + \beta \keto$ and transforms it into $X \ketpsi  = \beta \ketz + \alpha \keto$. Alternatively, by matrix multiplication we see that
+This takes a state $\ketpsi = \alpha \ketz + \beta \keto$ and transforms it into $X \ketpsi  = \beta \ketz + \alpha \keto$. Equivalently, by matrix multiplication we see that
 \begin{align*}
 X \ketpsi = \begin{bmatrix}
 0 & 1\\
@@ -263,9 +282,9 @@ The requirements that quantum transformations be reversible and normalized are e
 
 \section{Multiple Qubits}
 
-To represent multiple qubits, we expand our two quantum states to many using tensor products. For example, in a two qubit system, we have the following basis states:
+As we discussed, single qubits live in $\C^2$. In order to express a superposition over multiple qubits, say $n$ qubits, we need to take some \emph{tensor products}. An $n$-qubit state can be represented as vector in $(\C^2)^{\otimes n} \cong \C^{2^n}$. For example, in a two qubit system, we have the following basis states:
 $$ \ketz \otimes \ketz,~\ketz \otimes \keto,~\keto \otimes \ketz, \text{ and } \keto \otimes \keto.$$ 
-All single-qubit states could be expressed as a vector in $\C^2$. Analogously, all two-qubit states can be thought of as a vector in $\C^2 \otimes \C^2 = \C^4$. With that in mind, the four basis states above can also be written as:
+All two-qubit states can be thought of as a vector in $\C^2 \otimes \C^2 = \C^4$. With that in mind, the four basis states above can also be written as\footnote{In this thesis, the following notations are equivalent: $\ket{xy}, \ket{x, y},$ and $ \ket{x} \otimes \ket{y}$.}:
 $$ \ket{00},~\ket{01},~\ket{10}, \text{ and } \ket{11}.$$
 Thus, any two-qubit state can be represented as a linear combination of these basis states, namely $\ket{\psi} = \alpha_{00}\ket{00}+ \alpha_{01}\ket{01} + \alpha_{10}\ket{10} + \alpha_{11}\ket{11}.$ In general, an $n$-qubit state can be represented as a linear combination of basis states, 
 \begin{equation*}
@@ -292,17 +311,17 @@ Something that follows from the post-measurement equation (\ref{post_measurement
 \begin{equation*}
 \ket{\beta_{00}} = \frac{\ket{00} + \ket{11}}{\sqrt{2}}
 \end{equation*}
-Suppose we measured the first qubit. We will observe \ket{0} with probability 1/2, and the resulting post-measurement state is: \ket{\beta_{00}'} = \ket{00} (by the equation above). How can this be? We only measured the first qubit, and yet, we now have information about both qubits. This is precisely because the state is entangled. Another example of an entangled state is:
+Suppose we measured the first qubit. We will observe \ket{0} with probability 1/2, and the resulting post-measurement state is: \ket{\beta_{00}'} = \ket{00} (by \ref{post_measurement}). How can this be? We only measured the first qubit, and yet, we now have information about both qubits. This is precisely because the state is entangled. Another example of an entangled state is:
 \begin{equation*}
 \ket{\beta_{01}} = \frac{\ket{01} + \ket{10}}{\sqrt{2}}
 \end{equation*}
 These two states, \ket{\beta_{00}} and \ket{\beta_{01}}, are the first two \textit{Bell states} or \textit{EPR pairs}. Quantum entanglement is a powerful computational tool and will be used in many quantum algorithms in the rest of the text. 
 
-Now that we have the means to represent an $n$-qubit state, the state transformations can be represented by $2^n$-by-$2^n$ matrices. In particular, the $n$-qubit Hadamard transform is $H^{\otimes n} = H \otimes H \otimes \ldots \otimes H$, i.e.~$n$ tensor products.
+Now that we have the means to represent an $n$-qubit state, the state transformations can be represented by $2^n$-by-$2^n$ matrices. One particularly useful transformation is the $n$-qubit Hadamard transform.
 
 \section{Hadamard Transform}
 
-As promised, a more precise definition of the Hadamard transform follows. This is by far the most important unitary transformation in the field of quantum algorithms.
+As promised, a more precise definition of the Hadamard transform follows. Note that $H^{\otimes n} = H \otimes H \otimes \ldots \otimes H, n$ tensor products with itself. 
 
 \begin{definition}[Hadamard Transform] The $n$-qubit Hadamard transform, $H^{\otimes n}$ acts on a basis state $\ket{k}$ as follows:
 \begin{equation*}
@@ -319,74 +338,26 @@ Since $H = H^{-1}$, we also have that
 & H^{\otimes n} \Hplus^{\otimes n} =  \ketz^{\otimes n} \\
 & H^{\otimes n} \Hminus^{\otimes n} = \keto^{\otimes n}. \\
 \end{align*}
-This concludes the section on the Hadamard transform, though the careful (or confused) reader will find that they will have to refer back to this section in the coming chapters as the Hadamard transform is central to this thesis. 
+This concludes the section on the Hadamard transform, though the careful (or confused) reader will find that they will have to refer back to this section in the coming chapters as the Hadamard transform is central to this thesis.
+
+\section{Measuring in Other Bases}
+Thus far, all of the measurements we have performed have been done in the \textit{computational basis}. Given a state $\ket{\psi} = \alpha\ketz + \beta\keto$, upon measurement in the computational basis $\{\ketz, \keto\}$ this state will collapse to $\ketz$ with probability $\lvert \alpha \rvert^2$ and $\keto$ with probability  $\lvert \beta \rvert^2.$ But, this choice of basis is arbitrary. We could instead measure $\ket{\psi}$ in the Hadamard basis, $\Hplus$ and $\Hminus$. Then, we can re-express the state $\ket{\psi}$ as follows
+\begin{equation*}
+\ket{\psi} = \alpha\ketz + \beta\keto = \alpha \frac{\Hplus + \Hminus}{\sqrt{2}} + \beta \frac{\Hplus - \Hminus}{\sqrt{2}} = \frac{\alpha + \beta}{\sqrt{2}} \Hplus + \frac{\alpha - \beta}{\sqrt{2}} \Hminus.
+\end{equation*}
+So, measuring $\ket{\psi}$ in the Hadamard basis yields $\Hplus$ with probability $\lvert \alpha + \beta \rvert^2/2$ and $\Hminus$ with probability $\lvert\alpha - \beta\rvert^2/2$.
+
+More generally, given an orthonormal basis $\{\ket{a}, \ket{b}\}$, we can represent any state $\ket{\psi}$ as a unique linear combination of this basis, $\ket{\psi} = \alpha \ket{a}+ \beta \ket{b}$.Then, the probabilities of measuring $\ket{a}$ and $\ket{b}$ are $\lvert \alpha\rvert^2$ and $\lvert\beta\rvert^2$, respectively.
+ 
 
 \section{Phase}
 Up to this point, we have used the term \textit{phase} slightly ambiguously. The exact meaning of the word differs depending on context, so we will flesh these out. In fact, some of the original results in this thesis puzzled both student and adviser until we revisited the exact distinction between \textit{global phase} and \textit{relative phase}.
 
-Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$,\footnote{HOW TO FORMAT EULERS NUMBER} where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two phases are equivalent up to their \textit{global phase shift}. This just means that the probability of observing some basis state $x$ under measurement in any basis is the same for both states. Observationally, they are identical states, so we can ignore global phase shifts. 
+Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$, where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two phases are equivalent up to their \textit{global phase shift}. This just means that the probability of observing some basis state $\ket{k}$ under measurement in any basis is the same for both states. Observationally, they are identical states, so we can ignore global phase shifts. 
 
 The other notion of phase that will come up is \textit{relative phase}. Consider the states $\Hplus = (\ketz + \keto)/\sqrt{2}$ and $\Hminus = (\ketz- \keto)/\sqrt{2}$. These two states have amplitudes on basis state $\keto$ equal to $1/\sqrt{2}$ and $-1/\sqrt{2}$, respectively. So, although their magnitudes are equal, their signs are not. Now, observing both of these in the computational basis yields $\ketz$ with probability $1/2$ and $\keto$ with probability $1/2$ for both states. In the computational basis they are indistinguishable; however, measuring in the \textit{Hadamard basis}, with basis states $\Hplus$ and $\Hminus$, they are distinguishable with probability 1. Despite having the same relative phase, the states are in fact computationally distinct.
 
-\section{Universal Quantum Gate}
-In classical computation, there are three basic logic gates: NOT, AND, and OR. We can combine these gates to represent any possible logical expression. Furthermore, the NAND gate and the NOR gate, which we get from taking the negation (NOT) of the output of AND and OR respectively, are said to be \textit{universal gates}. This means that we can construct the three basic logic gates just from NAND gates or just from NOR gates. So, NAND and NOR are universal in that any logical expression can be represented with just NAND or NOR circuits. This is very useful in practice because NAND gates are very cheap to construct, so using only NANDs can keep the cost of a computer chip down.
 
-A natural question, then, is whether there exists a quantum analogue, a universal quantum gate. The short answer is that there is no single universal quantum gate, however the following three gates are enough to make an \textit{arbitrarily good approximation} of any quantum gate \citep{nielsenchuang}: Hadamard, CNOT, and phase gate. 
-
-The phase gate is defined
-\begin{align}
-\begin{bmatrix}
-1 & 0\\
-0 & i 
-\end{bmatrix}
-\end{align}
-And the CNOT, or controlled-NOT gate acts on two qubits by flipping the second qubit if and only if the first qubit is a 1. 
-\begin{align}
-\text{CNOT} = \begin{bmatrix}
-1 & 0 & 0 & 0 \\
-0 & 1 & 0 & 0 \\
-0 & 0 & 0 & 1 \\
-0 & 0 & 1 & 0
-\end{bmatrix}
-\end{align}
-As you can see, by multiplying the CNOT matrix by the column vector $(a\quad b\quad c\quad d)^\intercal$ this takes $a\ket{00} + b\ket{01} + c\ket{10} + d\ket{11}$ and transforms it into $a\ket{00} + b\ket{01} + c\ket{11} + d\ket{10}$, thereby swapping the amplitudes on the states $\ket{10}$ and $\ket{11}$, or equivalently ``flipping'' the second bit of the state if the first bit is a 1. 
-
-The \textit{gate complexity} of a unitary transformation is the minimum number of gates needed to implement the circuit. 
-
-\section{No-Cloning Theorem}
-
-Suppose my friend has a secret state \ket{\psi} that she wants me to have a copy of.  Classically, we could easily build a circuit to copy her state $x = 0$ or $x = 1$ without measuring it. We would simply initialize a temporary register to 0, and our circuit would write $x \oplus 0$, the XOR of $x$ and 0, to the destination register. 
-
-The quantum case is a bit trickier. Suppose \ket{\psi} is only known to our friend. We wish to copy this exact state into a target slot, which starts out in some standard known state \ket{s}. Thus, the initial state of our copying machine is $\ket{\psi} \otimes \ket{s}$. Now, we apply some unitary operation $U$ to these registers to obtain
-\begin{equation}
-\ket{\psi} \otimes \ket{s} \xrightarrow{U} U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
-\end{equation}
-Now, suppose this quantum copying circuit works for two arbitrary states \ket{\psi} and \ket{\phi}. Then, we have
-\begin{equation} \label{noclone1}
-U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
-\end{equation}
-and
-\begin{equation} \label{noclone2}
-U(\ket{\phi} \otimes \ket{s}) = \ket{\phi} \otimes \ket{\phi}
-\end{equation}
-Now, taking the inner product of the left-hand sides of equations \ref{noclone1} and \ref{noclone2} gives
-\begin{align} 
-(\bra{\psi} \otimes \bra{s})U^{\dagger}U (\ket{\phi} \otimes \ket{s})
-& = (\bra{\psi} U^\dagger U \ket{\phi})(\bra{s} U^\dagger U \ket{s}) \\
-& = \inner{\psi}{\phi} \label{noclone3}
-\end{align}
-However, taking the inner products of the right-hand sides of equations \ref{noclone1} and \ref{noclone2} gives
-\begin{align} \label{noclone4}
-(\bra{\psi} \otimes \bra{\psi})(\ket{\phi} \otimes \ket{\phi})
-& = (\inner{\psi}{\phi})^2
-\end{align}
-Now, equations \ref{noclone3} and \ref{noclone4} give
-\begin{equation*}
- \inner{\psi}{\phi} = (\inner{\psi}{\phi})^2.
-\end{equation*}
-However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\psi}$ is orthogonal to $\ket{\phi}$. Thus, a general cloning device can only clone states that are orthogonal, which means that we cannot clone two arbitrary states.
-
-This is an important fundamental difference between the classical and quantum models of computation. We take for granted in classical computing that we can copy any unknown states, and much of classical computation relies upon this fact. 
 
 \section{Quantum Oracles}
 
@@ -438,9 +409,9 @@ First, an overview of the algorithm: we will start in the state $\ketz^{\otimes 
 
 \begin{align}
  \ketz^{\otimes n}
-& \xrightarrow{H^{\otimes n}}\frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
-& \xrightarrow{\mathcal{O}_f} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{f(i)}\ket{i}\\
-& \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{f(i)} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \label{confusingline}\\
+& \myrightarrow{H^{\otimes n}}\frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
+& \myrightarrow{\mathcal{O}_f} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{f(i)}\ket{i}\\
+& \myrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{f(i)} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \label{confusingline}\\
 & = \ket{a}
 \end{align}
 This computation looks a mess for the beginner, so let's try to make sense of it. The first three lines follow from the definitions of the functions (confused readers may need to review the defined action of $H$ and $\mathcal{O}$ with phase-kickback). The last step, however, is less clear-cut. Note that $(-1)^{f(i)} = (-1)^{(i \cdot a) \mod{2}}= (-1)^{(i \cdot a)}$, given by $f(i) = i \cdot a \pmod{2}$ in the problem statement. Thus, we may manipulate \ref{confusingline} as follows:
@@ -459,17 +430,74 @@ Now, suppose $j=a$ (note that $(-1)^{2k} = 1~\forall k \in \Z$). Then, from \ref
 
 So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
 
-\section{Measuring in Other Bases}
-Thus far, all of the measurements we have performed have been done in the \textit{computational basis}. Given a state $\ket{\psi} = \alpha\ketz + \beta\keto$, upon measurement in the computational basis ($\ketz$ and $\keto$) this state will collapse to $\ketz$ with probability $\lvert \alpha \rvert^2$ and $\keto$ with probability  $\lvert \beta \rvert^2.$ But, this choice of basis is arbitrary. We could instead measure $\ket{\psi}$ in the Hadamard basis, $\Hplus$ and $\Hminus$. Then, we can re-express the state $\ket{\psi}$ as follows
+
+\section{Advanced Topics}
+In this section, we discuss some advanced topics that are not entirely necessary for understanding this thesis, but which are nonetheless vital to understanding quantum computation as a whole. 
+
+\subsection{No-Cloning Theorem}
+
+Suppose my friend has a secret state \ket{\psi} that she wants me to have a copy of.  Classically, we could easily build a circuit to copy her state $x = 0$ or $x = 1$ without measuring it. We would simply initialize a temporary register to 0, and our circuit would write $x \oplus 0$, the XOR of $x$ and 0, to the destination register. 
+
+The quantum case is a bit trickier. Suppose \ket{\psi} is only known to our friend. We wish to copy this exact state into a target slot, which starts out in some standard known state \ket{s}. Thus, the initial state of our copying machine is $\ket{\psi} \otimes \ket{s}$. Now, we apply some unitary operation $U$ to these registers to obtain
+\begin{equation}
+\ket{\psi} \otimes \ket{s} \xrightarrow{U} U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
+\end{equation}
+Now, suppose this quantum copying circuit works for two arbitrary states \ket{\psi} and \ket{\phi}. Then, we have
+\begin{equation} \label{noclone1}
+U(\ket{\psi} \otimes \ket{s}) = \ket{\psi} \otimes \ket{\psi}
+\end{equation}
+and
+\begin{equation} \label{noclone2}
+U(\ket{\phi} \otimes \ket{s}) = \ket{\phi} \otimes \ket{\phi}
+\end{equation}
+Now, taking the inner product of the left-hand sides of equations \ref{noclone1} and \ref{noclone2} gives
+\begin{align} 
+(\bra{\psi} \otimes \bra{s})U^{\dagger}U (\ket{\phi} \otimes \ket{s})
+& = (\bra{\psi} U^\dagger U \ket{\phi})(\bra{s} U^\dagger U \ket{s}) \\
+& = \inner{\psi}{\phi} \label{noclone3}
+\end{align}
+However, taking the inner products of the right-hand sides of equations \ref{noclone1} and \ref{noclone2} gives
+\begin{align} \label{noclone4}
+(\bra{\psi} \otimes \bra{\psi})(\ket{\phi} \otimes \ket{\phi})
+& = (\inner{\psi}{\phi})^2
+\end{align}
+Now, equations \ref{noclone3} and \ref{noclone4} give
 \begin{equation*}
-\ket{\psi} = \alpha\ketz + \beta\keto = \alpha \frac{\Hplus + \Hminus}{\sqrt{2}} + \beta \frac{\Hplus - \Hminus}{\sqrt{2}} = \frac{\alpha + \beta}{\sqrt{2}} \Hplus + \frac{\alpha - \beta}{\sqrt{2}} \Hminus.
+ \inner{\psi}{\phi} = (\inner{\psi}{\phi})^2.
 \end{equation*}
-So, measuring $\ket{\psi}$ in the Hadamard basis yields $\Hplus$ with probability $\lvert \alpha + \beta \rvert^2/2$ and $\Hminus$ with probability $\lvert\alpha - \beta\rvert^2/2$.
+However, this equation is only true if $\ket{\psi} = \ket{\phi}$ or if $\ket{\psi}$ is orthogonal to $\ket{\phi}$. Thus, a general cloning device can only clone states that are orthogonal, which means that we cannot clone two arbitrary states.
 
-More generally, given an orthonormal basis $\{\ket{a}, \ket{b}\}$, we can represent any state $\ket{\psi}$ as a unique linear combination of this basis, $\ket{\psi} = \alpha \ket{a}+ \beta \ket{b}$.Then, the probabilities of measuring $\ket{a}$ and $\ket{b}$ are $\lvert \alpha\rvert^2$ and $\lvert\beta\rvert^2$, respectively.
+This is an important fundamental difference between the classical and quantum models of computation. We take for granted in classical computing that we can copy any unknown state, and much of classical computation relies upon this fact. Another fact of classical computing which we take for granted is the existence of universal gates.
+
+\subsection{Universal Quantum Gate}
+In classical computation, there are three basic logic gates: NOT, AND, and OR. We can combine these gates to represent any possible logical expression. Furthermore, the NAND gate and the NOR gate, which we get from taking the negation (NOT) of the output of AND and OR respectively, are said to be \textit{universal gates}. This means that we can construct the three basic logic gates just from NAND gates or just from NOR gates. So, NAND and NOR are universal in that any logical expression can be represented with just NAND or NOR circuits. This is very useful in practice because NAND gates are very cheap to construct, so using only NANDs can keep the cost of a computer chip down.
+
+A natural question, then, is whether there exists a quantum analogue, a universal quantum gate. The short answer is that there is no single universal quantum gate, however the following three gates are enough to make an \textit{arbitrarily good approximation} of any quantum gate \citep{nielsenchuang}: Hadamard, CNOT, and phase gate. 
+
+The phase gate is defined
+\begin{align}
+\begin{bmatrix}
+1 & 0\\
+0 & i 
+\end{bmatrix}
+\end{align}
+And the CNOT, or controlled-NOT gate acts on two qubits by flipping the second qubit if and only if the first qubit is a 1. 
+\begin{align}
+\text{CNOT} = \begin{bmatrix}
+1 & 0 & 0 & 0 \\
+0 & 1 & 0 & 0 \\
+0 & 0 & 0 & 1 \\
+0 & 0 & 1 & 0
+\end{bmatrix}
+\end{align}
+As you can see, by multiplying the CNOT matrix by the column vector $(a\quad b\quad c\quad d)^\intercal$ this takes $a\ket{00} + b\ket{01} + c\ket{10} + d\ket{11}$ and transforms it into $a\ket{00} + b\ket{01} + c\ket{11} + d\ket{10}$, thereby swapping the amplitudes on the states $\ket{10}$ and $\ket{11}$, or equivalently ``flipping'' the second bit of the state if the first bit is a 1. 
+
+The \textit{gate complexity} of a unitary transformation is the minimum number of gates needed to implement the circuit. 
 
 
-\chapter{Introduction to Error-Correcting Codes}	
+
+
+\chapter{Error-Correcting Codes}	
 
 No real-life communication channel is perfect: internet packets occasionally get dropped, radio transmissions are drowned out by static interference, and data on storage media get corrupted. Distinguishing signal from noise is a problem as old as communication itself. One way of adapting to this problem is introducing redundancy into the transmission. If the information we want to transmit is encoded in more than one place, then there is a higher probability that at least one of the copies will make it through even if some of the copies are plagued with errors. This is precisely the approach that error-correcting codes take. 
 
@@ -636,7 +664,7 @@ One may wonder what happens if there are more than $\lfloor \frac{1}{2}(d-1)\rfl
 [****If I want to talk about this then I have to introduce cosets and syndromes and I don't feel like doing that so let's just skip it]
 
 
-\chapter{Introduction to Learning Theory}
+\chapter{Learning Theory}
 
 Given oracle (``black box'') access to some function $f$, how many queries would it take to determine some property of $f$? This is precisely the question that learning theory is concerned with. This field is motivated in part by the idea that the oracle computes some ``expensive'' function, i.e.~one that is time or space intensive. Minimizing the number of queries that an algorithm has to make to an oracle keeps the computational cost expended on oracle queries low.
 
