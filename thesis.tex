@@ -138,8 +138,7 @@
 % The preface is optional
 % To remove it, comment it out or delete it.
    \chapter*{Preface}
-  
-\emph{``It's not a Turing machine, but a machine of a different kind''} \citep{feynman1982simulating}. Quantum computing was proposed by Richard Feynman in 1981 for simulating quantum physical phenomena. He was the first to suggest that a computer based upon quantum mechanics could potentially have a computational advantage to classical computers. 
+   \emph{``It's not a Turing machine, but a machine of a different kind''} \citep{feynman1982simulating}. Quantum computing was proposed by Richard Feynman in 1981 for simulating quantum physical phenomena. He was the first to suggest that a computer based upon quantum mechanics could potentially have a computational advantage to classical computers. 
 
 This idea became relevant to mainstream computer science theorists in 1994 when Peter Shor challenged the Extended Church-Turing thesis\footnote{The Extended Church-Turing thesis (previously called the quantitative Church-Turing thesis) is stated by Shor as follows: \emph{any physical computing device can be simulated by a Turing machine in a number of steps polynomial in the resources used by the computing device }\citep{shor1999polynomial}. In most cases, ``resources'' refers to either time (CPU cycles) or space (memory).} which they held so dearly. He proposed a quantum algorithm that could compute the prime factors of integers in polynomial time, a large speedup compared to classical computers \citep{shor1999polynomial}. This algorithm demonstrated the great potential of quantum computation and spurred on the research community.
 
@@ -504,7 +503,7 @@ No real-life communication channel is perfect: internet packets occasionally get
 
 Error-correcting codes were developed to enable the reliable transmission of messages over noisy communication channels. There are many examples of their use today, and many error-correcting codes have been developed for specific noise models. In CDs\footnote{If they still exist\ldots}, error-correcting codes prevent (small) scratches from leading to data loss. They are also used for transmitting photographs from rovers and telescopes throughout the solar system to earth. 
 
-Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the code theory.
+Error-correcting codes are important for the practical implementation of quantum computers because current physical implementations of quantum computers are plagued by \textit{quantum decoherence}. That is, the qubits are difficult to fully isolate from their environment and thus become entangled with their surroundings, leading to noisy computations. For now, we will forget about quantum computing and plunge into the code theory. Much of the material in this chapter was paraphrased from \cite{macwilliamssloane}.
 
 \section{Preliminaries}
 There are many kinds of communication channels, but we will focus on \textit{binary symmetric channels}. 
@@ -520,37 +519,37 @@ In the following sections we will investigate how to mitigate the information lo
 
 Thus far, we have only described the parts of the communication system in vague terms; now, we will assuage the reader's thirst for clarity and precision. We will, of course, delve further into each of these parts later.
 
-There are five basic components in the communication system we consider. The \textit{message source}, or \textit{sender}, transfers a message $m = m_1 \ldots m_k$ to the \textit{encoder}. The \textit{encoder} outputs the \textit{codeword} $c = c_1\ldots c_n$ associated with message $m$ and passes it along to the \textit{binary symmetric channel}. The \textit{channel} incorporates an \textit{error vector} $e = e_1 \ldots e_n$ into the codeword and outputs the received vector $r = e + c = r_1 \ldots r_n$ where the addition is bitwise and modulo 2. Then, the \textit{decoder} takes the received vector (also referred to as the ``noisy codeword'') $r$ and outputs $\hat{m}$, an estimate of message $m$ to the \textit{receiver}. A schematic is provided below.
+There are five basic components in the communication system we consider. The \textit{message source}, or \textit{sender}, transfers a message $\mess = \m{1} \ldots \m{\mlen}$ to the \textit{encoder}. The \textit{encoder} outputs the \textit{codeword} $\cw = \cwb{1}\ldots \cwb{\clen}$ associated with message \mess and passes it along to the \textit{binary symmetric channel}. The \textit{channel} incorporates an \textit{error vector} $\ev = \evb{1} \ldots \evb{\clen}$ into the codeword and outputs the received vector $\rc = \ev + \cw = \rcb{1} \ldots \rcb{\clen}$ where the addition is bitwise and modulo 2. Then, the \textit{decoder} takes the received vector (also referred to as the ``noisy codeword'') $\rc$ and outputs $\mhat$, an estimate of message \mess to the \textit{receiver}. A schematic is provided below.
 \begin{equation*}
-\text{Sender} \xrightarrow{\text{Message }m} \text{Encoder} \xrightarrow{\text{Codeword }c} \text{Channel} \xrightarrow{\text{Rcvd.~Vect.~}m+e} \text{Decoder} \xrightarrow{\text{Est. }\hat{m}} \text{Receiver}
+\text{Sender} \xrightarrow{\text{Message }\mess} \text{Encoder} \xrightarrow{\text{Codeword }\cw} \text{Channel} \xrightarrow{\text{Rcvd.~Vect.~}\mess+\ev} \text{Decoder} \xrightarrow{\text{Est. }\mhat} \text{Receiver}
 \end{equation*}
 
 \section{Encoding}
 The job of the encoder is to introduce well-defined redundancy into the transmission. We will describe a general encoding scheme that applies to all linear codes, though the more advanced encoding algorithms we will explore later will deviate from this general form.
 
-In this general code $\mathscr{C}$, the message will be encoded as a codeword that consists of a series of \textit{check symbols} appended to the original message $m$. The check symbols encode redundancy into the codeword. More concretely, the bits of the codeword $c$ associated with message $m$ are defined
+In this general code $\mathscr{C}$, the message will be encoded as a codeword that consists of a series of \textit{check symbols} appended to the original message \mess. The check symbols encode redundancy into the codeword. More concretely, the bits of the codeword \cw associated with message \mess are defined
 \begin{equation*}
-c_1 = m_1, \quad c_2 = m_2, \quad \ldots,\quad c_k = m_k
+\cwb{1} = \m{1}, \quad \cwb{2} = \m{2}, \quad \ldots,\quad \cwb{\mlen} = \m{\mlen}
 \end{equation*}
-and the last $n-k$ bits of $c$ are all check symbols $c_{k+1} \ldots c_n$. The check symbols are determined by the codeword, and they are chosen so that 
+and the last $\clen-\mlen$ bits of $\cw$ are all check symbols $\cwb{\mlen+1} \ldots \cwb{\clen}$. The check symbols are determined by the codeword, and they are chosen so that 
 \begin{equation*}
 P \begin{bmatrix}
-c_{1}\\
-c_{2}\\
+\cwb{1}\\
+\cwb{2}\\
 \vdots\\
-c_n
+\cwb{\clen}
 \end{bmatrix} = 
-P \mathbf{c}^{tr}= 0
+P \cw^{\bot}= 0
 \end{equation*}
-where $P$ is the \textit{parity check matrix} for the code $\mathscr{C}$.
+where $P$ is the \textit{parity check matrix} for the code. We denote such a code $\mathscr{C} = [\clen, \mlen]$.
 
-\begin{definition}[Parity Check Matrix] The parity check matrix $P$ for a linear code $\mathscr{C}$ is given by 
+\begin{definition}[Parity Check Matrix] The parity check matrix $P$ for a linear code $\mathscr{C} = [\clen, \mlen]$ is given by 
 \begin{equation*}
-P = [A \mid I_{n-k}]
+P = [A \mid I_{\clen-\mlen}]
 \end{equation*}
-where $A$ is some fixed $(n-k) \times k$ binary matrix and $I_{n-k}$ is the $(n-k)\times(n-k)$ identity matrix.
+where $A$ is some fixed $(\clen-\mlen) \times \mlen$ binary matrix and $I_{\clen-\mlen}$ is the identity matrix of size $(\clen-\mlen)$.
 \end{definition}
-A code $\mathscr{C}\subset \Z_2^n$ is simply the set of all codewords $c$ that satisfy the equation $P\mathbf{c}^{tr} = 0$. In other words, $\mathscr{C} = \{c\in \Z_2^n \mid P\mathbf{c}^{tr} = 0\}$.
+A code $\mathscr{C}\subset \Z_2^\clen$ is simply the set of all codewords $\cw$ that satisfy the equation $P\cw^{\bot} = 0$. In other words, $\mathscr{C} = \{c\in \Z_2^n \mid P\mathbf{c}^{tr} = 0\}$.
 \begin{example} \label{P_ex} Suppose our parity check matrix is
 \begin{equation*}
 P = 
@@ -561,7 +560,7 @@ P =
 \end{array}
 \right]
 \end{equation*}
-This defines a code $\mathscr{C}$ with $n = 5$ and $k = 3$. For this code,
+This defines a code $\mathscr{C}$ with $\clen = 5$ and $\mlen = 3$. For this code,
 \begin{equation*}
 A = 
 \begin{bmatrix}
@@ -569,17 +568,17 @@ A =
 1 & 0 & 1
 \end{bmatrix}
 \end{equation*}
-Moreover, the message $m = m_1m_2m_3$ is encoded into a codeword $c = c_1 c_2 c_3 c_4 c_5$ such that $c_1 = m_1$, $c_2 = m_2$, and $c_3 = m_3$ and then
+Moreover, the message $\mess = \m{1}\m{2}\m{3}$ is encoded into a codeword $\cw = \cwb{1}\cwb{2}\cwb{3}\cwb{4}\cwb{5}$ such that $\cwb{1} = \m{1}$, $\cwb{2} = \m{2}$, and $\cwb{3} = \m{3}$ and then
 \begin{align*}
-& c_4 = -(c_2 + c_3) \equiv c_2 + c_3 \pmod 2\\
-& c_5 =  -(c_1 + c_3) \equiv c_1 + c_3 \pmod 2
+& \cwb{4} = -(\cwb{2} + \cwb{3}) \equiv \cwb{2} + \cwb{3} \pmod 2\\
+& \cwb{5} =  -(\cwb{1} + \cwb{3}) \equiv \cwb{1} + \cwb{3} \pmod 2
 \end{align*}
 \end{example}
 
 Given a parity check matrix and a message, the encoder needs to output the corresponding codeword. This is best done with the \textit{generator matrix}.
 
-\begin{definition}[Generator Matrix] Given a parity check matrix $P = [A\mid I_{n-k}]$ for a code $\mathscr{C}$, the corresponding generator matrix is $G = [I_k \mid A^{tr}]$.
-To generate the codeword $c$ for a message $m$, simply multiply the matrices $c = mG$.
+\begin{definition}[Generator Matrix] Given a parity check matrix $P = [A\mid I_{\clen-\mlen}]$ for a binary code $\mathscr{C}$, the corresponding generator matrix is $G = [I_k \mid A^{\bot}]$.
+To generate the codeword $\cw$ for a message $\mess$, simply multiply the matrices $\cw = \mess G$.
 \end{definition}
 
 \begin{remark}
@@ -601,22 +600,22 @@ G =
 \end{example}
 
 \section{Decoding}
-As was alluded to, the channel will (term-wise) add some unknown error vector $e = e_1 \ldots e_n$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $r = m + e \pmod 2$. 
+As we discussed earlier, the channel will (term-wise) add some unknown error vector $\ev=\evb{1} \ldots \evb{\clen}$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $\rc = \mess + \ev \pmod 2$. 
 
 The decoder has a significantly harder job than the encoder. Namely, it must take this noisy codeword $r$ and return the message $m$ that produced the vector. Any given decoding algorithm will not always be successful; sometimes there will be so many errors in a given received codeword that it is impossible to parse which message was sent. That said, some decoding algorithms are more effective than others, and this distinction comes down to the properties of the code $\mathscr{C}$.
 
 \subsection{Properties of Vectors}
 
-One of the key defining properties of a vector is its Hamming weight.
-\begin{definition}[Hamming weight] The Hamming weight of a vector $x = x_1  \ldots x_n$ is the number of nonzero $x_i$, and is denoted by $wt(x)$.
+In this subsection, we discuss properties of binary vectors generally, which apply to codewords, messages, error vectors, and received codewords (though we use notation for received codewords for generality). One of the key defining properties of a vector is its Hamming weight.
+\begin{definition}[Hamming weight] The Hamming weight of a vector $\rc = \rcb{1}  \ldots \rcb{\clen}$ is the number of nonzero $\rcb{i}$'s, and is denoted by $wt(\rc)$.
 \end{definition}
 
 \begin{example}
-For example, the vector $x = 0110100111$ has Hamming weight 6.
+For example, the vector $\rc = 0110100111$ has Hamming weight 6.
 \end{example}
 
 Another important property in relating two vectors is their \textit{Hamming distance}.
-\begin{definition}[Hamming distance] The Hamming distance of two vectors $x = x_1  \ldots x_n$  and $y = y_1 \ldots y_n$ is defined $dist(x,y) = wt(x \oplus y)$, where the XOR is bitwise.
+\begin{definition}[Hamming distance] The Hamming distance of two vectors $\rc = \rcb{1}  \ldots \rcb{\clen}$  and $\cw = \cwb{1} \ldots \cwb{\clen}$ is defined $dist(\rc,\cw) = wt(\rc \oplus \cw)$, where the XOR is bitwise.
 \end{definition}
 
 Note that one could write this definition in many ways (i.e.~addition or subtraction mod 2), but the heuristic idea behind computing the Hamming distance between two vectors is to add up how many of their bits differ. This concept is a fundamental building block for the decoding algorithms we will encounter.
@@ -626,91 +625,98 @@ dist(010101, 100111) = 3
 \end{example}
 
 \subsection{Errors}
-Earlier we defined the error vector $e = e_1 \ldots e_n$ where $e_i \in \Z_2$. The received vector is defined $r = m + e$, which implies that $e_i = 1$ if and only if the $i$-th bit of the codeword was corrupted in transmission and $e_i = 0$ otherwise. Since the binary symmetric channel corrupts a single bit with probability $p$, it follows that $P[e_i = 1] = p$.  One may wonder: \textit{what is the most probable error vector?} This would certainly help the decoder to determine which codeword was sent given the noisy codeword.
+Earlier we defined the error vector $\ev = \evb{1} \ldots \evb{\clen}$ where $\evb{i} \in \Z_2$. The received vector is defined $\rc = \mess + \ev$, which implies that $\evb{i} = 1$ if and only if the $i$-th bit of the codeword was corrupted in transmission and $\evb{i} = 0$ otherwise. Since the binary symmetric channel corrupts a single bit with probability $p$, it follows that $P[\evb{i} = 1] = p$.  One may wonder: \textit{what is the most probable error vector?} This would certainly help the decoder to determine which codeword was sent given the noisy codeword.
 
-Since the corruption of bits by the communication channel are independent of one another, we can compute the probability that the error vector $e$ is some particular vector $x$:
+Since the corruption of bits by the communication channel are independent of one another, we can compute the probability that the error vector $\ev$ is some particular vector $\mathbf{x}$:
 \begin{equation} \label{p_error_vect}
-P[e = x] = \prod_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}.
+P[\ev = \mathbf{x}] = \prod_{i = 1}^{\clen} P[\evb{i} = x_i] = p^{wt(\mathbf{x})}(1-p)^{\clen-wt(\mathbf{x})}.
 \end{equation}
 This perhaps goes without saying, but the error vector is entirely independent of the message.
 \begin{example}
-Suppose $n=5$. Then, $P[e = 10110] = p(1-p)p^2 (1-p) = p^3(1-p)^2$.
+Suppose $\clen=5$. Then, $P[\ev = 10110] = p(1-p)p^2 (1-p) = p^3(1-p)^2$.
 \end{example}
-So, now we want to maximize the equation $$P[e = x] =  \prod_{i = 1}^{n} P[e_i = x_i] = p^{wt(x)}(1-p)^{n-wt(x)}$$ to figure out the most likely error vector $x$ and thus the best decoding algorithm. We have that $p < \frac{1}{2}$, so it follows that the maximum probability is achieved when $n-wt(x)$ is as large as possible. This occurs when $x = \mathbf{0}$, the zero vector. In other words, \textit{the most likely error vector is one that indicates that none of the bits were corrupted}.
+So, now we want to maximize the equation \ref{p_error_vect} to figure out the most likely error vector $\mathbf{x}$ and thus the best decoding algorithm. We have that $p < \frac{1}{2}$, so it follows that the maximum probability is achieved when $\clen-wt(\mathbf{x})$ is as large as possible. This occurs when $\mathbf{x} = \mathbf{0}$, the zero vector. In other words, \textit{the most likely error vector is one that indicates that none of the bits were corrupted}.
  
- In terms of decoding, this fact implies that the optimal decoding algorithm assumes that the weight of $e$ is as small as possible. If the received vector $r$ is not a codeword, then the decoder should output the nearest codeword $c$ with respect to the Hamming distance. This decoding method is called \textit{nearest neighbor decoding} and it is the strategy we will employ.
+ In terms of decoding, this fact implies that the optimal decoding algorithm assumes that the weight of $\ev$ is as small as possible. If the received vector $\rc$ is not a codeword, then the decoder should output the nearest codeword $\cw$ with respect to the Hamming distance. This decoding method is called \textit{nearest neighbor decoding} and it is the strategy we will employ.
 
 \subsection{Properties of Codes}
 Now that we have defined the nearest neighbor decoding strategy, one may wonder how many errors a given code can correct. Before proceeding, note the distinction between \textit{error detection} whereby the code informs the decoder that $x$ number of errors occurred and \textit{error correction} whereby the decoder is able to correct the $x$ errors. Analyzing the error-correcting and error-detecting properties of linear codes will require some additional metrics on codes.
 
 One of the traits of a code that is most pertinent to its error-correcting properties is called its \textit{minimum distance}. This captures the worst-case correction performance of a code on a nearest neighbor decoding algorithm.
 
-\begin{definition}[Minimum Distance] The minimum distance $d$ of a code $\mathscr{C}$ is $$d(\mathscr{C}) = \min_{x,y \in \mathscr{C}} \{dist(x,y)\}.$$
+\begin{definition}[Minimum Distance] The minimum distance $\mindist$ of a code $\mathscr{C}$ is $$d(\mathscr{C}) = \min_{\cw,\cw' \in \mathscr{C}} \{dist(\cw,\cw')\}.$$
 \end{definition}
 
-The minimum distance of a code $\mathscr{C}$ encapsulates how closely packed the codewords are in $n$-dimensional space. This determines how many errors we can correct with nearest-neighbor decoding.
-\begin{theorem} A linear code $\mathscr{C}$ with minimum distance $d$ can correct $\lfloor \frac{1}{2} (d-1) \rfloor$ errors. 
+The minimum distance of a code $\mathscr{C}$ encapsulates how closely packed the codewords are in $\clen$-dimensional space. This determines how many errors we can correct with nearest-neighbor decoding.
+\begin{theorem} A linear code $\mathscr{C}$ with minimum distance $\mindist$ can correct $\lfloor \frac{1}{2} (\mindist-1) \rfloor$ errors. 
 \end{theorem}
 
 \begin{proof}
-Suppose our code $\mathscr{C}$ has minimum distance $d$. Now, imagine each codeword has an $n$-dimensional sphere\footnote{Or, for the topologists among you, let's call it the closed $n$-ball $\overline{B(c, t)}$ where $c\in \Z_2^n$ is a codeword.} of radius $t$ around it. Now, if $t$ is small enough, none of the spheres will overlap. This means that a received vector $r$ with at most $t$ errors will be decoded correctly using nearest neighbor decoding. Now, the question is: what is the largest that the radius $t$ can be and still maintain the non-overlapping $n$-spheres? This is precisely how error-correcting codes can be translated to sphere packing problems.
+Suppose our code $\mathscr{C}$ has minimum distance $\mindist$. Now, imagine each codeword has an $\clen$-dimensional sphere\footnote{Or, for the topologists among you, let's call it the closed $\clen$-ball $\overline{B(\cw, t)}$ where $\cw \in \Z_2^\clen$ is a codeword.} of radius $t$ around it. Now, if $t$ is small enough, none of the spheres will overlap. This means that a received vector $\rc$ with at most $t$ errors will be decoded correctly using nearest neighbor decoding. Now, the question is: what is the largest that the radius $t$ can be and still maintain the non-overlapping $\clen$-spheres? This is precisely how error-correcting codes can be translated to sphere packing problems.
 
-Anyway, if $d = 2t+1$, then spheres with radius $t$ will not overlap. Thus, we have that $t = \frac{1}{2}(d-1)$ is the largest that $t$ may be. Now, we can correct up to $t$ errors since the $n$-spheres do not overlap, but the number of errors in a codeword are discrete integer values. Thus, we can only guarantee that $\lfloor t \rfloor$, or $\lfloor \frac{1}{2} (d-1)\rfloor$ errors can be corrected.\\
+Anyway, if $\mindist = 2t+1$, then spheres with radius $t$ will not overlap. Thus, we have that $t = \frac{1}{2}(\mindist-1)$ is the largest that $t$ may be. Now, we can correct up to $t$ errors since the $\clen$-spheres do not overlap, but the number of errors in a codeword are discrete integer values. Thus, we can only guarantee that $\lfloor t \rfloor$, or $\lfloor \frac{1}{2} (\mindist-1)\rfloor$ errors can be corrected.\\
 \end{proof}
 
 \subsection{Decoding Errors}
-One may wonder what happens if there are more than $\lfloor \frac{1}{2}(d-1)\rfloor$ errors occur during transmission. In this case, the received vector $r = e+c$ may be closer to some other codeword $c'$, so nearest neighbor decoding will decide that $c'$ was the original codeword rather than $c$, the actual codeword that was sent. This is called a \textit{decoding error} because the decoder erroneously returned $c'$ instead of $c$. This is not ideal, and code theorists study the probability of this occurrence, denoted $P_{err}$. 
+One may wonder what happens if there are more than $\lfloor \frac{1}{2}(\mindist-1)\rfloor$ errors occur during transmission. In this case, the received vector $\rc = \ev+\cw$ may be closer to some other codeword $\cw'$, so nearest neighbor decoding will decide that $\cw'$ was the original codeword rather than $\cw$, the actual codeword that was sent. This is called a \textit{decoding error} because the decoder erroneously returned $\cw'$ instead of $\cw$. This is not ideal, and code theorists study the probability of this occurrence, denoted $P_{err}$. 
 
-[****If I want to talk about this then I have to introduce cosets and syndromes and I don't feel like doing that so let's just skip it]
+For this thesis, we will only concern ourselves with $P_{succ}[\mathcal{A}]$, the probability of success of a decoding algorithm $\mathcal{A}$ on some code. 
+\begin{definition}(Probability of Success) The probability of success for a decoding algorithm $\mathcal{A}$ in the presence of $\numerr$ errors for a code with generator matrix $G$ is 
+\begin{equation*}
+P_{succ}[\mathcal{A}] = P[\mathcal{A}(\mess G + \ev) = \mess]
+\end{equation*}
+where $wt(\ev) = \numerr$.
+\end{definition}
+
 
 
 \chapter{Learning Theory}
 
-Given oracle (``black box'') access to some function $f$, how many queries would it take to determine some property of $f$? This is precisely the question that learning theory is concerned with. This field is motivated in part by the idea that the oracle computes some ``expensive'' function, i.e.~one that is time or space intensive. Minimizing the number of queries that an algorithm has to make to an oracle keeps the computational cost expended on oracle queries low.
+Given oracle  access to some function $f$, how many queries would it take to determine some property of $f$? This is precisely the question that learning theory is concerned with, which was largely founded by Dana Angluin in \citep{angluin1988queries}. This field is motivated in part by the idea that the oracle computes some ``expensive'' function, i.e.~one that is time or space intensive. Minimizing the number of queries that an algorithm has to make to an oracle keeps the computational cost expended on oracle queries low. Furthermore, complexity theorists are very interested in the query complexity, or number of queries required to solve a problem, of quantum computers compared to classical computers\footnote{For example, see \citep{gortler2001quantum} and \citep{atici2005improved}}.
 
 \section{Basics of Concept Learning}
-Consider the oracle function $f$. This is a \textit{Boolean function}, as it takes inputs in $\{0,1\}^n$ for some fixed $n$ and outputs 0 or 1. In the field of learning theory, $f$ is called a \textit{concept}.\footnote{CITE Quantum vs classical learnability by Servedio!!!}
+Consider the oracle function $f$. This is a \textit{Boolean function}, as it takes inputs in $\Z_2^n $ for some fixed $n$ and outputs 0 or 1. In the field of learning theory, $f$ is called a \textit{concept}.
 
-\begin{definition}[Concept] A concept $f$ over $\{0,1\}^n$ is a Boolean function $f: \{0,1\}^n \rightarrow \{0,1\}$. Equivalently, a concept can be viewed as a subset of $\{0,1\}^n$, namely $f = \{x \in \{0,1\}^n \mid f(x) = 1\}$.
+\begin{definition}[Concept] A concept $f$ over $\Z_2^n$ is a Boolean function $f: \Z_2^n \rightarrow \Z_2$. Equivalently, a concept can be viewed as a subset of $\Z_2^n$, namely $f = \{x \in \Z_2^n \mid f(x) = 1\}$.
 \end{definition}
 
 Computer scientists do not care how many queries it takes to learn the properties of some particular concept, but they are more interested in knowing how the number of queries \textit{scales asymptotically} with the size of the input. To take care of this, they came up with 
 \textit{concept classes}. Traditionally, concept classes are denoted by $\mathcal{C}$, but we will instead call them $\mathcal{F}$ to avoid confusion with codes $\mathscr{C}$. 
 
-\begin{definition}[Concept Class] A concept class $\mathcal{F} = \cup_{n \geq 1} f_n$ is a collection of concepts where $f_n = \{f \in \mathcal{F} \mid f \text{ is a concept over } \{0,1\}^n\}$.
+\begin{definition}[Concept Class] A concept class $\mathcal{F} = \cup_{n \geq 1} f_n$ is a collection of concepts where $f_n = \{f \in \mathcal{F} \mid f \text{ is a concept over } \Z_2^n\}$.
 \end{definition}
 
 \begin{example}
-Suppose the domain we are working with is sets of $2^n$ people instead of $\{0,1\}^n$. Then, we can define a concept like $f = \{ x\in 2^n \text{-set of people} \mid \text{ Marika has met } x\}$. Then, $f(\text{``Jamie Pommersheim''}) = 1$, but $f(\text{``Alan Turing''}) = 0$, sadly. Now, the concept class is just the union of these concepts over all possible domain sizes (ignoring the fact that the number of people that have existed is finite). This example is perhaps not mathematically rigid, but it should give the reader an intuition for what concept classes are.
+Suppose the domain we are working with is sets of $2^n$ people instead of $\Z_2^n$. Then, we can define a concept like $f = \{ x\in 2^n \text{-set of people} \mid \text{ Marika has met } x\}$. Then, $f(\text{``Jamie Pommersheim''}) = 1$, but $f(\text{``Alan Turing''}) = 0$, sadly. Now, the concept class is just the union of these concepts over all possible domain sizes (ignoring the fact that the number of people that have existed is finite). This example is perhaps not mathematically rigid, but it should give the reader an intuition for what concept classes are.
 \end{example}
 The example we outlined refers to a specific kind of function called a \textit{membership oracle}.
 \begin{definition}[Membership Oracle] A membership oracle $MQ_f$ is an oracle that returns 1 on input $x$ if and only if $x \in f$ or equivalently if $f(x)=1$. This is called a \textit{membership query}.
 \end{definition}
 
-Given some membership oracle $MQ_f$, the goal of the learning algorithm is to construct a \textit{hypothesis} $h: \{0,1\}^n \rightarrow \{0,1\}$ that is equivalent to $f$, i.e.~$\forall x \in \{0,1\}^n, f(x) = h(x)$. While their outputs are equal, $f$ and $h$ may compute their outputs quite differently, but this is irrelevant.
+Given some membership oracle $MQ_f$, the goal of the learning algorithm is to construct a \textit{hypothesis} $h: \Z_2^n \rightarrow \Z_2$ that is equivalent to $f$, i.e.~$\forall x \in \Z_2^n, f(x) = h(x)$. While their outputs are equal, $f$ and $h$ may compute their outputs quite differently, but this is irrelevant.
 
 \chapter{The Binary Simplex Code}
 One particularly interesting linear code is the simplex code. This is a special case of the Reed-Muller codes we will discuss later. The encoding and decoding algorithms are quite simple, so this is our starting point for further analyzing some of the error-correcting properties of the quantum decoding algorithm.
 \section{Encoding}
-To encode a message $m$ with \mlen bits, simply append the inner product of each binary number of length \mlen (in order) with the message. The $2^\mlen$ bits of codeword $c$ for message $m$ are: 
+We will denote the binary simplex code for messages of length $\mlen$ by \simpl{\mlen}. To encode a message $\mess$ with \mlen bits, simply append the inner product of each binary number of length \mlen (in order) with the message. The $2^\mlen$ bits of codeword \cw for message $\mess$ are: 
 \begin{equation*}
-c_i= i \cdot m \pmod{2} \quad{i \in \Z_2^\mlen}.
+\cwb{i}= \mathbf{i} \cdot \mess \pmod{2} \quad{\mathbf{i} \in \Z_2^\mlen}.
 \end{equation*}
 \begin{example}
-Suppose $n=3$. Then, the encoding of the message $m = 010$ is:
+Suppose $\mlen=3$. Then, the encoding of the message $\mess = 010$ is:
 \begin{align*}
-&c_1 = (0,0,0) \cdot (0,1,0) = 0\\
-&c_2 = (0,0,1) \cdot (0,1,0) = 0\\
-&c_3 = (0,1,0) \cdot (0,1,0) = 1\\
-&c_4 = (0,1,1) \cdot (0,1,0) = 1\\
-&c_5 = (1,0,0) \cdot (0,1,0) = 0\\
-&c_6 = (1,0,1) \cdot (0,1,0) = 0\\
-&c_7 = (1,1,0) \cdot (0,1,0) = 1\\
-&c_8 = (1,1,1) \cdot (0,1,0) = 1\\
+&\cwb{1} = (0,0,0) \cdot (0,1,0) = 0\\
+&\cwb{2} = (0,0,1) \cdot (0,1,0) = 0\\
+&\cwb 3 = (0,1,0) \cdot (0,1,0) = 1\\
+&\cwb 4 = (0,1,1) \cdot (0,1,0) = 1\\
+&\cwb 5 = (1,0,0) \cdot (0,1,0) = 0\\
+&\cwb 6 = (1,0,1) \cdot (0,1,0) = 0\\
+&\cwb 7 = (1,1,0) \cdot (0,1,0) = 1\\
+&\cwb 8 = (1,1,1) \cdot (0,1,0) = 1\\
 \end{align*}
-Thus, $c = 00110011$ for that message. 
+Thus, $\cw = 00110011$ for that message. 
 \end{example}
-Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $n$ has a codeword of length $2^n$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact. 
+Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $\mlen$ has a codeword of length $2^\mlen$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact. 
 
 \subsection{Generating Matrix}
 Another way of encoding messages with the binary simplex code is to use a generating matrix. Recall the Hadamard matrix.
@@ -728,100 +734,98 @@ S =
 \end{equation}
 Note that the terms of $S$ are equivalent to the terms of $H$ with the following bijection: $h_{ij} = (-1)^{s_{ij}}$ (where $h_{ij}$ is the term of $H$ in row $i$ column $j$). This property is essential to the quantum decoding algorithm.
 
-Now, to create the generating matrix for a simplex code of length $n = 2^N$ for some $N \in \Z_{>0}$, simply take $N$ tensor products of matrix \ref{2_simplex}, or $S^{\otimes N}$.
+Now, to create the generating matrix for a simplex code of length $\mlen = 2^N$ for some $N \in \Z_{>0}$, simply take $N$ tensor products of matrix \ref{2_simplex}, or $S^{\otimes N}$.
 \begin{remark}
-For the geometers among you, you will be pleased to know that the codewords of the binary simplex code do, in fact, lie on the vertices of an $n$-dimensional regular simplex as the name would suggest.
+For the geometers among you, you will be pleased to know that the codewords of the binary simplex code do, in fact, lie on the vertices of an $\clen$-dimensional regular simplex as the name would suggest.
 \end{remark}
 \section{Quantum Decoding Algorithm}
 The quantum decoding algorithm for the simplex code is very pleasing. The Bernstein-Vazirani algorithm is the essence of the algorithm. In this version of the algorithm, we will assume that no errors occurred during the transmission of the codeword; later, we will analyze the performance of the algorithm with errors.
 \subsection{Reliable Quantum Oracle}
-The quantum oracle we will use is specific to each message $m$. That is, the oracle $\mathcal{O}_m$ encodes the message $m$ into the corresponding codeword $c$. This oracle is ``reliable'' in the sense that it always gives $c$ with no errors, i.e~the received codeword is the actual codeword. 
+The quantum oracle we will use is specific to each message $\mess$. That is, the oracle $\mathcal{O}_\mess$ encodes the message $\mess$ into the corresponding codeword $\cw$. This oracle is ``reliable'' in the sense that it always gives $\cw$ with no errors, i.e~the received codeword is the actual codeword. 
 
-Precisely, $\mathcal{O}_m$ is a bijection on $(\C^2)^n \otimes \C^2$ and is defined as follows
+To query the message oracle, the user initializes the query register with an indicator vector $\mathbf{i} \in \Z_2^\mlen$ denoting which bit of the message they would like to read in, and they initialize the response register to some known bit $z\in\Z_2$. Precisely, $\mathcal{O}_\mess$ is a bijection on $(\C^2)^\mlen \otimes \C^2$ and is defined as follows
 \begin{equation*}
-\mathcal{O}_m: \ket{i, r} \longmapsto \ket{i, r \oplus (i\cdot m)}.
+\mathcal{O}_\mess: \ket{\mathbf{i}, \rr} \longmapsto \ket{\mathbf{i}, \rr \oplus (\mathbf{i} \cdot \mess)}.
 \end{equation*} 
-This returns precisely the $i$-th bit of the codeword $c$ that corresponds to message $m$. Now, we may put $\Hminus$ in the response register and use the phase-kickback trick to store $c_i$ in the phase of the state:
+This returns precisely the $i$-th bit of the codeword $\cw$ that corresponds to message $\mess$. Now, we may put $\Hminus$ in the response register and use the phase-kickback trick to store $\cwb{i}$ in the phase of the state:
 \begin{equation*}
-\mathcal{O}_m: \ket{i, -} \longmapsto (-1)^{i \cdot m}\ket{i,-}.
+\mathcal{O}_m: \ket{\mathbf{i}, -} \longmapsto (-1)^{\mathbf{i} \cdot \mess}\ket{\mathbf{i},-}.
 \end{equation*}
 In the algorithm, we will omit the response register since it remains $\Hminus$ throughout the computation.
 \subsection{Algorithm}
 
-Now that our query model is defined, we give an overview of the algorithm. The $n$-qubit query register will be initialized with $\ket{0}^{\otimes n}$ and an $n$-qubit Hadamard transform will put the query register into an equal superposition. Simultaneously, the $n$-qubit response register will be set to $\Hminus^{\otimes n}$ so we can use the phase-kickback trick. The algorithm does one quantum query to the oracle $\mathcal{O}_m$ to read in the corresponding codeword's bits into the phase of each state in the query register. Then, an $n$-qubit Hadamard is applied to the query register. Upon measurement, we obtain the original message with probability 1.
+Now that our query model is defined, we give an overview of the algorithm. The $\mlen$-qubit query register will be initialized to $\ket{0}^{\otimes \mlen}$ and a $\mlen$-qubit Hadamard transform will put the query register into an equal superposition. Simultaneously, the $2^\mlen$ single-qubit response registers will each be set to $\Hminus$ so we can use the phase-kickback trick. The algorithm does one quantum query to the oracle $\mathcal{O}_m$ to read in the corresponding codeword's bits into the phase of each state in the query register. Then, an $n$-qubit Hadamard is applied to the query register. Upon measurement, we obtain the original message with probability 1.
 
-Now, for the algorithm. Let $\ket{\psi_m}$ denote the query register.
+Now, for the algorithm. Let $\ket{\psi_\mess}$ denote the query register.
 
 \begin{align}
-\ket{\psi_m}
-& =  \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
-& \xrightarrow{\mathcal{O}_m} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{i \cdot m} \ket{i} \\
-& \xrightarrow{H^{\otimes n}} \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{i \cdot m} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \\
-& = \frac{1}{2^n} \sum_{j \in \Z_2^n} \left( \sum_{i \in \Z_2^n} (-1)^{i\cdot (m +j)} \right) \ket{j} \label{confuse}\\
-& = \ket{m} \label{result}
+\ket{\psi_\mess}
+& =  \frac{1}{\sqrt{2^\mlen}} \sum_{\mathbf{i} \in \Z_2^\mlen} \ket{\mathbf{i}} \\
+& \xrightarrow{\mathcal{O}_\mess} \frac{1}{\sqrt{2^\mlen}} \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i} \cdot \mess} \ket{\mathbf{i}} \\
+& \xrightarrow{H^{\otimes \mlen}} \frac{1}{2^\mlen} \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i} \cdot \mess} \sum_{\mathbf{j} \in \Z_2^\mlen} (-1)^{\mathbf{i} \cdot \mathbf{j}} \ket{\mathbf{j}} \\
+& = \frac{1}{2^\mlen} \sum_{\mathbf{j} \in \Z_2^\mlen} \left( \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i}\cdot (\mess +\mathbf{j})} \right) \ket{\mathbf{j}} \label{confuse}\\
+& = \ket{\mess} \label{result}
 \end{align}
-Most of these transformations follow directly from definitions. The equality from line \ref{confuse} to \ref{result} is less apparent, but this equality follows the same logic as the analogous part of the Bernstein-Vazirani algorithm. Note that on line \ref{confuse} if $j = m$, the inner sum becomes 
+Most of these transformations follow directly from definitions. The equality from line \ref{confuse} to \ref{result} is less apparent, but this equality follows the same logic as the analogous part of the Bernstein-Vazirani algorithm. Note that on line \ref{confuse} if $\mathbf{j} = \mess$, the inner sum becomes 
 \begin{align*}
-\sum_{i \in \Z_2^n} (-1)^{i \cdot (2m)} 
-&= \sum_{i \in \Z_2^n} 1 \\
-& = {2^n}.
+\sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i} \cdot (2\mess)} 
+&  = \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i} \cdot \mathbf{0}} \\
+&= \sum_{i \in \Z_2^\mlen} 1 \\
+& = {2^\mlen}.
 \end{align*}
 Thus, the full state on line \ref{confuse} is 
 \begin{align*}
-\frac{1}{2^n} \sum_{j \in \Z_2^n} \left( \sum_{i \in \Z_2^n} (-1)^{i\cdot (m +j)} \right) \ket{j}
-& = \frac{1}{2^n} \left (2^n \ket{m}+  \sum\limits_{\substack{j \in \Z_2^n \\ j \neq m}}
- (-1)^{i\cdot (m +j)}\ket{j} \right) \\
- & = \frac{1}{2^n} \left (2^n \ket{m}+  \sum\limits_{\substack{j \in \Z_2^n \\ j \neq m}}
-0\ket{j} \right) \\
-& = \ket{m}.
+\frac{1}{2^\mlen} \sum_{\mathbf{j} \in \Z_2^\mlen} \left( \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i}\cdot (\mess +\mathbf{j})} \right) \ket{\mathbf{j}}
+& = \frac{1}{2^\mlen} \left (2^\mlen \ket{\mess}+  \sum\limits_{\substack{\mathbf{j} \in \Z_2^\mlen \\ \mathbf{j} \neq \mess}}
+ (-1)^{\mathbf{i}\cdot (\mess +\mathbf{j})}\ket{\mathbf{j}} \right) \\
+ & = \frac{1}{2^\mlen} \left (2^\mlen \ket{\mess}+  \sum\limits_{\substack{\mathbf{j} \in \Z_2^\mlen \\ \mathbf{j} \neq \mess}}
+0\ket{\mathbf{j}} \right) \\
+& = \ket{\mess}.
 \end{align*}
-So, measuring in the computational basis gives us $c$ with probability 1. This algorithm yields the correct message $m$ with probability 1 using only one quantum query.
+This algorithm yields the correct message $\mess$ with probability 1 using only one quantum query.
 \section{Rosbustness to Errors}
-Now we will consider a different scenario. Suppose that the oracle $\mathcal{O}_m$ is a little faulty. The oracle occasionally makes mistakes in transmitting the bits of the codeword $c$ that corresponds to $m$. Instead, it transmits a vector $r = c+ e$ which may not even be a codeword in the simplex code. Since the simplex code is error-correcting, one would hope that the algorithm could still recover the correct $m$ with a high probability. In this section, we formalize the algorithm's robustness to errors, that is, the probability of producing the correct output even with a noisy oracle. 
-\begin{remark}
-Since this algorithm only requires one query to the oracle, we will not distinguish between a stateless and stateful noisy quantum oracle; however, that is to come.
-\end{remark}
+Now we will consider a different scenario. Suppose that the oracle $\mathcal{O}_\mess$ is a little faulty. The oracle occasionally makes mistakes in transmitting the bits of the codeword $\cw$ that corresponds to $\mess$. Instead, it transmits a vector $\rc = \cw+\ev$ which may not even be a codeword in \simpl{\mlen}, the simplex code with messages of length $\mlen$. Since the simplex code is error-correcting, one would hope that the algorithm could still recover the correct $\mess$ with a high probability. In this section, we formalize the algorithm's robustness to errors, that is, the probability of producing the correct output even with a noisy oracle. 
 
 \subsection{Noisy Quantum Oracle}
-The reliable oracle is defined above. Now, we will define the unreliable, or noisy, quantum oracle. Again, it is a bijection on $(\C^2)^n \otimes \C^2$. Now, define a set of indices $E \subseteq [N]$, where $N = 2^n$, on which the oracle answers incorrectly. Then, the action of the noisy oracle $\widehat{\mathcal{O}}_m$ is defined as follows:
+The reliable oracle is defined above. Now, we will define the unreliable, or noisy, quantum oracle. Again, it is a bijection on $(\C^2)^\mlen \otimes \C^2$. Now, define a set of indices $E \subseteq [N]$, where $N = 2^\mlen$, on which the oracle answers incorrectly. Then, the action of the noisy oracle $\widehat{\mathcal{O}}_\mess$ is defined as follows:
 
 \begin{equation*}
-\widehat{\mathcal{O}}_m: \ket{i, -} \longmapsto (-1)^{m \cdot i} - 2\delta_E (-1)^{m \cdot i}
+\widehat{\mathcal{O}}_m: \ket{\mathbf{i}, -} \longmapsto (-1)^{\mess \cdot \mathbf{i}} - 2\delta_E (-1)^{\mess \cdot \mathbf{i}}
 \end{equation*}
-where $\delta_E$ is simply an indicator function on the set $E$. In other words, if $i \notin E$ then the oracle $\widehat{\mathcal{O}}_m$ returns the $i$-th bit of the codeword associated with $m$ properly in the form $(-1)^{m \cdot i}$. On the other hand, if $i \in E$, the oracle returns $-(-1)^{m\cdot i}$, which is the $i$-th bit of the codeword flipped.
+where $\delta_E$ is simply an indicator function on the set $E$. In other words, if $\mathbf{i} \notin E$ then the oracle $\widehat{\mathcal{O}}_\mess$ returns the $i$-th bit of the codeword associated with $\mess$ properly in the form $(-1)^{\mess \cdot \mathbf{i}}$. On the other hand, if $\mathbf{i} \in E$, the oracle returns $-(-1)^{\mess\cdot \mathbf{i}}$, which is the $i$-th bit of the codeword flipped.
 \subsection{Algorithm with Noisy Oracle}
-\begin{theorem} \label{cool_thm}(Swanberg and Pommersheim) The Bernstein-Vazirani quantum decoding algorithm for the binary simplex code $\mathcal{S}_n$ has probability of success
+\begin{theorem} \label{cool_thm}(Swanberg and Pommersheim) The Bernstein-Vazirani quantum decoding algorithm for the binary simplex code $\mathcal{S}_\mlen$ has probability of success
 \begin{equation*}
-P_{succ} = \left(1 - \frac{k}{2^{n-1}}\right)^2
+P_{succ} = \left(1 - \frac{\numerr}{2^{\mlen-1}}\right)^2
 \end{equation*}
-where $k= \lvert E \rvert$, the number of errors introduced by the noisy quantum oracle and $n$ is the length of the message.
+where $\numerr= \lvert E \rvert$, the number of errors introduced by the noisy quantum oracle and $\mlen$ is the length of the message.
 \end{theorem}
 
 \begin{proof}
-We will begin by performing the algorithm with our noisy oracle $\widehat{\mathcal{O}}_m$.
+We will begin by performing the algorithm with our noisy oracle $\widehat{\mathcal{O}}_\mess$.
 \begin{align*}
-\ket{\psi_m} 
-& = \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} \ket{i} \\
-& \xrightarrow{\widehat{\mathcal{O}}_m} \frac{1}{\sqrt{2^n}} \sum_{i \in \Z_2^n} (-1)^{i \cdot m}\ket{i} -2\left( \sum_{p \in E} (-1)^{p \cdot m} \ket{p}\right) \\
-& \xrightarrow{H^{\otimes n}} \ket{m} - \frac{1}{2^{n-1}} \left( \sum_{p \in E}(-1)^{p \cdot m} \sum_{j \in Z_2^n} (-1)^{j \cdot p} \ket{j}\right)\\
-& = \ket{m} - \frac{1}{2^{n-1}} \left( \sum_{p \in E}\sum_{j \in Z_2^n} (-1)^{p \cdot(j+m)} \ket{j} \right)
+\ket{\psi_\mess} 
+& = \frac{1}{\sqrt{2^\mlen}} \sum_{\mathbf{i} \in \Z_2^\mlen} \ket{\mathbf{i}} \\
+& \xrightarrow{\widehat{\mathcal{O}}_\mess} \frac{1}{\sqrt{2^\mlen}} \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i} \cdot \mess}\ket{\mathbf{i}} -2\left( \sum_{\mathbf{p} \in E} (-1)^{\mathbf{p} \cdot \mess} \ket{\mathbf{p}}\right) \\
+& \xrightarrow{H^{\otimes \mlen}} \ket{\mess} - \frac{1}{2^{\mlen -1}} \left( \sum_{\mathbf{p} \in E}(-1)^{\mathbf{p} \cdot \mess} \sum_{\mathbf{j} \in Z_2^\mlen} (-1)^{\mathbf{j} \cdot \mathbf{p}} \ket{\mathbf{j}}\right)\\
+& = \ket{\mess} - \frac{1}{2^{\mlen-1}} \left( \sum_{\mathbf{p} \in E}\sum_{\mathbf{j} \in Z_2^\mlen} (-1)^{\mathbf{p} \cdot(\mathbf{j}+\mess)} \ket{\mathbf{j}} \right)
 \end{align*}
-Now, we want to know $P_{succ}$, which is the probability of measuring $m$ in the computational basis. We have that for any quantum state, the probability of measuring a given result is the square of the coefficient on that state. So,
+Now, we want to know $P_{succ}$, which is the probability of measuring $\mess$ in the computational basis. We have that for any quantum state, the probability of measuring a given result is the square of the coefficient on that state. So,
 \begin{align*}
 P_{succ} 
-& = \left((1 - \frac{1}{2^{n-1}} \left( \sum_{p \in E} (-1)^{2(p \cdot m)} \right)\right)^2 \\
-& = \left(1 - \frac{1}{2^{n-1}} \left( \sum_{p \in E} 1 \right) \right)^2 \\
-& = \left( 1 - \frac{\lvert E \rvert}{2^{n-1}}\right)^2\\
-& = \left( 1 - \frac{k}{2^{n-1}}\right)^2.
+& = \left((1 - \frac{1}{2^{\mlen-1}} \left( \sum_{\mathbf{p} \in E} (-1)^{2(\mathbf{p} \cdot \mess)} \right)\right)^2 \\
+& = \left(1 - \frac{1}{2^{\mlen-1}} \left( \sum_{\mathbf{p} \in E} 1 \right) \right)^2 \\
+& = \left( 1 - \frac{\lvert E \rvert}{2^{\mlen-1}}\right)^2\\
+& = \left( 1 - \frac{\numerr}{2^{\mlen-1}}\right)^2.
 \end{align*}
 \end{proof}
-Interestingly, this formula shows that the quantum binary simplex decoding algorithm has $P_{succ} = 1$ if $k = 2^n$. In other words, if the quantum oracle is so noisy that it flips every single bit of the codeword, the decoding algorithm is still able to compute the correct message. This puzzled both the student and adviser on this thesis until we realized that flipping all of the bits leads to a \textit{global phase shift} in the quantum state post-query, which as was discussed in Chapter 1, is essentially an equivalent state. So, in this case the adage that \textit{it's so wrong it's right} holds true.
+Interestingly, this formula shows that the quantum binary simplex decoding algorithm has $P_{succ} = 1$ if $\numerr = 2^\mlen$. In other words, if the quantum oracle is so noisy that it flips all $2^\mlen$ bits of the codeword, the decoding algorithm is still able to compute the correct message. This puzzled both the student and adviser on this thesis until we realized that flipping all of the bits leads to a \textit{global phase shift} in the quantum state post-query, which as was discussed in Chapter 1, is essentially an equivalent state. So, in this case the adage that \textit{it's so wrong it's right} holds true.
 
 Additionally some features of the formula in theorem \ref{cool_thm}, 
-\begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code $\mathcal{S}_n$:
+\begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code with message length $\mlen$, $\simpl{\mlen}$:
 \begin{enumerate}
-\item Does not depend on the message $m$, and
-\item Does not depend on $E$, only $\lvert E \rvert$.
+\item Does not depend on the message $\mess$, and
+\item Does not depend on $E$, only $\lvert E \rvert = \numerr$.
 \end{enumerate} 
 \end{corollary}
 \begin{proof}
@@ -831,25 +835,25 @@ Corollary \ref{corollary} follows from the proof of Theorem \ref{cool_thm}.
 
 
 \chapter{Reed-Muller Codes}
-Reed-Muller codes are error-correcting codes with fascinating mathematical properties.  They are used in deep space communications to reliably transmit messages across space and time. Reed-Muller codes may be one of the oldest and most well-studied codes.
+Reed-Muller codes are error-correcting codes with fascinating mathematical properties.  They are used in deep space communications to reliably transmit messages across space and time. Reed-Muller codes may be one of the oldest and most well-studied codes; much of the material for this chapter can be found in \citep{macwilliamssloane}.
 
-While the binary simplex code (singular) only had one parameter, namely the block length, the Reed-Muller codes (plural) have two parameters. In fact, Reed-Muller codes are a generalization of the binary simplex code (also called the Walsh-Hadamard code) and are closely related to other important codes. They belong to the family of \textit{geometrical codes}, as evidenced by their close relationship with projective and Euclidean geometries (for which there is an appendix), and fortunately they are easier to decode than other geometrical codes. While they are used in some instances, such as for deep space communications, they have a smaller minimum distance than BCH (Bose-Chaudhuri-Hocquenghem) codes of the same block length.
+While the binary simplex code (singular) only had one parameter, namely the block length, the Reed-Muller codes (plural) have two parameters. In fact, Reed-Muller codes are a generalization of the binary simplex code (also called the Walsh-Hadamard code) and are closely related to other important codes. They belong to the family of \textit{geometric codes}, as evidenced by their close relationship with projective and Euclidean geometries (for which there is an appendix), and fortunately they are easier to decode than other geometrical codes. While they are used in some instances, such as for deep space communications, they have a smaller minimum distance than BCH (Bose-Chaudhuri-Hocquenghem) codes of the same block length \citep{macwilliamssloane}.
 
 
 \section{Boolean Functions}
-One interesting way to conceive of Reed-Muller (RM) codes is as polynomials of Boolean functions. Let the block length $N = 2^n$ for some $n\in \Z^+$. The input to a RM Boolean function will be $n$ variables taking binary values $v_1, \ldots, v_n \in \Z_2$. More precisely,
+One interesting way to conceive of Reed-Muller (RM) codes is as polynomials of Boolean functions. Let the block length $\clen = 2^\mlen$ for some $\mlen\in \Z^+$. The input to a RM Boolean function will be $\numin$ variables taking binary values $\inv{1}, \ldots, \inv{\numin} \in \Z_2$. More precisely,
 
-\begin{definition}(Boolean function) Any function $f: \Z_2^n \rightarrow \Z_2$ which takes $n$ binary input values $v_1, \ldots, v_n$ and outputs 0 or 1 is a Boolean function.
+\begin{definition}(Boolean function) Any function $f: \Z_2^\numin \rightarrow \Z_2$ which takes $\numin$ binary input values $\inv{1}, \ldots, \inv{\numin}$ and outputs 0 or 1 is a Boolean function.
 \end{definition}
 
-A Boolean function $f$ can be defined in terms of its truth table, that is, a simple enumeration of what $f$ evaluates to on all $2^n$ inputs.
+A Boolean function $f$ can be defined in terms of its truth table, that is, a simple enumeration of what $f$ evaluates to on all $2^\numin$ inputs.
 
 \begin{example}
-Suppose $N = 2^3$. Then, we may represent a Boolean function $f: \Z_2^3 \rightarrow \Z_2$ with its truth table. For example, we could define the following function.
+Suppose $\numin = 3$. Then, we may represent a Boolean function $f: \Z_2^3 \rightarrow \Z_2$ with its truth table. For example, we could define the following function.
 \begin{center}
 \begin{tabular}{ |c|c| } 
  \hline
-$ v_1v_2v_3$ &$f(v_1, v_2, v_3)$  \\ 
+$ \inv{1}\inv{2}\inv{3}$ &$f(\inv{1}, \inv{2}, \inv{3})$  \\ 
 \hline
 000 & 0  \\ 
 001 & 0 \\
@@ -864,27 +868,29 @@ $ v_1v_2v_3$ &$f(v_1, v_2, v_3)$  \\
 \end{center}
 Now, a more compact way of representing the same function above is by simply writing $f = 00011000$. 
 \end{example}
-All of the normal Boolean operations apply to Boolean functions, with the following modifications: $f \oplus g = f+g, f \land g = fg, $ and $\lnot f = 1 + f$. In particular, Boolean functions can be written as a polynomial of some particular functions which we will denote $v_1, v_2, \ldots v_n$. This notational overlap is not accidental, for $v_i$ is a function which simply evaluates to whatever the $i$-th bit of the input is. In general, we can write $v_i = (0^{2^{i-1}} 1^{2^{i-1}})^{2^{n-i}}$ where we use the computer science notation for concatenation as multiplication.
+All of the normal Boolean operations apply to Boolean functions, with the following modifications: $f \oplus g = f+g, f \land g = fg, $ and $\lnot f = 1 + f$. In particular, Boolean functions can be written as a polynomial of some particular functions which we will denote $\bv{1}, \bv{2}, \ldots \bv{\numin}$. This notational overlap is not accidental, for $\bv{i}$ is a function which simply evaluates to whatever the $i$-th bit of the input is. In general, we can write $\bv{i} = (0^{2^{i-1}} 1^{2^{i-1}})^{2^{\numin-i}}$ where we use the computer science notation for concatenation as multiplication.
 \begin{example}
-For $N=2^3$ again, then the following are the special functions $v_1, v_2, v_3$, which we will care about later,  written in the notation defined above :
+For $\numin = 3$ again, the following are the special functions $\bv{1}, \bv{2}, \bv{3}$, which we will care about later,  written in the notation defined above :
 \begin{align*}
-& v_1 = 01010101 \\
-& v_2 = 00110011\\
-&v_3 = 00001111
+& \bv{1} = 01010101 \\
+& \bv{2} = 00110011\\
+&\bv{3} = 00001111
 \end{align*}
 \end{example}
-We can write any Boolean function $f: \Z_2^n \rightarrow \Z_2$ as a polynomial of the special functions $v_1, \ldots v_n$ together with the constant function 1 (which always returns 1). 
+We can write any Boolean function $f: \Z_2^\numin \rightarrow \Z_2$ as a polynomial of the special functions $\bv{1}, \ldots \bv{\numin}$ together with the constant function \consto (which returns 1 on every input).  
 \section{Encoding}
-Now, consider how one might connect these Boolean functions to error-correcting codes. As was mentioned, any Boolean function can be represented as a polynomial of the functions $1, v_1, \ldots, v_n$. That polynomial has a coefficient vector $(a_1, \ldots, a_n)$, which we will suggestively call the message, and the output of the polynomial $c_1c_2 \ldots c_N$ which represents the codeword. 
+Now, consider how one might connect these Boolean functions to error-correcting codes. As was mentioned, any Boolean function can be represented as a polynomial of the functions $\consto, \bv{1}, \ldots, \bv{\numin}$. That polynomial has a coefficient vector $(\m{1}, \ldots, \m{\mlen})$, which we will suggestively call the message, and the output of the polynomial $\cwb{1}\cwb{2} \ldots \cwb{\clen}$ which represents the codeword (note that $\clen = 2^\mlen$). 
 
-\begin{definition} (Reed-Muller code) The $r$th order Reed-Muller code $\mathscr{R}(r,m)$ of length $n = 2^m$ , where $0 \leq r \leq m$, is the set of all vectors $f$ where $f(v_1, \ldots, v_m)$ is a Boolean function which is a polynomial of degree at most $r$.
+\begin{definition} (Reed-Muller code) The $\degrm$th order Reed-Muller code $\mathscr{R}(\degrm, \numin)$ of length $\mlen = 2^\lenrm$ , where $0 \leq \degrm \leq \lenrm$, is the set of all vectors $f$ where $f(\inv{1}, \ldots, \inv{\mlen})$ is a Boolean function which is a polynomial of degree at most $\degrm$.
 \end{definition}
 
 In other words, the $r$th order Reed-Muller code of length $2^m$ is the set of all linear combinations of products of $v_i$'s up to size $r$, i.e.
 \begin{equation} \label{reed_muller_poly}
 \sum_{\substack{S \subseteq [m] \\ \lvert S \rvert \leq r}} a_S \cdot \prod_{i \in S} v_i,  \quad a_S \in \Z_2.
 \end{equation}
-
+Moreover, the $\mathscr{R}(\degrm, \lenrm)$ has a basis of size
+\begin{equation}
+\end{equation}
 Hopefully a lengthy example will clarify this definition.
 \begin{example}
 The second order RM code of length 8, $\mathscr{R}(2,3)$ consists of the 128 codewords
