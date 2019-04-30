@@ -14,9 +14,9 @@
 % codeword length
 \newcommand{\clen}{\ensuremath{n}\xspace}
 % recieved codeword
-\newcommand{\rc}{\ensuremath{\mathbf{r}}\xspace}
+\newcommand{\rc}{\ensuremath{\mathbf{z}}\xspace}
 % recieved codeword bit
-\newcommand{\rcb}[1]{\ensuremath{r_{#1}}\xspace}
+\newcommand{\rcb}[1]{\ensuremath{z_{#1}}\xspace}
 % error vector
 \newcommand{\ev}{\ensuremath{\mathbf{e}}\xspace}
 % error vector bit
@@ -31,16 +31,25 @@
 %%%%%%% REED MULLER CODES
 %basis vector
 \newcommand{\bv}[1]{\ensuremath{\mathbf{v}_{#1}}\xspace}
+% negation of basis vector
+\newcommand{\nbv}[1]{\ensuremath{\overline{\mathbf{v}}_{#1}}\xspace}
 % degree of polynomial/RM code
 \newcommand{\degrm}{\ensuremath{r}\xspace}
 % m in RM code
-\newcommand{\lenrm}{\ensuremath{q}\xspace}
+\newcommand{\lenrm}{\ensuremath{N}\xspace}
 % input to function
 \newcommand{\inv}[1]{\ensuremath{v_{#1}}\xspace}
 %number of inputs into RM function
-\newcommand{\numin}{\ensuremath{g}\xspace}
+\newcommand{\numin}{\ensuremath{q}\xspace}
 % constant 1 function
 \newcommand{\consto}{\ensuremath{\mathbf{1}}\xspace}
+%valid exponents for RM
+\newcommand{\rmexp}{\ensuremath{\mathbb{J}}\xspace}
+%size of valid exp for RM
+\newcommand{\srmexp}{\ensuremath{J}\xspace}
+
+%%%%% FINITE GEOMETRIES
+\newcommand{\proj}[1]{\ensuremath{P}_{#1}\xspace}
 
 
 %%%%%%%% QUBITS
