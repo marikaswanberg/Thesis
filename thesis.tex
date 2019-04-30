@@ -1085,73 +1085,73 @@ So, these equations give us that $\m{12} =0 =0=1=0 $. These equations are \texti
 Now, the decoder will continue using this process to decode $\m{13}, \m{23}, \m{14}, $ and $\m{34}$. Once it has figured out those five bits, it will subtract $\m{34}\bv3\bv4 + \m{14}\bv1\bv4 + \m{23}\bv2\bv3 + \m{13}\bv1\bv3$ from $\rc$ and proceed with the algorithm to decode $m_0 \ldots m_4$. We will spare the reader these details, but that at least conveys the tedium involved in decoding. In the chapters that follow, we will explore a quantum way of decoding RM codes.
 
 \chapter{Quantum Multivariate Polynomial Interpolation}
-Before we dive into quantum decoding algorithms for Reed-Muller codes, we must understand the mechanisms behind such an algorithm. The contents of this chapter are largely taken from the recent work [CITE MULTIVARIATE AND OTHER INTERPOLATION PAPER]. In this chapter, we set up the general algorithm that we will later tailor to our Reed-Muller decoding problem. 
+Before we dive into quantum decoding algorithms for Reed-Muller codes, we must understand the mechanisms behind such an algorithm. The contents of this chapter are largely taken from the recent work in \citep{chen2018quantum} and \citep{childs2015optimal}. In this chapter, we set up the general algorithm that we will later tailor to our Reed-Muller decoding problem. 
 
-It is worth noting that the papers upon which this chapter is based ([CITE THEM]) is far more extensive than what will be covered here. In fact, their quantum polynomial interpolation algorithm is much more closely related to quantum cryptanalysis and a concept in cryptography called \textit{secret sharing}. Alas, this is not a cryptography thesis.
+It is worth noting that the papers upon which this chapter is based are far more extensive than what will be covered here. In fact, their quantum polynomial interpolation algorithm is much more closely related to quantum cryptanalysis and a concept in cryptography called \textit{secret sharing}. Alas, this is not a cryptography thesis.
 
 \section{The Problem Definition}
-Let $f(x_1, \ldots, x_n)\in \F_q[x_1, \ldots, x_n]$, that is, $f$ is a multivariate polynomial over the finite field of size $q$, and let $f$ be of degree $d$. Suppose an algorithm $\mathcal{A}$ has oracle access to $f$, and $d$ is known. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. In other words, $f$ must learn the coefficient vector of $f$.
+Let $f(\inv1, \ldots, \inv\numin)\in \F_\fsize[\inv1, \ldots, \inv\numin]$, that is, $f$ is a multivariate polynomial over the finite field of size $\fsize$, and let $f$ be of degree $\degrm$. Suppose an algorithm $\mathcal{A}$ has oracle access to $f$, and $\degrm$ is known. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. In other words, $f$ must learn the coefficient vector of $f$.
 
 The learning theory question that researchers then ask is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. 
 
-Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${n+d \choose d}$ queries, using a well-chosen system of linear equations.
+Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${\numin+\degrm \choose \degrm}$ queries, using a well-chosen system of linear equations.
 
 \section{Quantum Query Model}
-Much like phase kickback, queries to the oracle will be encoded in the phase of the response register. However, the algorithm will perform queries in the Fourier basis using a technique that is a generalization of the phase kickback trick. Moreover, the algorithm will make $k$ quantum queries in parallel to extract all of this information at once. These $k$ queries are chosen \textit{non-adaptively}, that is, the algorithm prepares the questions all at once.
+Much like phase kickback, queries to the oracle will be encoded in the phase of the response register. However, the algorithm will perform queries in the Fourier basis using a technique that is a generalization of the phase kickback trick. Moreover, the algorithm will make $\numq$ quantum queries in parallel to extract all of this information at once. These $\numq$ queries are chosen \textit{non-adaptively}, that is, the algorithm prepares the questions all at once.
 
 \subsection{Quantum Fourier Transform}
-Defining the quantum Fourier transform requires some background. First, it is a well-known fact that the order of any finite field can be written as a prime to some power. In other words, the finite field $\F_q$ has order $q = p^r$ where $p$ is prime. Now, define the trace function $T: \F_q \rightarrow \F_q$ by $z \mapsto z + z^p + z^{p^2} + \ldots + z^{p^{r-1}}$. Next, we will define the exponential function $E: \F_q \rightarrow \C$ by $E(z) = e^{i2\pi T(z)/p}$. Now we are ready to define the quantum Fourier transform (QFT).
+Defining the quantum Fourier transform requires some background. First, it is a well-known fact that the order of any finite field can be written as a prime to some power. In other words, the finite field $\F_\fsize$ has order $\fsize = p^w$ where $p$ is prime. Now, define the trace function $\tracef: \F_\fsize \rightarrow \F_\fsize$ by $x \mapsto x + x^p + x^{p^2} + \ldots + x^{p^{w-1}}$. Next, we will define the exponential function $\expf: \F_q \rightarrow \C$ by $\expf(x) = e^{i2\pi \tracef(x)/p}$. Now we are ready to define the quantum Fourier transform (QFT).
 
-\begin{definition}[QFT] The quantum Fourier transform over $\F_q$ is a unitary transformation acting as 
+\begin{definition}[QFT] The quantum Fourier transform over $\F_\fsize$ is a unitary transformation acting as 
 \begin{equation*}
-\ket{x} \longmapsto \frac{1}{\sqrt{q}} \sum_{y \in \F_q} E(xy) \ket{y}.
+\ket{x} \longmapsto \frac{1}{\sqrt{\fsize}} \sum_{y \in \F_\fsize} \expf(xy) \ket{y}.
 \end{equation*}
-The $k$-dimensional quantum Fourier transform is given by
+The $\numq$-dimensional quantum Fourier transform is given by
 \begin{equation*}
-\ket{x} \longmapsto \frac{1}{q^{k/2}} \sum_{y\in \F_q^k} E(x \cdot y) \ket{y}.
+\ket{x} \longmapsto \frac{1}{\fsize^{\numq/2}} \sum_{y\in \F_\fsize^\numq} \expf(x \cdot y) \ket{y}.
 \end{equation*}
 \end{definition}
 This will be key to the phase query algorithm.
 \subsection{Phase Query}
-The authors of [CITE] describe what they call a \textit{phase query}. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$), performing a query to oracle $\mathcal{O}$, and then doing a quantum Fourier transform (QFT) as follows
+The authors of \citep{childs2015optimal} and \citep{chen2018quantum} describe what they call a \textit{phase query}. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$), performing a query to oracle $\mathcal{O}_f$, and then doing a quantum Fourier transform (QFT) as follows
 \begin{align}
 \ket{x,y} 
-& \xrightarrow{QFT^{-1}} \frac{1}{\sqrt{q}} \sum_{z\in \F_q} E(-yz) \ket{x,z} \\
-& \xrightarrow{\mathcal{O}} \frac{1}{\sqrt{q}} \sum_{z \in \F_q} E(-yz) \ket{x, z + f(x)} \\
-& \xrightarrow{QFT} \frac{1}{q} \sum_{z,w \in \F_q} E(-yz + (z + f(x))w) \ket{x,w} \\
-& = E(yf(x)) \ket{x,y}.
+ \myrightarrow{QFT^{-1}} &\frac{1}{\sqrt{\fsize}} \sum_{z\in \F_\fsize} \expf(-yz) \ket{x,z} \\
+ \myrightarrow{\mathcal{O}_f} & \frac{1}{\sqrt{\fsize}} \sum_{z \in \F_\fsize} \expf(-yz) \ket{x, z + f(x)} \\
+ \myrightarrow{QFT} & \frac{1}{\fsize} \sum_{z,w \in \F_\fsize} \expf(-yz + (z + f(x))w) \ket{x,w} \\
+ & = \expf(yf(x)) \ket{x,y}.
 \end{align}
-So, overall the phase query has the following action $\ket{x,y} \mapsto E(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on one input $x \in \F_q$, we want to query it on $k$ inputs. So, we choose a subset of $\F_q^k$ on which to perform $k$ parallel queries, each in a separate register. For $x,y \in \F_q^k$, the $k$ parallel phase queries has the following action
+So, overall the phase query has the following action $\ket{x,y} \mapsto \expf(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on one input $x \in \F_\fsize$, we want to query it on $\numq$ inputs. So, we choose a subset of $\F_\fsize^\numq$ on which to perform $\numq$ parallel queries, each in a separate register. For $x,y \in \F_\fsize^\numq$, the $\numq$ parallel phase queries has the following action
 \begin{equation*}
-\ket{x,y} \longmapsto E\left(\sum_{i=1}^{k} y_i f(x_i) \right) \ket{x,y}
+\ket{x,y} \longmapsto \expf\left(\sum_{i=1}^{\numq} y_i f(x_i) \right) \ket{x,y}
 \end{equation*}
 where $x_i$ and $y_i$ are the $i$-th bits of $x$ and $y$, respectively.
 \section{More Preliminaries}
-Next, we define a mapping $Z: \F_q^{nk} \times \F_q^{k} \rightarrow \F_q^{J}$ by 
+Next, we define a mapping $Z: \F_\fsize^{\numin\numq} \times \F_\fsize^{\numq} \rightarrow \F_\fsize^{\srmexp}$ by 
 \begin{equation*}
-Z(x,y)_j = \sum_{i = 1}^k y_ix_i^j \quad \text{for }j \in \mathbb{J}
+Z(x,y)_j = \sum_{i = 1}^\numq y_ix_i^j \quad \text{for }j \in \mathbb{J}
 \end{equation*}
 so that
 \begin{equation*}
-Z(x,y) \cdot c = \sum_{i=1}^k y_i f(x_i)
+Z(x,y) \cdot \cw = \sum_{i=1}^\numq y_i f(x_i)
 \end{equation*}
-where $\mathbb{J}$ is the set of allowed exponents, and $J \coloneqq \lvert \mathbb{J} \rvert$.
+where $\rmexp$ is the set of allowed exponents, and $\srmexp \coloneqq \lvert \rmexp \rvert$.
 
-Now, we restrict the codomain of $Z$ so that it forms a bijection. Let $R_k \coloneqq Z(\F_q^{nk}, \F_q^k)$ be the image of $Z$. Now, for each $z \in R_k$, choose a unique $(x,y) \in \F_q^{nk} \times \F_q^{k}$ such that $Z(x,y) = z$. Call $T_k$ this set of unique representatives. Then, $Z: T_k \rightarrow R_k$ is a bijection.
+Now, we restrict the codomain of $Z$ so that it forms a bijection. Let $R_\numq \coloneqq Z(\F_\fsize^{\numin \numq}, \F_\fsize^\numq)$ be the image of $Z$. Now, for each $z \in R_\numq$, choose a unique $(x,y) \in \F_\fsize^{\numin \numq} \times \F_\fsize^{\numq}$ such that $Z(x,y) = z$. Call $T_\numq$ this set of unique representatives. Then, $Z: T_\numq \rightarrow R_\numq$ is a bijection.
 
 \section{The Algorithm}
-The algorithm has three steps. It starts in a superposition over $T_k$. First, it performs $k$ phase queries (denoted $k$-$\mathcal{PQ}$), then it simply computes $Z$ in place. Finally, we measure in the Fourier basis to get an approximation of the coefficients. More precisely,
+The algorithm has three steps. It starts in a superposition over $T_\numq$. First, it performs $\numq$ phase queries (denoted $\numq$-$\mathcal{PQ}$), then it simply computes $Z$ in place. Finally, we measure in the Fourier basis to get an approximation of the coefficients. More precisely,
 
 \begin{align*}
-\frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} \ket{x,y} 
-& \xmapsto{k\text{-}\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y)\in T_k} E(Z(x,y) \cdot c) \ket{x,y} \\
-& \xmapsto{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z\in R_k} E(z \cdot c) \ket{z}. 
+\frac{1}{\sqrt{\lvert T_\numq \rvert}} \sum_{(x,y)\in T_\numq} \ket{x,y} 
+& \myrightarrow{\numq\text{-}\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_\numq \rvert}} \sum_{(x,y)\in T_\numq} \expf(Z(x,y) \cdot m) \ket{x,y} \\
+& \myrightarrow{Z} \frac{1}{\sqrt{\lvert R_\numq \rvert}} \sum_{z\in R_\numq} \expf(z \cdot m) \ket{z}. 
 \end{align*}
-Measuring in the basis of Fourier states defined as follows
+Measuring in the basis of Fourier states (defined below)
 \begin{equation*}
-\ket{\hat{c}} \coloneqq \frac{1}{\sqrt{q^J}} \sum_{z \in \F_q^J} E(z \cdot c) \ket{z},
+\ket{\hat{m}} \coloneqq \frac{1}{\sqrt{\fsize^\srmexp}} \sum_{z \in \F_\fsize^\srmexp} \expf(z \cdot m) \ket{z},
 \end{equation*}
-where $c$ are the computational basis states, results in the correct vector of coefficients with probability $\lvert R_k \rvert / q^J$.
+where $m$ are the computational basis states, results in the correct vector of coefficients with probability $\lvert R_\numq \rvert / \fsize^\srmexp$.
 
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
