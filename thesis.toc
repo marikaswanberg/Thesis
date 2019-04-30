@@ -51,12 +51,15 @@
 \contentsline {section}{\numberline {6.4}The Algorithm}{42}
 \contentsline {chapter}{Chapter 7: Quantum Decoding Algorithm for Reed-Muller Codes}{43}
 \contentsline {section}{\numberline {7.1}Polynomial : Coefficient Vector :: Codeword : Message}{43}
-\contentsline {subsection}{\numberline {7.1.1}Adapting Polynomial Interpolation}{44}
+\contentsline {subsection}{\numberline {7.1.1}Adapting Polynomial Interpolation}{43}
 \contentsline {subsection}{\numberline {7.1.2}The Algorithm}{45}
 \contentsline {section}{\numberline {7.2}Two Types of Noisy Oracles}{46}
 \contentsline {subsection}{\numberline {7.2.1}Connection to Message Transmission}{46}
 \contentsline {chapter}{Conclusion}{47}
 \contentsline {section}{\numberline {8.1}Further Work}{47}
 \contentsline {chapter}{Appendix A: Finite Geometries}{49}
-\contentsline {chapter}{Bibliography}{51}
-\contentsline {chapter}{Index}{53}
+\contentsline {chapter}{Appendix B: Notation Guide}{51}
+\contentsline {subsection}{\numberline {B.0.1}Notation for Code Theory}{51}
+\contentsline {subsection}{\numberline {B.0.2}Notation for Reed-Muller Codes}{52}
+\contentsline {subsection}{\numberline {B.0.3}Notation for Polynomial Interpolation}{52}
+\contentsline {chapter}{Bibliography}{53}

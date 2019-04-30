@@ -1159,17 +1159,17 @@ where $m$ are the computational basis states, results in the correct vector of c
 In this chapter, we explore the possibility of using the quantum polynomial interpolation algorithm to decode Reed-Muller codes. The decoder will have oracle access to the received codeword $f_c$ and, through a well-chosen series of queries and computations, will need to output the correct message $m$. The task of this chapter is to yet again reframe the Reed-Muller decoding algorithm. This time, instead of thinking about decoding in terms of finite geometries, we will explain it in terms of polynomial interpolation. Furthermore, the algorithm described in the previous chapter will be tailored to the task of decoding.
  
 \section{Polynomial : Coefficient Vector :: Codeword : Message}
-As was previously discussed, we can view codewords in $\mathscr{R}(r,m)$ as multivariate polynomials of degree at most $r$ with coefficients in the field $\F_2$. The polynomials have the following form:
-\begin{equation*}
-f_c = \sum_{\substack{S \subseteq [m] \\ \lvert S \rvert \leq r}} a_S \cdot \prod_{i \in S} v_i,  \quad a_S \in \Z_2.
-\end{equation*}
-where $f_c$ is the $\mathscr{R}(r,m)$ codeword that corresponds to message $a$. So, by applying the polynomial interpolation algorithm to $f_c$, we should be able to extract $a$. 
+As was previously discussed, we can view codewords in $\mathscr{R}(\degrm, \numin)$ as multivariate polynomials of degree at most $\degrm$ with coefficients in the field $\F_2$. The polynomials have the following form:
+\begin{equation}
+f_\cw = \sum_{\bv{\sigma} \in \rmexp} \m{\sigma} \bv{\sigma} .
+\end{equation}
+where $f_\cw$ is the $\mathscr{R}(\degrm,\numin)$ codeword that corresponds to message $\mess$. So, by applying the polynomial interpolation algorithm to $f_\cw$, we should be able to extract $\mess$. 
 
 
 \subsection{Adapting Polynomial Interpolation}
 A lot of nice things happen when we adapt the polynomial interpolation algorithm to our use case. For one, the notation gets substantially less painful to look at. More importantly, many components of the algorithm become simpler.
 
-First, the polynomials in $\mathscr{R}(r,m)$ are over the field $\F_2$. So, the order of the field is simply 2 and the trace function defined earlier $T:\F_2 \rightarrow \F_2$ defined by $z \mapsto z + z^p + z^{p^2} + \ldots + z^{p^{r-1}}$ is just the identity transformation. This simplifies the quantum Fourier transform. The function $E: \F_2 \rightarrow \C$ is now defined by $z \longmapsto e^{i\pi z}$.
+First, the polynomials in $\mathscr{R}(\degrm,\numin)$ are over the field $\F_2$. So, the order of the field is simply 2 and the trace function defined earlier $\tracef:\F_2 \rightarrow \F_2$ defined by $x \mapsto x + x^p + x^{p^2} + \ldots + x^{p^{\fsize-1}}$ is just the identity transformation. This simplifies the quantum Fourier transform. The function $\expf: \F_2 \rightarrow \C$ is now defined by $x \longmapsto e^{i\pi x}$.
 
  
 \begin{theorem} The quantum Fourier transform over $\F_2$ is just the Hadamard transform.
@@ -1178,13 +1178,13 @@ First, the polynomials in $\mathscr{R}(r,m)$ are over the field $\F_2$. So, the 
 \begin{proof}
 The QFT acts on a state $\ket{x}$, $x\in \F_2$, as follows
 \begin{equation*}
-\ket{x}  \longmapsto \frac{1}{\sqrt{2}}\sum_{y\in \F_2} E(xy)\ket{y}
+\ket{x}  \longmapsto \frac{1}{\sqrt{2}}\sum_{y\in \F_2} \expf(xy)\ket{y}
 =  \frac{1}{\sqrt{2}}\sum_{y\in \F_2} e^{i\pi xy}\ket{y}.
 \end{equation*}
 But, since $x,y \in \F_2$, this is just the transformation
 \begin{align*}
 \ket{x}  \longmapsto 
-&\frac{1}{\sqrt{2}}\bigg( E(x\cdot 0)\ket{0} + E(x\cdot 1)\ket{1} \bigg) \\
+&\frac{1}{\sqrt{2}}\bigg( \expf(x\cdot 0)\ket{0} + \expf(x\cdot 1)\ket{1} \bigg) \\
  = &  \frac{1}{\sqrt{2}}\bigg( e^{i\pi x\cdot 0}\ket{0} + e^{i\pi x\cdot 1}\ket{1} \bigg) \\
  = & \frac{1}{\sqrt{2}}\bigg( 1\ket{0} + e^{i\pi x}\ket{1} \bigg) \\
  = & \frac{1}{\sqrt{2}}\bigg( 1\ket{0} + (-1)^x\ket{1} \bigg). 
@@ -1192,12 +1192,12 @@ But, since $x,y \in \F_2$, this is just the transformation
 This is the Hadamard transform. \\
 \end{proof}
 
-This simplifies the phase query. In the previous chapter we showed that the phase query has the following action $\ket{x,y} \mapsto E(yf(x))\ket{x,y}$. Given the simplified definition of QFT and $E$, we have that the phase query ($\mathcal{PQ}$) in $\F_2$ has the action
+This simplifies the phase query. In the previous chapter we showed that the phase query has the following action $\ket{x,y} \mapsto \expf(yf(x))\ket{x,y}$. Given the simplified definition of the QFT and $\expf$, we have that the phase query ($\mathcal{PQ}$) in $\F_2$ has the action
 \begin{equation}
 \ket{x,y} \xrightarrow{\mathcal{PQ}} (-1)^{yf(x)} \ket{x,y}.
 \end{equation}
 
-Now, the only thing left to inspect is the mapping $Z: T_k \rightarrow R_k$ where $T_k \subseteq \F_2^{nk} \times \F_2^k$ and $R_k \subseteq \F_2^J$. In this mapping, the coordinate $(x,y) \in T_k$ is comprised of the query register ($x$) and response register ($y$). Each pair is a set of $k$ queries to the oracle and the corresponding results from the oracle of the $k$ queries. In other words, we have that
+Now, the only thing left to inspect is the mapping $Z: T_\numq \rightarrow R_\numq$ where $T_\numq \subseteq \F_2^{\numin \numq} \times \F_2^\numq$ and $R_\numq \subseteq \F_2^\srmexp$. In this mapping, the coordinate $(x,y) \in T_k$ is comprised of the query register ($x$) and response register ($y$). Each pair is a set of $\numq$ queries to the oracle and the corresponding results from the oracle of the $\numq$ queries. In other words, we have that
 
 \begin{equation*}
 (x, y) =
@@ -1205,28 +1205,31 @@ Now, the only thing left to inspect is the mapping $Z: T_k \rightarrow R_k$ wher
 x_1 & \mathcal{O}_f(x_1) \\
 x_2 & \mathcal{O}_f(x_2)\\
 \vdots & \vdots \\
-x_k & \mathcal{O}_f(x_1)
+x_\numq & \mathcal{O}_f(x_\numq)
 \end{bmatrix}.
 \end{equation*}
 Now,  we may have that the response register $y$ stores $r \oplus \mathcal{O}_f(x_i)$  where $r$ is whatever was in the register prior to the query; these details are omitted because they yield equivalent definitions of $Z$.
 
-The thing which $Z$ computes is fundamentally difficult. The question that $Z$ answers is: \textit{Given $k$ pairs of query inputs and query outputs, which polynomial is most likely?}. This problem is, in many ways, more difficult than plain polynomial interpolation. In order to even define $Z$, one must decide how it should behave given every possible $k$-set of input queries and all possible responses from the oracle. The one guarantee on $Z$ is that it computes the results in place without any oracle access. Since this thesis is concerned with quantum query complexity, we may leave $Z$ undefined with the understanding that the exact implementation of $Z$ will not affect the query complexity of the algorithm.
+The thing which $Z$ computes is fundamentally difficult. The question that $Z$ answers is: \textit{Given $\numq$ pairs of query inputs and query outputs, which polynomial is most likely?}. This problem is, in many ways, more difficult than plain polynomial interpolation. In order to even define $Z$, one must decide how it should behave given every possible $\numq$-set of input queries and all possible responses from the oracle. The one guarantee on $Z$ is that it computes the results in place without any oracle access. Since this thesis is concerned with quantum query complexity, we may leave $Z$ undefined with the understanding that the exact implementation of $Z$ will not affect the query complexity of the algorithm.
 
 \subsection{The Algorithm}
-We begin in a superposition over $T_k$, make $k$ parallel phase queries, compute $Z$ in place, and then instead of  measuring in the Fourier basis, we will take the Hadamard and measure in the computational basis. More precisely,
+We begin in a superposition over $T_\numq$, make $\numq$ parallel phase queries, compute $Z$ in place, and then instead of  measuring in the Fourier basis, we will take the Hadamard and measure in the computational basis. More precisely,
 
 \begin{align*}
-\frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k} \ket{x,y}
-& \xrightarrow{k-\mathcal{PQ}} \frac{1}{\sqrt{\lvert T_k \rvert}} \sum_{(x,y) \in T_k}  (-1)^{Z(x,y) \cdot c} \ket{x,y} \\
-& \xrightarrow{Z} \frac{1}{\sqrt{\lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z\cdot c} \ket{z} \\
-& \xrightarrow{H^{\otimes n}} \frac{1}{\sqrt{2^n \lvert R_k \rvert}} \sum_{z \in R_k} (-1)^{z \cdot c} \sum_{j \in \Z_2^n} (-1)^{z \cdot j} \ket{j} \\
-& = \frac{1}{\sqrt{2^n \lvert R_k \rvert}}  \sum_{z \in R_k} \sum_{j \in \Z_2^n}(-1)^{z(c + j)}\ket{j}. \\
+\frac{1}{\sqrt{\lvert T_\numq \rvert}} \sum_{(x,y) \in T_\numq} \ket{x,y}
+ \myrightarrow{\numq-\mathcal{PQ}} 
+ & \frac{1}{\sqrt{\lvert T_\numq \rvert}} \sum_{(x,y) \in T_\numq}  (-1)^{Z(x,y) \cdot m} \ket{x,y} \\
+ \myrightarrow{Z}
+ & \frac{1}{\sqrt{\lvert R_\numq \rvert}} \sum_{z \in R_\numq} (-1)^{z\cdot m} \ket{z} \\
+\myrightarrow{H^{\otimes \numin}}
+& \frac{1}{\sqrt{2^\numin \lvert R_\numq \rvert}} \sum_{z \in R_\numq} (-1)^{z \cdot m} \sum_{j \in \Z_2^\numin} (-1)^{z \cdot j} \ket{j} \\
+ = &\frac{1}{\sqrt{2^\numin \lvert R_\numq \rvert}}  \sum_{z \in R_\numq} \sum_{j \in \Z_2^\numin}(-1)^{z(m + j)}\ket{j}. \\
 \end{align*}
-Now, measuring in the computational basis, we measure $\ket{c}$ with probability 
+Now, measuring in the computational basis, we measure $\ket{m}$ with probability 
 \begin{equation*}
-\bigg(\frac{\lvert R_k \rvert}{\sqrt{2^n \lvert R_k \rvert}}\bigg )^2 = \bigg (\sqrt{\frac{\lvert R_k \rvert}{2^n}} \bigg)^2 = \frac{\lvert R_k \rvert}{2^n}
+\bigg(\frac{\lvert R_\numq \rvert}{\sqrt{2^\numin \lvert R_\numq \rvert}}\bigg )^2 = \bigg (\sqrt{\frac{\lvert R_\numq \rvert}{2^\numin}} \bigg)^2 = \frac{\lvert R_\numq \rvert}{2^\numin}
 \end{equation*}
-So, for $k$ queries, $P_{succ} = \lvert R_k \rvert /2^n$ for Reed-Muller decoding.
+So, for $\numq$ queries, $P_{succ} = \lvert R_\numq \rvert /2^\numin$ for decoding $\mathscr{R}(\degrm, \numin)$.
 \section{Two Types of Noisy Oracles}
 One may wonder how the probability of success of the above algorithm is affected by an unreliable oracle, which is similar to the question that we answered about the binary simplex code. In the case of the simplex code, the algorithm only required one quantum query, but this algorithm makes $k$ quantum queries. After some thought about noise models, two kinds of unreliable or noisy oracles arise: one which we will call stateful or self-consistent and one which we call stateless or contradictory.
 
@@ -1257,7 +1260,7 @@ Many questions arose during the course of the year. Some of them yielded satisfa
 \section{Further Work}
 In this thesis we presented the idea of algorithmic robustness to noisy quantum oracles. That is, for a given quantum algorithm $\mathcal{A}$ which relies on quantum queries to oracle $\mathcal{O}$, what is $P_{succ}$ of the algorithm if the oracle is replaced with a noisy oracle $\widehat{\mathcal{O}}$?
 
-We were able to answer this question for the binary simplex decoding algorithm if we had a specific known error rate $(k/2^n)$ for the noisy oracle. This topic could be generalized by considering the probability of success given that the noise added to the oracle \emph{follows some particular distribution}. This is more realistic because it is unlikely that one would know the exact number of errors that occurred in the query process. 
+We were able to answer this question for the binary simplex decoding algorithm for simplex code of length $\mlen$, \simpl{\mlen}, if we had a specific known error rate $(\numerr/2^\mlen )$ for the noisy oracle. This topic could be generalized by considering the probability of success given that the noise added to the oracle \emph{follows some particular distribution}. This is more realistic because it is unlikely that one would know the exact number of errors that occurred in the query process. 
 
 A second way to expand upon this thesis is to answer questions about robustness to noisy oracles of a \emph{wide variety} of algorithms. For example, Grover's search algorithm \citep{grover1996fast} seems particularly suited for this line of inquiry. 
 
@@ -1305,6 +1308,67 @@ A \textit{hyperplane} of subspace of dimension $m-1$ in $PG(m,q)$ consists of th
 \end{equation*}
 
 The affine or projective geometry $EG(m,q)$ is obtained from $PG(m,q)$ by deleting the points of any hyperplane $H$. A subspace of $EG(m,q)$ of dimension $r$ is called an \textit{$r$-flat}. 
+
+\chapter{Notation Guide}
+It is an understatement to say that this thesis is \emph{notationally rich}. I have done my best to combine notations from three fields of computer science theory, two major textbooks on the subjects, and a dozen papers while resolving collisions. Undoubtedly, there were compromises. For the benefit of the reader, a description of all fixed variables are described below. One hopes that the reader will identify dummy variables and other notational conventions from context and good judgment. 
+
+\subsection{Notation for Code Theory}
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+Notation & Usage \\
+\hline 
+\mess & Message \\
+\m{i} & $i$-th bit of message \\
+\mlen & Message length \\
+\cw & Codeword \\
+\cwb{i} & $i$-th bit of codeword \\
+\clen & Codeword length \\
+\rc & Recieved codeword \\
+\rcb{i} & $i$-th bit of received codeword \\
+\ev & Error vector \\
+\evb{i} & $i$-th bit of error vector \\
+\mhat & Nearest message \\
+\mindist & Minimum distance \\
+\numerr & Number of errors in received codeword \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Notation for Reed-Muller Codes}
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+Notation & Usage \\
+\hline 
+\degrm & Degree of Reed-Muller code\\
+\lenrm & Length of Reed-Muller code ($\lenrm = 2^\numin$) \\
+\numin & Number of inputs to vectors in RM code \\
+\inv{i} & $i$-th input to $f$ in RM code \\
+\bv{i} & Basis vector $i$ (``special'' function) \\
+\nbv{i} & Negation of basis vector $i$ \\
+\consto & Constant unit function \\
+\rmexp & Set of valid monomials for codewords in $\mathscr{R}(\degrm, \numin)$ and \consto \\
+\srmexp & $\lvert \rmexp \rvert$ \\
+\hline
+\end{tabular}
+\end{center}
+
+\subsection{Notation for Polynomial Interpolation}
+
+\begin{center}
+\begin{tabular}{|c|l|}
+\hline
+Notation & Usage \\
+\hline 
+\fsize & Size of field $\F_\fsize$ that polynomial's coefficients come from \\
+\numq & Number of queries to oracle in interpolation algorithm \\
+\tracef & Trace function defined in chapter 6 \\
+\expf & Exponential function defined in chapter 6 \\
+\hline
+\end{tabular}
+\end{center}
+
 %This is where endnotes are supposed to go, if you have them.
 %I have no idea how endnotes work with LaTeX.
 
@@ -1327,5 +1391,5 @@ The affine or projective geometry $EG(m,q)$ is obtained from $PG(m,q)$ by deleti
  %\printbibliography[heading=bibintoc]
 
 % Finally, an index would go here... but it is also optional.
-\printindex
+
 \end{document}
