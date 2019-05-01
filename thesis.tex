@@ -1123,7 +1123,7 @@ The authors of \citep{childs2015optimal} and \citep{chen2018quantum} describe wh
  \myrightarrow{QFT} & \frac{1}{\fsize} \sum_{z,w \in \F_\fsize} \expf(-yz + (z + f(x))w) \ket{x,w} \\
  & = \expf(yf(x)) \ket{x,y}.
 \end{align}
-So, overall the phase query has the following action $\ket{x,y} \mapsto \expf(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on one input $x \in \F_\fsize$, we want to query it on $\numq$ inputs. So, we choose a subset of $\F_\fsize^\numq$ on which to perform $\numq$ parallel queries, each in a separate register. For $x,y \in \F_\fsize^\numq$, the $\numq$ parallel phase queries has the following action
+So, overall the phase query has the following action $\ket{x,y} \mapsto \expf(yf(x)) \ket{x,y}$. Now, instead of just querying $f$ on one input $x \in \F_\fsize$, we want to query it on $\numq$ inputs. So, we choose a subset of $\F_\fsize^\numq$ on which to perform $\numq$ parallel queries, each in a separate register. For $x \in \F_\fsize^{\numin\numq}$ and $y \in \F_\fsize^\numq$, the $\numq$ parallel phase queries has the following action
 \begin{equation*}
 \ket{x,y} \longmapsto \expf\left(\sum_{i=1}^{\numq} y_i f(x_i) \right) \ket{x,y}
 \end{equation*}
