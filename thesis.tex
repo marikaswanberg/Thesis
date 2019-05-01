@@ -423,7 +423,7 @@ This computation looks a mess for the beginner, so let's try to make sense of it
 Now, suppose $j=a$ (note that $(-1)^{2k} = 1~\forall k \in \Z$). Then, from \ref{equals_a} we have
 \begin{align*}
 \frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{i \cdot (2a)}  \ket{a} 
-& = \frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{2(i \cdot a)}  \ket{a} \\
+& = \frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{(i \cdot \mathbf{0})}  \ket{a} \\
 & = \frac{1}{2^n}  \sum_{i \in \Z_2^n} 1 \ket{a}  \\
 & = \ket{a}.
 \end{align*}
@@ -1303,11 +1303,7 @@ A \textit{hyperplane} $H$ is a maximal proper subspace, so that $\Omega$ is the 
 A set $T$ of points in a projective or affine geometry is called \textit{independent} if, for every $x \in T, x$ does not belong to the smallest subspace which contains $T/\{x\}$. The \textit{dimension} of a subspace $S$ is $r-1$, where $r$ is the size of the largest set of independent points in $S$. In particular, if $S = \Omega$ this defines the dimension of the projective geometry.
 \end{definition}
 
-We denote Euclidean and projective geometries of dimension $m$ constructed from a finite field $GF(q)$
-USE FQ NOTATION
-SUBSTANTIATE 
-
- by $EG(m,q)$ and $PG(m,q)$, respectively. Now, we will discuss the projective and affine geometries that are obtained from finite fields, as they are most pertinent to Reed-Muller codes.
+We denote Euclidean and projective geometries of dimension $m$ constructed from a finite field $GF(q)$ by $EG(m,q)$ and $PG(m,q)$, respectively. Now, we will discuss the projective and affine geometries that are obtained from finite fields, as they are most pertinent to Reed-Muller codes. (See \citep{macwilliamssloane} Appendix B for more information)
 
 Let $GF(q)$ be a finite field and suppose $m \geq 2$. We will take the points of $\Omega$ to be the nonzero $(m+1)$-tuples in $GF(q)^{m+1}$ such that
 \begin{equation*}
