@@ -325,7 +325,7 @@ As promised, a more precise definition of the Hadamard transform follows. Note t
 
 \begin{definition}[Hadamard Transform] The $n$-qubit Hadamard transform, $H^{\otimes n}$ acts on a basis state $\ket{k}$ as follows:
 \begin{equation*}
-H^{\otimes n} \ket{k} = \frac{1}{\sqrt{2^n}} \sum_{j \in \{0,1\}^n} (-1)^{k \cdot j} \ket{j}.
+H^{\otimes n} \ket{k} = \frac{1}{\sqrt{2^n}} \sum_{j \in \Z_2^n} (-1)^{k \cdot j} \ket{j}.
 \end{equation*}
 \end{definition}
 Upon first glance, this formula is quite uninviting, so I will provide a quick guide for some common states. 
@@ -368,7 +368,7 @@ Classical oracles are used throughout computer science theory to abstract comput
 \subsection{Quantum Queries}
 First, consider the action of the query. Suppose the function operates on the following spaces $f: \Z_2^n \rightarrow \Z_2^m$, and oracle $\mathcal{O}_f$ computes $f$. Clearly, if $n \neq m$, this function could not possibly be bijective. In order to ensure the reversibility of queries to $\mathcal{O}_f$, we must maintain two registers: a query register, and a response register. The query register contains the input $x$ on which we wish to query the oracle and remains unchanged by the query. The response register is initialized to some known basis state $\ket{r} \in \Z_2^m$. After the quantum query takes place, the oracle records the response by taking the bitwise exclusive OR, or addition modulo two of $f(x)$ and $r$. Thus, the response register has the post-query state $\ket{r\oplus f(x)}$. 
 
-\begin{definition}[Quantum Oracle Query] Let $f: \Z_2^n \rightarrow \Z_2^m$ be a function. Then, the quantum oracle $\mathcal{O}_f : \Z_2^n \times \Z_2^m \rightarrow \Z_2^n \times \Z_2^m$ that computes $f$ has the following action on the query and response registers 
+\begin{definition}[Quantum Oracle Query] Let $f: \Z_2^n \rightarrow \Z_2^m$ be a function. Then, the quantum oracle $\mathcal{O}_f : \Z_2^n \otimes \Z_2^m \rightarrow \Z_2^n \otimes \Z_2^m$ that computes $f$ has the following action on the query and response registers 
 \begin{equation*}
 \mathcal{O}_f : \ket{x, r} \rightarrow \ket{x, r \oplus f(x)}.
 \end{equation*}
@@ -381,7 +381,7 @@ Then, we need to append an $m$-qubit response register to each query register $\
 \begin{equation*}
 \sum_{\substack{s \in S \\ r_s \in \Z_2^m}} \alpha_s \ket{s, r_s} .
 \end{equation*}
-Then, the query $\mathcal{O}_f:  \Z_2^n \times \Z_2^m \rightarrow \Z_2^n \times \Z_2^m$ produces the following unitary transformation
+Then, the query $\mathcal{O}_f:  \Z_2^n \otimes \Z_2^m \rightarrow \Z_2^n \otimes \Z_2^m$ produces the following unitary transformation
 \begin{equation*}
 \sum_{\substack{s \in S \\ r_s \in \Z_2^m}} \alpha_s \ket{s, r_s}  \xrightarrow{\mathcal{O}_f} \sum_{\substack{s \in S \\ r_s \in \Z_2^m}} \alpha_s \ket{s, r_s \oplus f(s)}.
 \end{equation*}
@@ -550,7 +550,7 @@ P = [A \mid I_{\clen-\mlen}]
 \end{equation*}
 where $A$ is some fixed $(\clen-\mlen) \times \mlen$ binary matrix and $I_{\clen-\mlen}$ is the identity matrix of size $(\clen-\mlen)$.
 \end{definition}
-A code $\mathscr{C}\subset \Z_2^\clen$ is simply the set of all codewords $\cw$ that satisfy the equation $P\cw^{\bot} = 0$. In other words, $\mathscr{C} = \{c\in \Z_2^n \mid P\mathbf{c}^{tr} = 0\}$.
+A code $\mathscr{C}\subset \Z_2^\clen$ is simply the set of all codewords $\cw$ that satisfy the equation $P\cw^{\bot} = 0$. In other words, $\mathscr{C} = \{c\in \Z_2^n \mid P\mathbf{c}^{\bot} = 0\}$.
 \begin{example} \label{P_ex} Suppose our parity check matrix is
 \begin{equation*}
 P = 
@@ -603,7 +603,7 @@ G =
 \section{Decoding}
 As we discussed earlier, the channel will (term-wise) add some unknown error vector $\ev=\evb{1} \ldots \evb{\clen}$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $\rc = \mess + \ev \pmod 2$. 
 
-The decoder has a significantly harder job than the encoder. Namely, it must take this noisy codeword $r$ and return the message $m$ that produced the vector. Any given decoding algorithm will not always be successful; sometimes there will be so many errors in a given received codeword that it is impossible to parse which message was sent. That said, some decoding algorithms are more effective than others, and this distinction comes down to the properties of the code $\mathscr{C}$.
+The decoder has a significantly harder job than the encoder. Namely, it must take this noisy codeword $\rc$ and return the message $\mess$ that produced the vector. Any given decoding algorithm will not always be successful; sometimes there will be so many errors in a given received codeword that it is impossible to parse which message was sent. That said, some decoding algorithms are more effective than others, and this distinction comes down to the properties of the code $\mathscr{C}$.
 
 \subsection{Properties of Vectors}
 
@@ -669,7 +669,7 @@ P_{succ}[\mathcal{A}] = P[\mathcal{A}(\mess G + \ev) = \mess]
 where $wt(\ev) = \numerr$.
 \end{definition}
 
-
+We will study this property of the binary simplex code and prove some interesting results about it in chapter 4.
 
 \chapter{Learning Theory}
 
@@ -719,26 +719,6 @@ Thus, $\cw = 00110011$ for that message.
 \end{example}
 Now, the computer scientists reading this will notice that the length of the encoding of a message is exponential in the length of the message, i.e.~a message of length $\mlen$ has a codeword of length $2^\mlen$. This is far from an ideal representation of information. Indeed, the codeword for a 256-bit message would be $2^{253}$ bytes long, which is so large that our units of storage do not go that high. For some perspective, the largest unit of storage I could find is the yottabyte, or $2^{80}$ bytes, or one trillion terabytes. The length of the codeword, $2^{253}$ bytes, is far more information than could possibly be stored in the observable universe even if each bit were represented by a single atom. Clearly, this scheme is not ideal for long messages, but in the spirit of conducting unfettered computer science theory research, we will ignore this fact. 
 
-\subsection{Generating Matrix}
-Another way of encoding messages with the binary simplex code is to use a generating matrix. Recall the Hadamard matrix.
-\begin{equation*}
-H = \hadamard
-\end{equation*}
-Now, we will define a similar matrix transformation that is, in fact, the generating matrix for the binary simplex code.
-\begin{equation} \label{2_simplex}
-S = 
-\frac{1}{\sqrt{2}}
-\begin{bmatrix}
-0 & 0 \\
-0 & 1
-\end{bmatrix}
-\end{equation}
-Note that the terms of $S$ are equivalent to the terms of $H$ with the following bijection: $h_{ij} = (-1)^{s_{ij}}$ (where $h_{ij}$ is the term of $H$ in row $i$ column $j$). This property is essential to the quantum decoding algorithm.
-
-Now, to create the generating matrix for a simplex code of length $\mlen = 2^N$ for some $N \in \Z_{>0}$, simply take $N$ tensor products of matrix \ref{2_simplex}, or $S^{\otimes N}$.
-\begin{remark}
-For the geometers among you, you will be pleased to know that the codewords of the binary simplex code do, in fact, lie on the vertices of an $\clen$-dimensional regular simplex as the name would suggest.
-\end{remark}
 \section{Quantum Decoding Algorithm}
 The quantum decoding algorithm for the simplex code is very pleasing. The Bernstein-Vazirani algorithm is the essence of the algorithm. In this version of the algorithm, we will assume that no errors occurred during the transmission of the codeword; later, we will analyze the performance of the algorithm with errors.
 \subsection{Reliable Quantum Oracle}
@@ -795,7 +775,10 @@ The reliable oracle is defined above. Now, we will define the unreliable, or noi
 \end{equation*}
 where $\delta_E$ is simply an indicator function on the set $E$. In other words, if $\mathbf{i} \notin E$ then the oracle $\widehat{\mathcal{O}}_\mess$ returns the $i$-th bit of the codeword associated with $\mess$ properly in the form $(-1)^{\mess \cdot \mathbf{i}}$. On the other hand, if $\mathbf{i} \in E$, the oracle returns $-(-1)^{\mess\cdot \mathbf{i}}$, which is the $i$-th bit of the codeword flipped.
 \subsection{Algorithm with Noisy Oracle}
-\begin{theorem} \label{cool_thm}(Swanberg and Pommersheim) The Bernstein-Vazirani quantum decoding algorithm for the binary simplex code $\mathcal{S}_\mlen$ has probability of success
+
+To the best of my knowledge, this is the first analysis of its kind. Given a fixed number of errors from the noisy oracle, I was able to compute the probability of success for the Bernstein-Vazirani algorithm (with an unreliable oracle) on the binary simplex code. I also state some corollaries that follow directly from the proof of the following theorem.
+
+\begin{theorem} \label{cool_thm} The Bernstein-Vazirani quantum decoding algorithm for the binary simplex code $\mathcal{S}_\mlen$ has probability of success
 \begin{equation*}
 P_{succ} = \left(1 - \frac{\numerr}{2^{\mlen-1}}\right)^2
 \end{equation*}
@@ -822,17 +805,19 @@ P_{succ}
 \end{proof}
 Interestingly, this formula shows that the quantum binary simplex decoding algorithm has $P_{succ} = 1$ if $\numerr = 2^\mlen$. In other words, if the quantum oracle is so noisy that it flips all $2^\mlen$ bits of the codeword, the decoding algorithm is still able to compute the correct message. This puzzled both the student and adviser on this thesis until we realized that flipping all of the bits leads to a \textit{global phase shift} in the quantum state post-query, which as was discussed in Chapter 1, is essentially an equivalent state. So, in this case the adage that \textit{it's so wrong it's right} holds true.
 
-Additionally some features of the formula in theorem \ref{cool_thm}, 
-\begin{corollary} \label{corollary}(Swanberg and Pommersheim) The probability of success for the quantum decoding algorithm for the binary simplex code with message length $\mlen$, $\simpl{\mlen}$:
+Another interesting property of the formula in theorem \ref{cool_thm} is that $\numerr/2^{\mlen-1}$ is twice the expected value of the number of errors in a codeword of length $\mlen$ when transmitted through a binary symmetric channel with a \emph{bitwise error rate} of $p = \numerr$. This is because $\numerr/2^{\mlen}$ is the proportion of corrupted bits in the message. Of course, with independent and identically distributed random errors, the exact error rate for a given codeword transmission will follow a binomial distribution. That distribution will be centered around $p$, so a loose interpretation of the formula is that $P_{succ} \approx (1-2p)^2$, where $p$ is the bitwise error rate on the noisy oracle.
+
+
+Some other notable features of the formula in theorem \ref{cool_thm}, 
+\begin{corollary} \label{corollary}The probability of success for the quantum decoding algorithm for the binary simplex code with message length $\mlen$, $\simpl{\mlen}$:
 \begin{enumerate}
 \item Does not depend on the message $\mess$, and
 \item Does not depend on $E$, only $\lvert E \rvert = \numerr$.
 \end{enumerate} 
 \end{corollary}
 \begin{proof}
-Corollary \ref{corollary} follows from the proof of Theorem \ref{cool_thm}.
+Corollary \ref{corollary} follows from the proof of Theorem \ref{cool_thm}.\\
 \end{proof}
-
 
 
 \chapter{Reed-Muller Codes}
@@ -878,14 +863,21 @@ For $\numin = 3$ again, the following are the special functions $\bv{1}, \bv{2},
 &\bv{3} = 00001111
 \end{align*}
 \end{example}
-We can write any Boolean function $f: \Z_2^\numin \rightarrow \Z_2$ as a polynomial of the special functions $\bv{1}, \ldots \bv{\numin}$ together with the constant function \consto (which returns 1 on every input).  
+We can write any Boolean function $f: \Z_2^\numin \rightarrow \Z_2$ as a polynomial of the special functions $\bv{1}, \ldots \bv{\numin}$ together with the constant function \consto (which returns 1 on every input).  First, note that $\bv{i}^2 = \bv{i}$ since the values are binary. Now, there are $2^\numin$ possible monomials that we can make out of $\consto, \bv{1}, \bv{3},\ldots \bv{\numin}$. Namely, 
+\begin{equation}
+\consto, \bv{1}, \bv{3},\ldots \bv{\numin}, \bv{1}\bv{2}, \bv{1}\bv{3}, \ldots, \bv{\numin -1}\bv{\numin}, \ldots, \bv{1}\bv{2}\ldots\bv{\numin}.
+\end{equation}
+This is a little difficult to read, but essentially we begin by listing all monomials we can make with just one special function, then all monomials we can make by multiplying two of the special functions, and so on, until the last term which is just all of the special functions multiplied together.
+
+There are $1 + { \numin \choose 1} + { \numin \choose 2}+ \ldots + {\numin \choose \numin} = 2^\numin$ such monomials. Now, note that the coefficient on a given monomial can be either 0 or 1. This implies that there are $2^{2^\numin}$ possible functions we can make by summing these tems. Since this is equal to the total number of Boolean functions with $\numin$ inputs, all of the sums must be distinct.
 \section{Encoding}
 Now, consider how one might connect these Boolean functions to error-correcting codes. As was mentioned, any Boolean function can be represented as a polynomial of the functions $\consto, \bv{1}, \ldots, \bv{\numin}$. That polynomial has a coefficient vector $(\m{1}, \ldots, \m{\mlen})$, which we will suggestively call the message, and the output of the polynomial $\cwb{1}\cwb{2} \ldots \cwb{\clen}$ which represents the codeword (note that $\clen = 2^\mlen$). 
 
 
 \begin{definition} (Reed-Muller code) The $\degrm$th order Reed-Muller code $\mathscr{R}(\degrm, \numin)$ of length $\lenrm = 2^\numin$ , where $0 \leq \degrm \leq \numin$, is the set of all vectors $f$ where $f(\inv{1}, \ldots, \inv{\numin})$ is a Boolean function which is a polynomial of degree at most $\degrm$.
 \end{definition}
-Let \rmexp denote the set of valid monomials for vectors $f$ in $\mathscr{R}(\degrm, \numin)$ together with the constant function \consto. Then, we have
+
+As was mentioned, $\bv{i}^2 = \bv{i}$ since the values are binary. So, we can  assume every $\bv{i}$ has degree 0 or 1 in each monomial. Let \rmexp denote the set of valid monomials for vectors $f$ in $\mathscr{R}(\degrm, \numin)$ together with the constant function \consto. Then, we have
 \begin{equation*}
 \rmexp \coloneqq 
 \left \{
@@ -943,6 +935,10 @@ G(\degrm, \numin-1) & G(\degrm, \numin-1) \\
 \end{equation*}
 \end{theorem}
 
+\begin{proof}
+This follows from Theorem 2 in \S 13.3 of \citep{macwilliamssloane}.\\
+\end{proof}
+
 \begin{example} \label{gen_matrix_ex}
 The generator matrix for $\mathscr{R}(4,4)$ is displayed in Table \ref{gen_matrix}.
 \begin{table}
@@ -982,7 +978,7 @@ There are a few ways to approach the decoding algorithm for Reed-Muller codes. B
 \subsection{Geometric Connections}
 Recall that the Euclidean geometry of dimension $\numin$ over $GF(2)$, denoted $EG(\numin,2)$, contains $2^\numin$ points whose coordinates are all of the binary vectors of length $\numin$, $(\bv1, \ldots, \bv{\numin})$. If the zero point is deleted, the projective geometry $PG(\numin-1, 2)$ is obtained. We can think of the codewords of $\mathscr{R}(\degrm,\numin)$ in this context, namely as subsets of $EG(\numin,2)$. However, we must have a way to specify the subsets. This is achieved by looking at the codewords as \textit{incidence vectors} for these subsets.
 
-\begin{definition}[Incidence vector] Let $S \subseteq X$ where $\lvert X \rvert = 2^\numin$ and $X$ is well-ordered. Then, $\mathbf{v} \in \Z_2^\numin$ is an incidence vector for $S$ if
+\begin{definition}[Incidence vector] Let $S \subseteq X$ where $\lvert X \rvert = 2^\numin$ and $X$ has some ordering. Then, $\mathbf{v} \in \Z_2^\numin$ is an incidence vector for $S$ if
 \begin{equation*}
 \inv{i} = 1 \iff x_i \in S,
 \end{equation*}
@@ -1092,28 +1088,34 @@ It is worth noting that the papers upon which this chapter is based are far more
 \section{The Problem Definition}
 Let $f(\inv1, \ldots, \inv\numin)\in \F_\fsize[\inv1, \ldots, \inv\numin]$, that is, $f$ is a multivariate polynomial over the finite field of size $\fsize$, and let $f$ be of degree $\degrm$. Suppose an algorithm $\mathcal{A}$ has oracle access to $f$, and $\degrm$ is known. The polynomial interpolation problem that $\mathcal{A}$ must solve is to determine the coefficients of $f$ by querying the oracle. In other words, $f$ must learn the coefficient vector of $f$.
 
-The learning theory question that researchers then ask is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} In this case, researchers often care about some ``worst case,'' also called a \textit{lower bound}, over all possible algorithms $\mathcal{A}$ that solve the polynomial interpolation problem. Or, they may wonder what the optimal algorithm is. 
+The learning theory question that researchers then ask is: \textit{how many queries must any algorithm $\mathcal{A}$ make to the oracle before it can determine the coefficients of $f$?} They may wonder specifically about the minimum number of queries required for any algorithm.
 
-Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. The best classical algorithm for multivariate polynomial interpolation requires ${\numin+\degrm \choose \degrm}$ queries, using a well-chosen system of linear equations.
+Additionally, those interested in quantum complexity theory wonder how the answer to the above question changes depending on whether $\mathcal{A}$ is a quantum or classical algorithm. In their paper, \citep{chen2018quantum} show that 
+\begin{equation*}
+\left \lceil \frac{\degrm}{\numin + \degrm} { \numin + \degrm \choose \degrm} \right \rceil
+\end{equation*}
+queries suffice to achieve probability of success approaching 1 for large field order $\fsize$.
+
+By contrast, the best classical algorithm for multivariate polynomial interpolation requires ${\numin+\degrm \choose \degrm}$ queries, using a well-chosen system of linear equations \citep{chen2018quantum}. So, the quantum algorithm has a speedup factor of $\frac{\numin + \degrm}{\degrm}$.
 
 \section{Quantum Query Model}
 Much like phase kickback, queries to the oracle will be encoded in the phase of the response register. However, the algorithm will perform queries in the Fourier basis using a technique that is a generalization of the phase kickback trick. Moreover, the algorithm will make $\numq$ quantum queries in parallel to extract all of this information at once. These $\numq$ queries are chosen \textit{non-adaptively}, that is, the algorithm prepares the questions all at once.
 
 \subsection{Quantum Fourier Transform}
-Defining the quantum Fourier transform requires some background. First, it is a well-known fact that the order of any finite field can be written as a prime to some power. In other words, the finite field $\F_\fsize$ has order $\fsize = p^w$ where $p$ is prime. Now, define the trace function $\tracef: \F_\fsize \rightarrow \F_\fsize$ by $x \mapsto x + x^p + x^{p^2} + \ldots + x^{p^{w-1}}$. Next, we will define the exponential function $\expf: \F_q \rightarrow \C$ by $\expf(x) = e^{i2\pi \tracef(x)/p}$. Now we are ready to define the quantum Fourier transform (QFT).
+Defining the quantum Fourier transform requires some background. First, it is a well-known fact that the order of any finite field can be written as a prime to some power. In other words, the finite field $\F_\fsize$ has order $\fsize = p^w$ where $p$ is prime. Now, define the trace function $\tracef: \F_\fsize \rightarrow \F_\fsize$ by $x \mapsto x + x^p + x^{p^2} + \ldots + x^{p^{w-1}}$. Next, we will define the exponential function $\expf: \F_\fsize \rightarrow \C$ by $\expf(x) = e^{i2\pi \tracef(x)/p}$. Now we are ready to define the quantum Fourier transform (QFT).
 
-\begin{definition}[QFT] The quantum Fourier transform over $\F_\fsize$ is a unitary transformation acting as 
+\begin{definition}[QFT] The quantum Fourier transform over $\F_\fsize$ is a unitary transformation $QFT: \C^\fsize\rightarrow \C^\fsize$ defined as follows 
 \begin{equation*}
 \ket{x} \longmapsto \frac{1}{\sqrt{\fsize}} \sum_{y \in \F_\fsize} \expf(xy) \ket{y}.
 \end{equation*}
-The $\numq$-dimensional quantum Fourier transform is given by
+The $\numq$-dimensional quantum Fourier transform $QFT: \C^{\fsize\numq}\rightarrow \C^{\fsize\numq}$ is given by
 \begin{equation*}
 \ket{x} \longmapsto \frac{1}{\fsize^{\numq/2}} \sum_{y\in \F_\fsize^\numq} \expf(x \cdot y) \ket{y}.
 \end{equation*}
 \end{definition}
 This will be key to the phase query algorithm.
 \subsection{Phase Query}
-The authors of \citep{childs2015optimal} and \citep{chen2018quantum} describe what they call a \textit{phase query}. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$), performing a query to oracle $\mathcal{O}_f$, and then doing a quantum Fourier transform (QFT) as follows
+The authors of \citep{childs2015optimal} and \citep{chen2018quantum} describe what they call a \textit{phase query}. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$) on the query and response registers, $x, y \in \F_\fsize$, performing a query to the oracle $\mathcal{O}_f: \C^{\otimes \fsize} \otimes \C^{\otimes \fsize} \rightarrow \C^{\otimes \fsize} \otimes \C^{\otimes \fsize}$,  and then doing a quantum Fourier transform (QFT) as follows
 \begin{align}
 \ket{x,y} 
  \myrightarrow{QFT^{-1}} &\frac{1}{\sqrt{\fsize}} \sum_{z\in \F_\fsize} \expf(-yz) \ket{x,z} \\
@@ -1133,9 +1135,9 @@ Z(x,y)_j = \sum_{i = 1}^\numq y_ix_i^j \quad \text{for }j \in \mathbb{J}
 \end{equation*}
 so that
 \begin{equation*}
-Z(x,y) \cdot \cw = \sum_{i=1}^\numq y_i f(x_i)
+Z(x,y) \cdot m = \sum_{i=1}^\numq y_i f(x_i)
 \end{equation*}
-where $\rmexp$ is the set of allowed exponents, and $\srmexp \coloneqq \lvert \rmexp \rvert$.
+where $\rmexp$ is the set of allowed exponents, and $\srmexp \coloneqq \lvert \rmexp \rvert$, and $m$ is the coefficient vector on $f$.
 
 Now, we restrict the codomain of $Z$ so that it forms a bijection. Let $R_\numq \coloneqq Z(\F_\fsize^{\numin \numq}, \F_\fsize^\numq)$ be the image of $Z$. Now, for each $z \in R_\numq$, choose a unique $(x,y) \in \F_\fsize^{\numin \numq} \times \F_\fsize^{\numq}$ such that $Z(x,y) = z$. Call $T_\numq$ this set of unique representatives. Then, $Z: T_\numq \rightarrow R_\numq$ is a bijection.
 
@@ -1152,6 +1154,10 @@ Measuring in the basis of Fourier states (defined below)
 \ket{\hat{m}} \coloneqq \frac{1}{\sqrt{\fsize^\srmexp}} \sum_{z \in \F_\fsize^\srmexp} \expf(z \cdot m) \ket{z},
 \end{equation*}
 where $m$ are the computational basis states, results in the correct vector of coefficients with probability $\lvert R_\numq \rvert / \fsize^\srmexp$.
+
+In \citep{chen2018quantum}, they state that this success probability is $1-O(1/q)$ with at most $\left \lceil \frac{\degrm}{\numin + \degrm} { \numin + \degrm \choose \degrm} \right \rceil $ queries.
+
+
 
 
 \chapter{Quantum Decoding Algorithm for Reed-Muller Codes}
@@ -1260,11 +1266,14 @@ Many questions arose during the course of the year. Some of them yielded satisfa
 \section{Further Work}
 In this thesis we presented the idea of algorithmic robustness to noisy quantum oracles. That is, for a given quantum algorithm $\mathcal{A}$ which relies on quantum queries to oracle $\mathcal{O}$, what is $P_{succ}$ of the algorithm if the oracle is replaced with a noisy oracle $\widehat{\mathcal{O}}$?
 
-We were able to answer this question for the binary simplex decoding algorithm for simplex code of length $\mlen$, \simpl{\mlen}, if we had a specific known error rate $(\numerr/2^\mlen )$ for the noisy oracle. This topic could be generalized by considering the probability of success given that the noise added to the oracle \emph{follows some particular distribution}. This is more realistic because it is unlikely that one would know the exact number of errors that occurred in the query process. 
+We were able to answer this question for the binary simplex decoding algorithm for simplex code of length $\mlen$, \simpl{\mlen}, if we had a specific known error rate $(\numerr/2^\mlen )$ for the noisy oracle. One may wonder if it is possible to improve this probability of success. Additionally, which algorithm is optimal for $\numq$ queries to the oracle?
+
+Furthermore, this topic could be generalized by considering the probability of success given that the noise added to the oracle \emph{follows some particular distribution}, say a binomial distribution. This is more realistic because it is unlikely that one would know the exact number of errors that occurred in the query process.
 
 A second way to expand upon this thesis is to answer questions about robustness to noisy oracles of a \emph{wide variety} of algorithms. For example, Grover's search algorithm \citep{grover1996fast} seems particularly suited for this line of inquiry. 
 
 Lastly, for an algorithm which relies on \emph{multiple} oracle queries, one could analyze the difference in $P_{succ}$ when the oracle is replaced with a \emph{stateless} versus a \emph{stateful} noisy oracle (as described in chapter 7).
+
 
 
 
@@ -1273,7 +1282,7 @@ Lastly, for an algorithm which relies on \emph{multiple} oracle queries, one cou
 
 	
 \chapter{Finite Geometries} \label{finite_geom_chapter}
-Finite geometries are mathematical objects that codes map onto well, and they provide a new way of viewing codes. In this appendix, we will explore the properties of finite geometries that are vital to the classical Reed-Muller decoding algorithm with a focus on the projective geometry and affine or Euclidean geometry. This material is largely based on Appendix B in [REFERENCE MACWILLIAMS AND SLOANE]
+Finite geometries are mathematical objects that codes map onto well, and they provide a new way of viewing codes. In this appendix, we will explore the properties of finite geometries that are vital to the classical Reed-Muller decoding algorithm with a focus on the projective geometry and affine or Euclidean geometry. This material is largely based on Appendix B in \citep{macwilliamssloane}.
 
 \begin{definition}(Projective geometry) A finite projective geometry consists of a finite set $\Omega$ of \textit{points} $p, q, \ldots$ together with a collection of subsets $L, M, \ldots$ of $\Omega$ called \textit{lines}, which satisfies the following axioms (If $p \in L$ we say that $p$ lies on $L$ or $L$ passes through $p$.)
 \begin{enumerate}
@@ -1294,7 +1303,11 @@ A \textit{hyperplane} $H$ is a maximal proper subspace, so that $\Omega$ is the 
 A set $T$ of points in a projective or affine geometry is called \textit{independent} if, for every $x \in T, x$ does not belong to the smallest subspace which contains $T/\{x\}$. The \textit{dimension} of a subspace $S$ is $r-1$, where $r$ is the size of the largest set of independent points in $S$. In particular, if $S = \Omega$ this defines the dimension of the projective geometry.
 \end{definition}
 
-We denote Euclidean and projective geometries of dimension $m$ constructed from a finite field $GF(q)$ by $EG(m,q)$ and $PG(m,q)$, respectively. Now, we will discuss the projective and affine geometries that are obtained from finite fields, as they are most pertinent to Reed-Muller codes.
+We denote Euclidean and projective geometries of dimension $m$ constructed from a finite field $GF(q)$
+USE FQ NOTATION
+SUBSTANTIATE 
+
+ by $EG(m,q)$ and $PG(m,q)$, respectively. Now, we will discuss the projective and affine geometries that are obtained from finite fields, as they are most pertinent to Reed-Muller codes.
 
 Let $GF(q)$ be a finite field and suppose $m \geq 2$. We will take the points of $\Omega$ to be the nonzero $(m+1)$-tuples in $GF(q)^{m+1}$ such that
 \begin{equation*}
