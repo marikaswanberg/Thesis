@@ -1115,7 +1115,7 @@ The $\numq$-dimensional quantum Fourier transform $QFT: \C^{\fsize\numq}\rightar
 \end{definition}
 This will be key to the phase query algorithm.
 \subsection{Phase Query}
-The authors of \citep{childs2015optimal} and \citep{chen2018quantum} describe what they call a \textit{phase query}. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$) on the query and response registers, $x, y \in \F_\fsize$, performing a query to the oracle $\mathcal{O}_f: \C^{\otimes \fsize} \otimes \C^{\otimes \fsize} \rightarrow \C^{\otimes \fsize} \otimes \C^{\otimes \fsize}$,  and then doing a quantum Fourier transform (QFT) as follows
+The authors of \citep{childs2015optimal} and \citep{chen2018quantum} describe what they call a \textit{phase query}. First, note that the query register $x$ is one set of inputs to $f$, $ (x_1, x_2, \ldots, x_\numin) \in \F_\fsize^\numin$ and the response register $y \in \F_\fsize$ is where the output of the query will be stored. Essentially, the algorithm involves doing an inverse quantum Fourier transform (which we will denote $QFT^{-1}$) on the query and response registers, performing a query to the oracle $\mathcal{O}_f: (\C^\fsize)^{\otimes \numin} \otimes \C^\fsize \rightarrow (\C^\fsize)^{\otimes \numin} \otimes \C^\fsize$,  and then doing a quantum Fourier transform (QFT) as follows
 \begin{align}
 \ket{x,y} 
  \myrightarrow{QFT^{-1}} &\frac{1}{\sqrt{\fsize}} \sum_{z\in \F_\fsize} \expf(-yz) \ket{x,z} \\
