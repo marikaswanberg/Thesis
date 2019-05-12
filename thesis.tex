@@ -248,7 +248,7 @@ X \ketpsi = \begin{bmatrix}
 \alpha
 \end{bmatrix}.
 \end{align*}
-So, any transformation on a single qubit can be represented by a 2-by-2 matrix. What about the transformation that, when given \ketz or \keto, outputs an \textit{equal superposition} of \ketz and \keto ? This would essentially give us a fair coin. We might represent that as follows:
+So, any transformation on a single qubit can be represented by a 2-by-2 matrix. What about the transformation that, when given \ketz or \keto, outputs a state that is in \textit{equal superposition} between \ketz and \keto ? By this, we mean that there is a 1/2 probability of measuring \ketz or \keto. This would essentially give us a fair coin. We might represent that as follows:
 \begin{align*}
 \widehat{H} = \begin{bmatrix}
 1 & 1\\
@@ -264,7 +264,7 @@ There are a few problems with this transformation. First, applying this transfor
 1 & 1 
 \end{bmatrix}
 \end{align*}
-This transformation still isn't \textit{unitary}, meaning it doesn't preserve the magnitude of the input vector. For example, $\widehat{H} \Hminus = 0\ketz + 0 \keto$. This is not a valid state, because the squares of the amplitudes do not add to 1. So, we must fix this transformation to the following:
+This transformation still isn't \textit{unitary}, meaning it doesn't preserve the magnitude of the input vector. For example, applying this transformation to the state $\ket{\phi} =( \ketz - \keto)/\sqrt{2}$ gives us $\widehat{H}\ket{\phi} =  0\ketz + 0 \keto$. This is not a valid state, because the squares of the amplitudes do not add to 1. So, we must fix this transformation to the following:
 
 \begin{align*}
 H = \hadamard
@@ -272,7 +272,7 @@ H = \hadamard
 
 The quantum gate above ($H$) is called the \textit{Hadamard transform} or \textit{Hadamard gate}. We will precisely define this quantum gate later in this chapter, as it is absolutely critical for work in quantum algorithms. $H$ acts on the basis vectors as follows: $H\ketz = (\ketz + \keto)/\sqrt{2}$ and $H\keto = (\ketz - \keto)/\sqrt{2}$. 
 
-Both of these states are in an equal superposition between \ketz and \keto, but they are distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
+Both of these states are in an equal superposition between \ketz and \keto, meaning that for both states, there is an equal probability (1/2) of measuring \ketz and \keto; however, they are still distinct states. These states come up rather often, so they have been given the special shorthand notations \Hplus and \Hminus, respectively. 
 
 \begin{definition}[Plus and Minus States] The following states (pronounced ``plus'' and ``minus'') will be used ubiquitously throughout this thesis in their shorthand form:
 $$\Hplus = \frac{1}{\sqrt{2}}(\ketz + \keto)$$
@@ -315,7 +315,7 @@ Suppose we measured the first qubit. We will observe \ket{0} with probability 1/
 \begin{equation*}
 \ket{\beta_{01}} = \frac{\ket{01} + \ket{10}}{\sqrt{2}}
 \end{equation*}
-These two states, \ket{\beta_{00}} and \ket{\beta_{01}}, are the first two \textit{Bell states} or \textit{EPR pairs}. Quantum entanglement is a powerful computational tool and will be used in many quantum algorithms in the rest of the text. 
+Because these two states famously demonstrate quantum entanglement, \ket{\beta_{00}} and \ket{\beta_{01}}, are called the first two \textit{Bell states} or \textit{EPR pairs}\footnote{There are four EPR pairs or Bell states, the four most basic examples of quantum entanglement.}. Quantum entanglement is a powerful computational tool and will be used in many quantum algorithms in the rest of the text. 
 
 Now that we have the means to represent an $n$-qubit state, the state transformations can be represented by $2^n$-by-$2^n$ matrices. One particularly useful transformation is the $n$-qubit Hadamard transform.
 
@@ -351,11 +351,11 @@ More generally, given an orthonormal basis $\{\ket{a}, \ket{b}\}$, we can repres
  
 
 \section{Phase}
-Up to this point, we have used the term \textit{phase} slightly ambiguously. The exact meaning of the word differs depending on context, so we will flesh these out. In fact, some of the original results in this thesis puzzled both student and adviser until we revisited the exact distinction between \textit{global phase} and \textit{relative phase}.
+The term \textit{phase} has multiple meanings in quantum computation, so we will flesh these out. In fact, some of the original results in this thesis puzzled both student and adviser until we revisited the exact distinction between \textit{global phase} and \textit{relative phase}.
 
-Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$, where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two phases are equivalent up to their \textit{global phase shift}. This just means that the probability of observing some basis state $\ket{k}$ under measurement in any basis is the same for both states. Observationally, they are identical states, so we can ignore global phase shifts. 
+Consider the states $\ket{\psi}$ and $e^{i \theta}\ket{\psi}$, where $\ket{\psi}$ is a state vector and $\theta$ is a real number. These two states are equivalent up to their \textit{global phase shift}. This just means that the probability of observing some basis state $\ket{k}$ under measurement in any basis is the same for both states. Observationally, they are identical states, so we can ignore global phase shifts. 
 
-The other notion of phase that will come up is \textit{relative phase}. Consider the states $\Hplus = (\ketz + \keto)/\sqrt{2}$ and $\Hminus = (\ketz- \keto)/\sqrt{2}$. These two states have amplitudes on basis state $\keto$ equal to $1/\sqrt{2}$ and $-1/\sqrt{2}$, respectively. So, although their magnitudes are equal, their signs are not. Now, observing both of these in the computational basis yields $\ketz$ with probability $1/2$ and $\keto$ with probability $1/2$ for both states. In the computational basis they are indistinguishable; however, measuring in the \textit{Hadamard basis}, with basis states $\Hplus$ and $\Hminus$, they are distinguishable with probability 1. Despite having the same relative phase, the states are in fact computationally distinct.
+The other notion of phase that will come up is \textit{relative phase}. Consider the states $\Hplus = (\ketz + \keto)/\sqrt{2}$ and $\Hminus = (\ketz- \keto)/\sqrt{2}$. These two states have amplitudes on basis state $\keto$ equal to $1/\sqrt{2}$ and $-1/\sqrt{2}$, respectively. So, although their magnitudes are equal, their signs are not. Now, observing both of these in the computational basis yields $\ketz$ with probability $1/2$ and $\keto$ with probability $1/2$ for both states. In the computational basis they are indistinguishable; however, measuring in the \textit{Hadamard basis}, with basis states $\Hplus$ and $\Hminus$, they are distinguishable with probability 1. Despite having the same relative phase (meaning that the magnitudes of each of their amplitudes are equal), the states are in fact computationally distinct.
 
 
 
@@ -420,15 +420,14 @@ This computation looks a mess for the beginner, so let's try to make sense of it
 & = \frac{1}{2^n} \sum_{i \in \Z_2^n} (-1)^{i \cdot a} \sum_{j \in \Z_2^n} (-1)^{i \cdot j} \ket{j} \\
 & = \frac{1}{2^n}  \sum_{j \in \Z_2^n}\sum_{i \in \Z_2^n} (-1)^{i \cdot(a + j)}  \ket{j} \label{equals_a}
 \end{align}
-Now, suppose $j=a$ (note that $(-1)^{2k} = 1~\forall k \in \Z$). Then, from \ref{equals_a} we have
+Now, suppose $j=a$. Then, from \ref{equals_a} we have
 \begin{align*}
 \frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{i \cdot (2a)}  \ket{a} 
 & = \frac{1}{2^n}  \sum_{i \in \Z_2^n} (-1)^{(i \cdot \mathbf{0})}  \ket{a} \\
 & = \frac{1}{2^n}  \sum_{i \in \Z_2^n} 1 \ket{a}  \\
 & = \ket{a}.
 \end{align*}
-
-So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
+Since the Hadamard transform is unitary, the amplitudes on all states $\ket{j}, j \neq a$ must be zero. So, \ref{equals_a} is simply the state $\ket{a}$; thus, measurement in the computational basis will yield $a$ with probability 1. This algorithm is the bread and butter of this thesis, so to speak, and is critical to the decoding algorithms we will study in a few chapters. 
 
 
 \section{Advanced Topics}
@@ -522,7 +521,7 @@ Thus far, we have only described the parts of the communication system in vague 
 
 There are five basic components in the communication system we consider. The \textit{message source}, or \textit{sender}, transfers a message $\mess = \m{1} \ldots \m{\mlen}$ to the \textit{encoder}. The \textit{encoder} outputs the \textit{codeword} $\cw = \cwb{1}\ldots \cwb{\clen}$ associated with message \mess and passes it along to the \textit{binary symmetric channel}. The \textit{channel} incorporates an \textit{error vector} $\ev = \evb{1} \ldots \evb{\clen}$ into the codeword and outputs the received vector $\rc = \ev + \cw = \rcb{1} \ldots \rcb{\clen}$ where the addition is bitwise and modulo 2. Then, the \textit{decoder} takes the received vector (also referred to as the ``noisy codeword'') $\rc$ and outputs $\mhat$, an estimate of message \mess to the \textit{receiver}. A schematic is provided below.
 \begin{equation*}
-\text{Sender} \xrightarrow{\text{Message }\mess} \text{Encoder} \xrightarrow{\text{Codeword }\cw} \text{Channel} \xrightarrow{\text{Rcvd.~Vect.~}\mess+\ev} \text{Decoder} \xrightarrow{\text{Est. }\mhat} \text{Receiver}
+\text{Sender} \xrightarrow{\text{Message }\mess} \text{Encoder} \xrightarrow{\text{Codeword }\cw} \text{Channel} \xrightarrow{\text{Rcvd.~Vect.~}\cw+\ev} \text{Decoder} \xrightarrow{\text{Est. }\mhat} \text{Receiver}
 \end{equation*}
 
 \section{Encoding}
@@ -601,7 +600,7 @@ G =
 \end{example}
 
 \section{Decoding}
-As we discussed earlier, the channel will (term-wise) add some unknown error vector $\ev=\evb{1} \ldots \evb{\clen}$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $\rc = \mess + \ev \pmod 2$. 
+As we discussed earlier, the channel will (term-wise) add some unknown error vector $\ev=\evb{1} \ldots \evb{\clen}$ to the codeword so that the decoder receives a ``noisy codeword'' or ``received vector'' $\rc = \cw + \ev \pmod 2$. 
 
 The decoder has a significantly harder job than the encoder. Namely, it must take this noisy codeword $\rc$ and return the message $\mess$ that produced the vector. Any given decoding algorithm will not always be successful; sometimes there will be so many errors in a given received codeword that it is impossible to parse which message was sent. That said, some decoding algorithms are more effective than others, and this distinction comes down to the properties of the code $\mathscr{C}$.
 
@@ -626,7 +625,7 @@ dist(010101, 100111) = 3
 \end{example}
 
 \subsection{Errors}
-Earlier we defined the error vector $\ev = \evb{1} \ldots \evb{\clen}$ where $\evb{i} \in \Z_2$. The received vector is defined $\rc = \mess + \ev$, which implies that $\evb{i} = 1$ if and only if the $i$-th bit of the codeword was corrupted in transmission and $\evb{i} = 0$ otherwise. Since the binary symmetric channel corrupts a single bit with probability $p$, it follows that $P[\evb{i} = 1] = p$.  One may wonder: \textit{what is the most probable error vector?} This would certainly help the decoder to determine which codeword was sent given the noisy codeword.
+Earlier we defined the error vector $\ev = \evb{1} \ldots \evb{\clen}$ where $\evb{i} \in \Z_2$. The received vector is defined $\rc = \cw + \ev$, which implies that $\evb{i} = 1$ if and only if the $i$-th bit of the codeword was corrupted in transmission and $\evb{i} = 0$ otherwise. Since the binary symmetric channel corrupts a single bit with probability $p$, it follows that $P[\evb{i} = 1] = p$.  One may wonder: \textit{what is the most probable error vector?} This would certainly help the decoder to determine which codeword was sent given the noisy codeword.
 
 Since the corruption of bits by the communication channel are independent of one another, we can compute the probability that the error vector $\ev$ is some particular vector $\mathbf{x}$:
 \begin{equation} \label{p_error_vect}
@@ -759,12 +758,10 @@ Thus, the full state on line \ref{confuse} is
 \frac{1}{2^\mlen} \sum_{\mathbf{j} \in \Z_2^\mlen} \left( \sum_{\mathbf{i} \in \Z_2^\mlen} (-1)^{\mathbf{i}\cdot (\mess +\mathbf{j})} \right) \ket{\mathbf{j}}
 & = \frac{1}{2^\mlen} \left (2^\mlen \ket{\mess}+  \sum\limits_{\substack{\mathbf{j} \in \Z_2^\mlen \\ \mathbf{j} \neq \mess}}
  (-1)^{\mathbf{i}\cdot (\mess +\mathbf{j})}\ket{\mathbf{j}} \right) \\
- & = \frac{1}{2^\mlen} \left (2^\mlen \ket{\mess}+  \sum\limits_{\substack{\mathbf{j} \in \Z_2^\mlen \\ \mathbf{j} \neq \mess}}
-0\ket{\mathbf{j}} \right) \\
 & = \ket{\mess}.
 \end{align*}
-This algorithm yields the correct message $\mess$ with probability 1 using only one quantum query.
-\section{Rosbustness to Errors}
+The last equality follows because the coefficient on $\ket{\mess}$ is 1 and the Hadamard transform is unitary. These two facts imply that the coefficients on all other states must be zero. So, this algorithm yields the correct message $\mess$ with probability 1 using only one quantum query.
+\section{Robustness to Errors}
 Now we will consider a different scenario. Suppose that the oracle $\mathcal{O}_\mess$ is a little faulty. The oracle occasionally makes mistakes in transmitting the bits of the codeword $\cw$ that corresponds to $\mess$. Instead, it transmits a vector $\rc = \cw+\ev$ which may not even be a codeword in \simpl{\mlen}, the simplex code with messages of length $\mlen$. Since the simplex code is error-correcting, one would hope that the algorithm could still recover the correct $\mess$ with a high probability. In this section, we formalize the algorithm's robustness to errors, that is, the probability of producing the correct output even with a noisy oracle. 
 
 \subsection{Noisy Quantum Oracle}
@@ -805,7 +802,7 @@ P_{succ}
 \end{proof}
 Interestingly, this formula shows that the quantum binary simplex decoding algorithm has $P_{succ} = 1$ if $\numerr = 2^\mlen$. In other words, if the quantum oracle is so noisy that it flips all $2^\mlen$ bits of the codeword, the decoding algorithm is still able to compute the correct message. This puzzled both the student and adviser on this thesis until we realized that flipping all of the bits leads to a \textit{global phase shift} in the quantum state post-query, which as was discussed in Chapter 1, is essentially an equivalent state. So, in this case the adage that \textit{it's so wrong it's right} holds true.
 
-Another interesting property of the formula in theorem \ref{cool_thm} is that $\numerr/2^{\mlen-1}$ is twice the expected value of the number of errors in a codeword of length $\mlen$ when transmitted through a binary symmetric channel with a \emph{bitwise error rate} of $p = \numerr$. This is because $\numerr/2^{\mlen}$ is the proportion of corrupted bits in the message. Of course, with independent and identically distributed random errors, the exact error rate for a given codeword transmission will follow a binomial distribution. That distribution will be centered around $p$, so a loose interpretation of the formula is that $P_{succ} \approx (1-2p)^2$, where $p$ is the bitwise error rate on the noisy oracle.
+Another interesting property of the formula in theorem \ref{cool_thm} is that $\numerr/2^{\mlen-1}$ is twice the expected value of the number of errors in a codeword of length $\mlen$ when transmitted through a binary symmetric channel with a \emph{bitwise error rate} of $p = \numerr/2^\mlen$. This is because $\numerr/2^{\mlen}$ is the proportion of corrupted bits in the message. Of course, with independent and identically distributed random errors, the exact error rate for a given codeword transmission will follow a binomial distribution. That distribution will be centered around $p$, so a loose interpretation of the formula is that $P_{succ} \approx (1-2p)^2$, where $p$ is the bitwise error rate on the noisy oracle.
 
 
 Some other notable features of the formula in theorem \ref{cool_thm}, 
@@ -1029,7 +1026,7 @@ Denote the eleven bits of the message as $\mess = \m0\m4\m3\m2\m1\m{34}\m{24}\m{
 & \stackrel{\mathclap{call}}{=} \cwb0\cwb1\cwb2\ldots \cwb{15} \\
 & = \cw.
 \end{align*}
-Now, the challenge is to decode $\rc$, the received codeword (note that $\rc$ may or may not be a codeword itself). In general, to decode a noisy codeword from $\mathscr{R}(\degrm,\numin)$, we construct a series of parity checks. We begin by decoding $\m\sigma$ where $\sigma = \sigma_1 \ldots \sigma_\degrm$. The corresponding row of the generator matrix $\bv{\sigma_1} \ldots \bv{\sigma_\degrm}$ is the incidence vector of an $(\numin-\degrm)$-dimensional subspace $S$ of $EG(\numin,2)$. To find $S$, use the row of the generator matrix as an indicator vector on the matrix of complements of the Reed-Muller monomial basis vectors. Now, we take $T$ to be the complementary subspace to $S$ with incidence vector $\bv{\tau_1}\ldots \bv{\tau_{\numin-\degrm}}$ where $\{\tau_1, \ldots \tau_{\numin-\degrm}\} = [\numin]\setminus \{\sigma_1, \ldots, \sigma_\degrm\}$. Then $T$ meets $S$ at a single point, namely the origin. Now, let $U_1, \ldots, U_{2^{\numin-\degrm}}$ be the \textit{translates} of $T$ in $EG(\numin,2)$, including $T$ itself. Each $U_i$ meets $S$ in exactly one point.
+Now, the challenge is to decode $\rc$, the received codeword (note that $\rc$ may or may not be a codeword itself). In general, to decode a noisy codeword from $\mathscr{R}(\degrm,\numin)$, we construct a series of parity checks. We begin by decoding $\m\sigma$ where $\sigma = \sigma_1 \ldots \sigma_\degrm$. The corresponding row of the generator matrix $\bv{\sigma_1} \ldots \bv{\sigma_\degrm}$ is the incidence vector of an $(\numin-\degrm)$-dimensional subspace $S$ of $EG(\numin,2)$. To find $S$, use the row of the generator matrix as an indicator vector on the matrix of complements of the Reed-Muller monomial basis vectors. Now, we take $T$ to be the complementary subspace to $S$ with incidence vector $\bv{\tau_1}\ldots \bv{\tau_{\numin-\degrm}}$ where $\{\tau_1, \ldots \tau_{\numin-\degrm}\} = [\numin]\setminus \{\sigma_1, \ldots, \sigma_\degrm\}$. Then $T$ meets $S$ at a single point, namely the origin. Now, let $U_1, \ldots, U_{2^{\numin-\degrm}}$ be the \textit{translates} of $T$ by points in $S$, which includes $T$ itself. Each $U_i$ meets $S$ in exactly one point.
 
 \begin{theorem} \label{error_correct_thm}
 If there are no errors, $\m\sigma$ is given by
@@ -1037,7 +1034,7 @@ If there are no errors, $\m\sigma$ is given by
 \m\sigma = \sum_{P \in U_i} \rcb{P}, \quad i = 1, \ldots, 2^{\numin-\degrm}
 \end{equation*}
 \end{theorem}
-Note that there are $2^{\numin-\degrm}$ equations that should all yield the same $\m{\sigma}$, and if not, one can apply majority logic. This theorem implies that if no more than $\lfloor\frac{1}{2}(2^{\numin-\degrm} -1)\rfloor$ errors occur, majority logic decoding will recover each of the symbols $\m{\sigma}$ correctly, where $\sigma$ is a string of any $\degrm$ symbols. 
+Note that there are $2^{\numin-\degrm}$ equations that should all yield the same $\m{\sigma}$. If some of the equations do not agree, one can apply majority logic, meaning choosing the result based on what the majority of equations state.  This theorem implies that if no more than $\lfloor\frac{1}{2}(2^{\numin-\degrm} -1)\rfloor$ errors occur, majority logic decoding will recover each of the symbols $\m{\sigma}$ correctly, where $\sigma$ is a string of any $\degrm$ symbols. 
 	After going through this process for all $\degrm$-length subscripts in $\mess$, we subtract the corresponding $\m{ij}\bv{i}\bv{j}$'s from $\rc$ to obtain a new received codeword $\rc' = \rcb0'\rcb1' \ldots \rcb{15}'$ and repeat the process for all $\degrm-1$-length subscripts. We continue this process until all we have left is $\rcb0\consto + \ev$ and $\rcb0 = 0$ or $\rcb0 =1$ according to the number of 1's in the remainder of the codeword.
 	
 \subsection{Geometric Decoding Example}
